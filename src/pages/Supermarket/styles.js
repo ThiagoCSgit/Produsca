@@ -19,8 +19,15 @@ const styles = StyleSheet.create({
       marginHorizontal: 25,
       fontSize: 25,
     },
+    supermarketInfos: {
+      gap: 10
+    },
     supermarketInfo: {
-      textAlign: 'left'
+      fontSize: 18,
+      textAlign: 'center',
+    },
+    iconPhone:{
+      marginLeft: 20
     },
     listSupermarketCategorys:{
       flex: 1,

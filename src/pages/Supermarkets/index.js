@@ -9,32 +9,44 @@ export default function Supermarkets({navigation}) {
     {
       id: 1,
       name: "Extrabom",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia",
+      city: "Vila Velha"
     },
     {
       id: 2,
       name: "Perim",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia 2",
+      city: "Vitória"
     },
     {
       id: 3,
       name: "Carone",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia 3",
+      city: "Vitória"
     },
     {
       id: 4,
       name: "Epa",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia 4",
+      city: "Serra"
     },
     {
       id: 5,
       name: "Mineirão",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia 5",
+      city: "Vila Velha"
     },
     {
       id: 6,
       name: "Atacadão",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
+      address: "Rua da Fantasia 6",
+      city: "Vila Velha"
     },
   ])
 
@@ -48,13 +60,12 @@ export default function Supermarkets({navigation}) {
           <Text>QR Code</Text>
         </View>
         <Text style={styles.titlePage}>Lista de supermercados</Text>
-        <Icon name="shoppingcart" size={25}/>
+        <Icon name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
       </View>
       <FlatList
-        contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
         style={styles.listSupermarkets}
         data={supermarkets}
-        numColumns={3}
+        numColumns={1}
         key={'_'}
         renderItem={({item}) => {
           return (
@@ -62,7 +73,10 @@ export default function Supermarkets({navigation}) {
               name: item.name
             })}>
               <Image style={styles.supermarketIcon} source={item.image}/>
-              <Text style={styles.supermarketName}>{item.name}</Text>
+              <View>
+                <Text style={styles.supermarketName}>{item.name} - {item.city}</Text>
+                <Text style={styles.supermarketName}>{item.address}</Text>
+              </View>
             </Pressable>
           )
         }}

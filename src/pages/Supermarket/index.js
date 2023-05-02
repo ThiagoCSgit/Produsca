@@ -103,10 +103,15 @@ export default function Supermarket({route, navigation}) {
     <SafeAreaView style={styles.container}>
       <View style={styles.titleIcon}>
         <Text style={styles.titlePage}>Categorias - {supermarketInfos.name}</Text>
-        <Icon name="shoppingcart" size={25}/>
+        <Icon name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
       </View>
-      <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.contact}</Text>
-      <Text style={styles.supermarketInfo}>Endereço: {supermarketInfos.address}</Text>
+      <View style={styles.supermarketInfos}>
+        <View style={{flexDirection: 'row', textAlign: 'center'}}>
+          <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.contact}</Text> 
+          <Icon style={styles.iconPhone} name="phone" size={18}/>
+        </View>
+        <Text style={styles.supermarketInfo}>Endereço: {supermarketInfos.address}</Text>
+      </View>
       <FlatList
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
         style={styles.listSupermarketCategorys}

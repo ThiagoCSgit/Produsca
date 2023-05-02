@@ -7,6 +7,7 @@ import CategoryProducts from './src/pages/CategoryProducts';
 import Supermarkets from './src/pages/Supermarkets';
 import Products from './src/pages/Products';
 import Supermarket from './src/pages/Supermarket';
+import ShopCart from './src/pages/ShopCart';
 
 export default function App() {
   const Stack = createStackNavigator()
@@ -27,6 +28,7 @@ export default function App() {
           <Stack.Screen options={{ headerShown: false }} name=" " component={Tabs}/>
           <Stack.Screen  name="Produtos" component={Products}/>
           <Stack.Screen  name="Supermercado" component={Supermarket}/>
+          <Stack.Screen  name="Carrinho" component={ShopCart}/>
         </Stack.Navigator>
     </NavigationContainer>
   );

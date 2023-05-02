@@ -36,14 +36,17 @@ const styles = StyleSheet.create({
     supermarketItem: {
       margin: 15,
       alignItems: 'center',
+      width: '100%',
+      flexDirection: 'row'
     },
     supermarketIcon: {
       width: 70,
-      height: 70
+      height: 70,
+      marginRight: 10
     },
     supermarketName: {
       fontSize: 18,
-      textAlign: 'center'
+      textAlign: 'left'
     }
   });
 

@@ -30,20 +30,31 @@ const styles = StyleSheet.create({
     },
     listProducts:{
       flex: 1,
+      width: '100%',
     },
     productItem: {
       margin: 10,
       alignItems: 'center',
-      width: 100,
-      height: 100
+      flexDirection: 'row',
+    },
+    productInfos: {
+      justifyContent: 'center'
     },
     productIcon: {
       width: 70,
-      height: 70
+      height: 70,
+      marginRight: 10
     },
     productName: {
       fontSize: 18,
-      textAlign: 'center'
+    },
+    checkboxLabel:{
+      flexDirection: 'row',
+      marginLeft: 10,
+      marginBottom: 15
+    },
+    label: {
+      marginLeft: 10
     }
   });
 
