@@ -1,7 +1,8 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
+import api from "../../service/api"
 
 export default function CategoryProducts({navigation}) {
   const [catProducts, setCatProducts] = useState([
@@ -97,6 +98,12 @@ export default function CategoryProducts({navigation}) {
     },
   ])
 
+  useEffect(() => {
+    api.get("/CategoriasProdutos").then(response => {
+      console.warn("response:", response)
+      setCatProducts(response.data)
+    })
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,10 +126,10 @@ export default function CategoryProducts({navigation}) {
         renderItem={({item}) => {
           return (
             <Pressable style={styles.categoryItem} onPress={() => navigation.navigate("Produtos", {
-              categoryName: item.name
+              categoryName: item.nome
             })}>
-              <Image style={styles.categoryIcon} source={item.image}/>
-              <Text style={styles.categoryName}>{item.name}</Text>
+              {/* <Image style={styles.categoryIcon} source={item.image}/> */}
+              <Text style={styles.categoryName}>{item.nome}</Text>
             </Pressable>
           )
         }}
