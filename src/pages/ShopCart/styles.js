@@ -11,8 +11,13 @@ const styles = StyleSheet.create({
       width: "100%"
     },
     emptyCartImage:{
-        // width: '100%',
-        height: '100%',
+        width: 300,
+        height: 300,
+    },
+    labelEmptyCart: {
+      textAlign: 'center',
+      marginTop: 20,
+      fontSize: 20
     }
 })
 
