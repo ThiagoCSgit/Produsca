@@ -1,6 +1,7 @@
-import {SafeAreaView, Text, Image, FlatList} from 'react-native';
+import {SafeAreaView, Text, Image, FlatList, View} from 'react-native';
 import styles from './styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
@@ -8,9 +9,26 @@ import { useState } from 'react';
 
 export default function ShopCart() {
     const [cartList, setCartList] = useState([])
+
+    useEffect(() => {
+        getCartProducts()
+    }, [])
+    
+    async function getCartProducts(){
+        try {
+            let productKeys = await AsyncStorage.getAllKeys()
+            let products = await AsyncStorage.multiGet(productKeys)
+            let newList = products.map(product => (
+                 product[1]
+            ))
+            setCartList(newList)
+        } catch(e) {
+            console.warn('error', e)
+        }
+    }
+
     return(
         <SafeAreaView style={styles.container}>
-            <Text>Carrinho</Text>
             {
                 cartList.length > 0 ?
                 <FlatList
@@ -19,12 +37,15 @@ export default function ShopCart() {
                     key={'_'}
                     renderItem={({item}) => {
                     return (
-                        <Text>oi</Text>
+                        <Text>{item}</Text>
                     )
                     }}
                 />
                 :
-                <Image style={styles.emptyCartImage} source={require("../../images/shoppingCart.png")}/>
+                <View>
+                    <Image style={styles.emptyCartImage} source={require("../../images/shoppingCart.png")}/>
+                    <Text style={styles.labelEmptyCart}>Seu carrinho está vazio</Text>
+                </View>
             }
         </SafeAreaView>
     )
