@@ -1,9 +1,10 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import Checkbox from 'expo-checkbox';
 import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from "@react-navigation/native";
+import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Products({route, navigation}) {
   const [products, setProducts] = useState([
@@ -68,21 +69,22 @@ export default function Products({route, navigation}) {
       inCart: false,
     },
   ])
+  const isFocused = useIsFocused();
 
 
   useEffect(() => {
     getCheckProducts()
-  }, [])
+  }, [isFocused])
   
   async function getCheckProducts(){
-    // await AsyncStorage.clear();
     try {
-      console.warn('products:',products)
+      // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
       let productsListCheked = await AsyncStorage.multiGet(productKeys)
-      let newList = products
-      console.warn('newList:',newList)
-      console.warn('productsListCheked:',productsListCheked)
+      let newList = [...products]
+      newList.forEach(item => {
+        item.inCart = false
+      })
       newList.forEach(item => {
         productsListCheked.forEach(itemChecked => {
           if(item.id == itemChecked[0]){
@@ -90,18 +92,15 @@ export default function Products({route, navigation}) {
           }
         })
       })
-      console.warn('newList depois:',newList)
       setProducts(newList)
     } catch (e) {
       console.warn('error',e)
     }
-    console.warn('products depois:',products)
   }
 
 
-  async function addOrRemoveToShopCart(value, id, name, mark, supermarket){
+  async function addOrRemoveToShopCart(value, id, supermarket){
     let newList = [...products]
-    console.warn('newList teste:',newList)
     setProducts(newList.map(item => {
       if(item.id == id){
         item.inCart = value
@@ -109,12 +108,12 @@ export default function Products({route, navigation}) {
       return item
     }))
 
-    console.warn('products teste:',products)
 
     if(value){
-      let fullName = mark ? `${name} - ${mark}, ${supermarket}` : `${name}, ${supermarket}`
+      let itemToAdd = products.find(item => item.id == id)
+      itemToAdd.supermarket = supermarket
       try {
-        await AsyncStorage.setItem(id, fullName)
+        await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {
         console.warn('error:',e)
       }
@@ -134,7 +133,7 @@ export default function Products({route, navigation}) {
         <Text style={styles.titlePage}>
           {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
         </Text>
-        <Icon style={[styles.iconCart, !route.params?.supermarketName && styles.modifyPositionIcon]} name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
+        <ShopCartButton route={route} navigation={navigation} applyClass={true}/>
       </View>
       <FlatList
         style={styles.listProducts}
@@ -152,14 +151,12 @@ export default function Products({route, navigation}) {
                 </View>
               </Pressable>
               {route.params?.supermarketName &&
-                <View style={styles.checkboxLabel}>
-                  <Text>{item.inCart} teste</Text>
+                <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
                   <Checkbox
                     value={item.inCart}
-                    onValueChange={(newValue) => addOrRemoveToShopCart(newValue, item.id, item.name, item.mark, route.params?.supermarketName)}
                   />
                   <Text style={styles.label}>Adicionar ao carrinho</Text>
-                </View>
+                </Pressable>
               }
             </View>
           )

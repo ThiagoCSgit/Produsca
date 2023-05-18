@@ -2,6 +2,7 @@ import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-nati
 import Icon from 'react-native-vector-icons/AntDesign';
 import React, { useState } from "react";
 import styles from './styles';
+import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Supermarket({route, navigation}) {
   const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
@@ -103,7 +104,7 @@ export default function Supermarket({route, navigation}) {
     <SafeAreaView style={styles.container}>
       <View style={styles.titleIcon}>
         <Text style={styles.titlePage}>Categorias - {supermarketInfos.name}</Text>
-        <Icon name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
+        <ShopCartButton route={null} navigation={navigation} applyClass={false}/>
       </View>
       <View style={styles.supermarketInfos}>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>

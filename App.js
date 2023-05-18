@@ -8,6 +8,7 @@ import Supermarkets from './src/pages/Supermarkets';
 import Products from './src/pages/Products';
 import Supermarket from './src/pages/Supermarket';
 import ShopCart from './src/pages/ShopCart';
+import Scanner from './src/pages/QRCodeScanner';
 
 export default function App() {
   const Stack = createStackNavigator()
@@ -29,6 +30,7 @@ export default function App() {
           <Stack.Screen  name="Produtos" component={Products}/>
           <Stack.Screen  name="Supermercado" component={Supermarket}/>
           <Stack.Screen  name="Carrinho" component={ShopCart}/>
+          <Stack.Screen  name="Scanner" component={Scanner}/>
         </Stack.Navigator>
     </NavigationContainer>
   );
