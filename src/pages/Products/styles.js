@@ -20,14 +20,6 @@ const styles = StyleSheet.create({
       position: 'relative',
       left: 10
     },
-    iconCart: {
-      position: 'relative',
-      left: 30
-    },
-    modifyPositionIcon: {
-      position: 'relative',
-      left: 60
-    },
     listProducts:{
       flex: 1,
       width: '100%',

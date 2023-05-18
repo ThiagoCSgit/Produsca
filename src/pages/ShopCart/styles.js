@@ -31,8 +31,6 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       minWidth: "70%",
       maxWidth: "78%",
-      borderWidth: 1,
-      borderColor: "red"
     },
     actionIcons: {
       gap: 15,

@@ -1,10 +1,10 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import Checkbox from 'expo-checkbox';
 import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
+import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Products({route, navigation}) {
   const [products, setProducts] = useState([
@@ -134,9 +134,7 @@ export default function Products({route, navigation}) {
         <Text style={styles.titlePage}>
           {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
         </Text>
-        {/* <View style={{width: 30, height: 30}}> */}
-          <Icon style={[styles.iconCart, !route.params?.supermarketName && styles.modifyPositionIcon]} name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
-        {/* </View> */}
+        <ShopCartButton route={route} navigation={navigation} applyClass={true}/>
       </View>
       <FlatList
         style={styles.listProducts}

@@ -1,8 +1,8 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
 import React, { useState } from "react";
-import ScannerButton from '../../components/ScannerButton';
+import ScannerButton from '../../components/Scanner/ScannerButton';
+import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Supermarkets({navigation}) {
 
@@ -56,7 +56,7 @@ export default function Supermarkets({navigation}) {
       <View style={styles.titleIcon}>
         <ScannerButton navigation={navigation}/>
         <Text style={styles.titlePage}>Lista de supermercados</Text>
-        <Icon name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
+        <ShopCartButton route={null} navigation={navigation} applyClass={false}/>
       </View>
       <FlatList
         style={styles.listSupermarkets}
