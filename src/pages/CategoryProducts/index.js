@@ -115,7 +115,7 @@ export default function CategoryProducts({navigation}) {
           <Text>QR Code</Text>
         </View>
         <Text style={styles.titlePage}>Lista de categorias</Text>
-        <Icon name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
+        <Icon name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
       </View>
       <FlatList
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}

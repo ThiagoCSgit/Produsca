@@ -60,7 +60,7 @@ export default function Supermarkets({navigation}) {
           <Text>QR Code</Text>
         </View>
         <Text style={styles.titlePage}>Lista de supermercados</Text>
-        <Icon name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
+        <Icon name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
       </View>
       <FlatList
         style={styles.listSupermarkets}

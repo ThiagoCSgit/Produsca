@@ -27,7 +27,6 @@ export default function ShopCart() {
         }
     }
 
-
     function checkedProduct(value, id){
         let newList = [...cartList]
         setCartList(newList.map(item => {
@@ -36,6 +35,15 @@ export default function ShopCart() {
             }
             return item
         }))
+    }
+
+    async function removeItem(id){
+        try{
+            await AsyncStorage.removeItem(id);
+            getCartProducts()
+        } catch(e) {
+            console.warn('error', e)
+        }
     }
 
     return(
@@ -58,7 +66,7 @@ export default function ShopCart() {
                                     value={item.check}
                                     onValueChange={(newValue) => checkedProduct(newValue, item.product.id)}
                                 />
-                                <IconE style={styles.iconTrash} name="trash" size={30} onPress={() => {}}/>
+                                <IconE style={styles.iconTrash} name="trash" size={30} onPress={() => removeItem(item.product.id)}/>
                             </View>
                         </View>
                     )

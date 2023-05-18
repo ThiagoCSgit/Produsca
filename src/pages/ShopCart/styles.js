@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
       fontSize: 19,
       textAlign: 'center',
       minWidth: "70%",
+      maxWidth: "78%",
       borderWidth: 1,
       borderColor: "red"
     },

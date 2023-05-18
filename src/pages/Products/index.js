@@ -4,6 +4,7 @@ import Checkbox from 'expo-checkbox';
 import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Products({route, navigation}) {
   const [products, setProducts] = useState([
@@ -68,18 +69,23 @@ export default function Products({route, navigation}) {
       inCart: false,
     },
   ])
+  const isFocused = useIsFocused();
 
 
   useEffect(() => {
+    console.log('useEffect')
     getCheckProducts()
-  }, [])
+  }, [isFocused])
   
   async function getCheckProducts(){
-    // await AsyncStorage.clear();
     try {
+      // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
       let productsListCheked = await AsyncStorage.multiGet(productKeys)
       let newList = [...products]
+      newList.forEach(item => {
+        item.inCart = false
+      })
       newList.forEach(item => {
         productsListCheked.forEach(itemChecked => {
           if(item.id == itemChecked[0]){
@@ -128,7 +134,9 @@ export default function Products({route, navigation}) {
         <Text style={styles.titlePage}>
           {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
         </Text>
-        <Icon style={[styles.iconCart, !route.params?.supermarketName && styles.modifyPositionIcon]} name="shoppingcart" size={25} onPress={() => navigation.navigate("Carrinho")}/>
+        {/* <View style={{width: 30, height: 30}}> */}
+          <Icon style={[styles.iconCart, !route.params?.supermarketName && styles.modifyPositionIcon]} name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
+        {/* </View> */}
       </View>
       <FlatList
         style={styles.listProducts}
@@ -146,13 +154,12 @@ export default function Products({route, navigation}) {
                 </View>
               </Pressable>
               {route.params?.supermarketName &&
-                <View style={styles.checkboxLabel}>
+                <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
                   <Checkbox
                     value={item.inCart}
-                    onValueChange={(newValue) => addOrRemoveToShopCart(newValue, item.id, route.params?.supermarketName)}
                   />
                   <Text style={styles.label}>Adicionar ao carrinho</Text>
-                </View>
+                </Pressable>
               }
             </View>
           )
