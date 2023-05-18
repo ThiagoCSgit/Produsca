@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 20,
+      padding: 10,
+      paddingTop: 40,
       height: "100%",
       width: "100%"
     },
@@ -18,6 +19,27 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       marginTop: 20,
       fontSize: 20
+    },
+    itemCart: {
+      flexDirection: "row",
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: "100%"
+    },
+    itemName: {
+      fontSize: 19,
+      textAlign: 'center',
+      minWidth: "70%",
+      borderWidth: 1,
+      borderColor: "red"
+    },
+    actionIcons: {
+      gap: 15,
+      marginLeft: 15,
+      flexDirection: "row"
+    },
+    bought:{
+      textDecorationLine: 'line-through'
     }
 })
 
