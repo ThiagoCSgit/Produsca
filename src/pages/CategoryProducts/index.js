@@ -2,7 +2,9 @@ import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-nati
 import React, { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/AntDesign';
 import styles from './styles';
-import api from "../../service/api"
+import api from "../../service/api";
+import ScannerButton from '../../components/ScannerButton';
+
 
 export default function CategoryProducts({navigation}) {
   const [catProducts, setCatProducts] = useState([
@@ -108,12 +110,7 @@ export default function CategoryProducts({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleIcon}>
-        <View>
-          <View style={styles.iconCamera}>
-            <Icon name="camerao" size={25}/>
-          </View>
-          <Text>QR Code</Text>
-        </View>
+        <ScannerButton navigation={navigation}/>
         <Text style={styles.titlePage}>Lista de categorias</Text>
         <Icon name="shoppingcart" size={30} onPress={() => navigation.navigate("Carrinho")}/>
       </View>
