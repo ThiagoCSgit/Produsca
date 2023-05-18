@@ -73,7 +73,6 @@ export default function Products({route, navigation}) {
 
 
   useEffect(() => {
-    console.log('useEffect')
     getCheckProducts()
   }, [isFocused])
   
