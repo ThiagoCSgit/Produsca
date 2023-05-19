@@ -112,6 +112,7 @@ export default function Products({route, navigation}) {
     if(value){
       let itemToAdd = products.find(item => item.id == id)
       itemToAdd.supermarket = supermarket
+      itemToAdd.quantityItems = 1
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IconE from 'react-native-vector-icons/EvilIcons';
 import Checkbox from 'expo-checkbox';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 
 export default function ShopCart() {
@@ -18,8 +19,10 @@ export default function ShopCart() {
             let productKeys = await AsyncStorage.getAllKeys()
             let products = await AsyncStorage.multiGet(productKeys)
             let newList = products.map(product => {
-                return {product: JSON.parse(product[1]), check: false}
+                const newProduct = JSON.parse(product[1])
+                return {product: newProduct, check: false}
             })
+
             setCartList(newList)
 
         } catch(e) {
@@ -37,12 +40,60 @@ export default function ShopCart() {
         }))
     }
 
-    async function removeItem(id){
+    async function removeItem(id, callGetCart = true){
         try{
             await AsyncStorage.removeItem(id);
-            getCartProducts()
+            if(callGetCart){
+                getCartProducts()
+            }
         } catch(e) {
             console.warn('error', e)
+        }
+    }
+
+    function increaseQuantity(id){
+        let newList = [...cartList]
+        setCartList(newList.map(item => {
+            if(item.product.id == id){
+                item.product.quantityItems = parseInt(item.product.quantityItems) + 1
+            }
+            return item
+        }))
+        saveEditions(id)
+    }
+
+    function decreaseQuantity(id){
+        let newList = [...cartList]
+        setCartList(newList.map(item => {
+            if(item.product.id == id){
+                item.product.quantityItems = parseInt(item.product.quantityItems) - 1
+            }
+            return item
+        }))
+        saveEditions(id)
+    }
+
+    function unformatedParseFloatValue(value) {
+        if (value != "") {
+            return Number.parseFloat(value.replaceAll(".", "").replace(",", "."));
+        }
+        return 0;
+    }
+
+    function itemPrice(value, quantity){
+        let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity)
+        let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
+        return Number.parseFloat(valueFixed).toLocaleString("pt-br", {
+            minimumFractionDigits: 2,
+        })
+    }
+
+    async function saveEditions(id){
+        let itemToAdd = cartList.find(item => item.product.id == id)
+        try {
+            await AsyncStorage.setItem(id, JSON.stringify(itemToAdd.product))
+        } catch (e) {
+            console.warn('error:',e)
         }
     }
 
@@ -55,18 +106,24 @@ export default function ShopCart() {
                     numColumns={1}
                     key={'_'}
                     contentContainerStyle={{gap: 20}}
-                    renderItem={({item, index}) => {
+                    renderItem={({item}) => {
                     return (
                         <View style={styles.itemCart}>
                             <Text style={[styles.itemName, item.check && styles.bought]}>
-                                {item.product.mark ? `${item.product.name}, ${item.product.mark} \n R$${item.product.price} - ${item.product.supermarket}` : `${item.product.name} \n R$${item.product.price} - ${item.product.supermarket}`}
+                                {item.product.mark ? `${item.product.name}, ${item.product.mark} \n R$${itemPrice(item.product.price,  item.product.quantityItems)} - ${item.product.supermarket}` : `${item.product.name} \n R$${itemPrice(item.product.price,  item.product.quantityItems)} - ${item.product.supermarket}`}
                             </Text>
                             <View style={styles.actionIcons}>
                                 <Checkbox
                                     value={item.check}
                                     onValueChange={(newValue) => checkedProduct(newValue, item.product.id)}
+                                    style={{width: 28, height: 28}}
                                 />
-                                <IconE style={styles.iconTrash} name="trash" size={30} onPress={() => removeItem(item.product.id)}/>
+                                <View style={styles.quantItems}>
+                                    <Icon name="minuscircleo" size={28} onPress={() => decreaseQuantity(item.product.id)}/>
+                                    <Text style={styles.quantityValue}>{item.product.quantityItems}</Text>
+                                    <Icon name="pluscircleo" size={28} onPress={() => increaseQuantity(item.product.id)}/>
+                                </View>
+                                <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(item.product.id)}/>
                             </View>
                         </View>
                     )
