@@ -2,7 +2,6 @@ import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-nati
 import styles from './styles';
 import React, { useState } from "react";
 import ScannerButton from '../../components/Scanner/ScannerButton';
-import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Supermarkets({navigation}) {
 
@@ -53,11 +52,6 @@ export default function Supermarkets({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleIcon}>
-        <ScannerButton navigation={navigation}/>
-        <Text style={styles.titlePage}>Lista de supermercados</Text>
-        <ShopCartButton route={null} navigation={navigation} applyClass={false}/>
-      </View>
       <FlatList
         style={styles.listSupermarkets}
         data={supermarkets}
@@ -77,6 +71,7 @@ export default function Supermarkets({navigation}) {
           )
         }}
       />
+      <ScannerButton navigation={navigation}/>
     </SafeAreaView>
   );
 }

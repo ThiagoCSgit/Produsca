@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
       height: 70
     },
     categoryName: {
-      fontSize: 18,
+      fontSize: 24,
       textAlign: 'center'
     }
   });

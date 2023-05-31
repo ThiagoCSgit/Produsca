@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import styles from './styles';
 import api from "../../service/api";
 import ScannerButton from '../../components/Scanner/ScannerButton';
-import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 
 export default function CategoryProducts({navigation}) {
@@ -109,11 +108,6 @@ export default function CategoryProducts({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleIcon}>
-        <ScannerButton navigation={navigation}/>
-        <Text style={styles.titlePage}>Lista de categorias</Text>
-        <ShopCartButton route={null} navigation={navigation} applyClass={false}/>
-      </View>
       <FlatList
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
         style={styles.listCategorys}
@@ -131,6 +125,7 @@ export default function CategoryProducts({navigation}) {
           )
         }}
       />
+      <ScannerButton navigation={navigation}/>
     </SafeAreaView>
   );
 }

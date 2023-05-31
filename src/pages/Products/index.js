@@ -111,8 +111,8 @@ export default function Products({route, navigation}) {
 
     if(value){
       let itemToAdd = products.find(item => item.id == id)
-      itemToAdd.supermarket = supermarket
       itemToAdd.quantityItems = 1
+      itemToAdd.supermarket = supermarket
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {
@@ -151,14 +151,14 @@ export default function Products({route, navigation}) {
                   <Text style={styles.productName}>R$ {`${route.params?.supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
                 </View>
               </Pressable>
-              {route.params?.supermarketName &&
+              {/* {route.params?.supermarketName && */}
                 <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
                   <Checkbox
                     value={item.inCart}
                   />
                   <Text style={styles.label}>Adicionar ao carrinho</Text>
                 </Pressable>
-              }
+              {/* } */}
             </View>
           )
         }}
