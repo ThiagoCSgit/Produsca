@@ -1,4 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,12 +16,15 @@ import ShopCartButton from './src/components/Cart/ShopCartButton';
 import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 
-
 export default function App() {
   const Stack = createStackNavigator()
   const Tab = createBottomTabNavigator()
+  const [state, setState] = useState(null)
 
   function Tabs({navigation}){
+    if(!state){
+      setState(navigation)
+    }
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
@@ -36,7 +40,14 @@ export default function App() {
             return <ShopCartButton navigation={navigation}/>
           },
           headerRightContainerStyle: {
-            alignItems: 'center',
+            alignItems: 'flex-end',
+            marginRight: 40
+          },
+          headerStyle:{
+            backgroundColor: '#1E90FF',
+          },
+          headerTitleStyle: {
+            color: '#ffffff',
           }
         })}
       >
@@ -44,6 +55,10 @@ export default function App() {
         <Tab.Screen name="Supermercados Próximos" component={Supermarkets}/>
       </Tab.Navigator>
     )
+  }
+
+  function returnShopCart(){
+    return <ShopCartButton navigation={state}/>
   }
   
   return (
@@ -55,18 +70,50 @@ export default function App() {
             name=" " 
             component={Tabs}
           />
-          <Stack.Screen name="Produtos" component={Products}/>
+          <Stack.Screen 
+            name="Produtos" 
+            component={Products}
+            options={{
+              headerRight: () => {
+                return returnShopCart()
+              },
+              headerRightContainerStyle: {
+                alignItems: 'flex-end',
+                marginRight: 40
+              },
+              headerTintColor: '#ffffff',
+              headerStyle:{
+                backgroundColor: '#1E90FF',
+              },
+              headerTitleStyle: {
+                color: '#ffffff',
+              }
+            }}
+          />
           <Stack.Screen
             name="Supermercado" 
             component={Supermarket}
             options={{
-                headerRight: (props) => {
-                  console.log('proooops:',props)
-                  return <ShopCartButton />
+                headerRight: () => {
+                  return returnShopCart()
+                },
+                headerRightContainerStyle: {
+                  alignItems: 'flex-end',
+                  marginRight: 40
+                },
+                headerTintColor: '#ffffff',
+                headerStyle:{
+                  backgroundColor: '#1E90FF',
+                },
+                headerTitleStyle: {
+                  color: '#ffffff',
                 }
               }}
            />
-          <Stack.Screen name="Carrinho" component={ShopCart}/>
+          <Stack.Screen 
+            name="Carrinho" 
+            component={ShopCart}
+          />
           <Stack.Screen name="Lista de Compras" component={ShoppingList}/>
           <Stack.Screen name="Scanner" component={Scanner}/>
         </Stack.Navigator>
@@ -77,7 +124,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },

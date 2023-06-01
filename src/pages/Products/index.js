@@ -130,12 +130,9 @@ export default function Products({route, navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleIcon}>
-        <Text style={styles.titlePage}>
-          {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
-        </Text>
-        <ShopCartButton route={route} navigation={navigation} applyClass={true}/>
-      </View>
+      <Text style={styles.titlePage}>
+        {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
+      </Text>
       <FlatList
         style={styles.listProducts}
         data={products}
