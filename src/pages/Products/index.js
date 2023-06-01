@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
-import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Products({route, navigation}) {
   const [products, setProducts] = useState([

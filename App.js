@@ -12,9 +12,11 @@ import ShopCart from './src/pages/ShopCart';
 import ShoppingList from './src/pages/ShoppingList';
 import Scanner from './src/pages/QRCodeScanner';
 import ShopCartButton from './src/components/Cart/ShopCartButton';
+import PurchasesHistoric from './src/pages/PurchasesHistoric';
 
 import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
+import IconFA from 'react-native-vector-icons/FontAwesome5';
 
 export default function App() {
   const Stack = createStackNavigator()
@@ -32,8 +34,11 @@ export default function App() {
             if(route.name === "Categorias de Produtos"){
               return <IconMI style={[focused && styles.buttonFocus]} name="category" size={25}/>
             }
-            else{
+            else if(route.name == "Supermercados Próximos"){
               return <IconET style={[focused && styles.buttonFocus]} name="shopping-basket" size={25}/>
+            }
+            else{
+              return <IconFA style={[focused && styles.buttonFocus]} name="clipboard-list" size={25}/>
             }
           },
           headerRight: () => {
@@ -53,6 +58,7 @@ export default function App() {
       >
         <Tab.Screen name="Categorias de Produtos" component={CategoryProducts}/>
         <Tab.Screen name="Supermercados Próximos" component={Supermarkets}/>
+        <Tab.Screen name="Histórico de Compras" component={PurchasesHistoric}/>
       </Tab.Navigator>
     )
   }

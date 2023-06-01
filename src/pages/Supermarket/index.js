@@ -2,7 +2,6 @@ import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-nati
 import Icon from 'react-native-vector-icons/AntDesign';
 import React, { useState } from "react";
 import styles from './styles';
-import ShopCartButton from '../../components/Cart/ShopCartButton';
 
 export default function Supermarket({route, navigation}) {
   const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
