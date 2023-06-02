@@ -7,7 +7,7 @@ import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
-export default function ShopCart() {
+export default function ShoppingList({navigation}) {
     const [cartList, setCartList] = useState([])
 
     useEffect(() => {
@@ -62,7 +62,9 @@ export default function ShopCart() {
                     )
                     }}
                 />
-                <TouchableOpacity style={styles.buttonSimulate} onPress={() => {}}>
+                <TouchableOpacity style={styles.buttonSimulate} onPress={() => navigation.navigate("Supermacados para Comprar", {
+                    list: cartList
+                })}>
                   <IconMCI style={styles.iconCalculator} name="calculator-variant-outline" size={25}/>
                   <Text style={styles.textButton}>Simular Compra</Text>
                 </TouchableOpacity>

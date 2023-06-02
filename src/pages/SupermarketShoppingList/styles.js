@@ -1,8 +1,10 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  iconCart: {
-    color: '#ffffff'
+  container: {
+    backgroundColor: '#ffffff',
+    width: "100%",
+    height: "100%"
   },
 });
 

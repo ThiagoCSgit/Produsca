@@ -11,6 +11,7 @@ import Products from './src/pages/Products';
 import Supermarket from './src/pages/Supermarket';
 import ShopCart from './src/pages/ShopCart';
 import ShoppingList from './src/pages/ShoppingList';
+import SupermarketShoppingList from './src/pages/SupermarketShoppingList';
 import Scanner from './src/pages/QRCodeScanner';
 import ShopCartButton from './src/components/Cart/ShopCartButton';
 import PurchasesHistoric from './src/pages/PurchasesHistoric';
@@ -26,10 +27,12 @@ export default function App() {
   const [myLocation, setMyLocation] = useState(null)
 
   useEffect(() => {
+    console.log('useEffect')
     getLocation()
   },[])
 
   async function getLocation(){
+    console.log('getLocation')
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       alert('A permissão para acessar o local foi negada');
@@ -37,6 +40,7 @@ export default function App() {
     }
 
     let location = await Location.getCurrentPositionAsync({});
+    console.log('location:',location)
     setMyLocation(location);
   }
 
@@ -136,8 +140,42 @@ export default function App() {
           <Stack.Screen 
             name="Carrinho" 
             component={ShopCart}
+            options={{
+              headerTintColor: '#ffffff',
+                headerStyle:{
+                  backgroundColor: '#1E90FF',
+                },
+                headerTitleStyle: {
+                  color: '#ffffff',
+                }
+            }}
           />
-          <Stack.Screen name="Lista de Compras" component={ShoppingList}/>
+          <Stack.Screen 
+            name="Lista de Compras" 
+            component={ShoppingList}
+            options={{
+              headerTintColor: '#ffffff',
+                headerStyle:{
+                  backgroundColor: '#1E90FF',
+                },
+                headerTitleStyle: {
+                  color: '#ffffff',
+                }
+            }}
+          />
+          <Stack.Screen 
+            name="Supermacados para Comprar" 
+            component={SupermarketShoppingList}
+            options={{
+              headerTintColor: '#ffffff',
+                headerStyle:{
+                  backgroundColor: '#1E90FF',
+                },
+                headerTitleStyle: {
+                  color: '#ffffff',
+                }
+            }}
+          />
           <Stack.Screen name="Scanner" component={Scanner}/>
         </Stack.Navigator>
     </NavigationContainer>
