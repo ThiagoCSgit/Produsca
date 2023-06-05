@@ -6,6 +6,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%"
   },
+  collapse: {
+    backgroundColor: 'red',
+    height: "100%",
+    width: "100%"
+  }
 });
 
 

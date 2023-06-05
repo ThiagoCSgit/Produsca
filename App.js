@@ -27,12 +27,10 @@ export default function App() {
   const [myLocation, setMyLocation] = useState(null)
 
   useEffect(() => {
-    console.log('useEffect')
     getLocation()
   },[])
 
   async function getLocation(){
-    console.log('getLocation')
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       alert('A permissão para acessar o local foi negada');
@@ -40,7 +38,6 @@ export default function App() {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    console.log('location:',location)
     setMyLocation(location);
   }
 
@@ -176,7 +173,26 @@ export default function App() {
                 }
             }}
           />
-          <Stack.Screen name="Scanner" component={Scanner}/>
+          <Stack.Screen 
+            name="Scanner" 
+            component={Scanner}
+            options={{
+              headerRight: () => {
+                return returnShopCart()
+              },
+              headerRightContainerStyle: {
+                alignItems: 'flex-end',
+                marginRight: 40
+              },
+              headerTintColor: '#ffffff',
+              headerStyle:{
+                backgroundColor: '#1E90FF',
+              },
+              headerTitleStyle: {
+                color: '#ffffff',
+              }
+            }}  
+          />
         </Stack.Navigator>
     </NavigationContainer>
   );
