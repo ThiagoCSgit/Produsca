@@ -15,8 +15,8 @@ export default function ({ visible, children, setVisible }) {
                 <View style={styles.lineStyle} />
                 {
                     visible ?
-                        <Icon name="right" size={16} /> :
-                        <Icon name="down" size={16} />
+                        <Icon name="down" size={16} /> :
+                        <Icon name="right" size={16} />
                 }
             </View>
 

@@ -42,7 +42,7 @@ export default function SupermaketShoppingList({ route }) {
       <Collapse visible={visible} setVisible={setVisible}>
         {state.map(item => {
           return (
-            <Text>{item.nome} - {item.preco}</Text>
+            <Text>{item.nome} {item.preco}</Text>
           )
         })}
       </Collapse>

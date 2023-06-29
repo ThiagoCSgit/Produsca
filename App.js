@@ -8,6 +8,7 @@ import * as Location from 'expo-location';
 import CategoryProducts from './src/pages/CategoryProducts';
 import Supermarkets from './src/pages/Supermarkets';
 import Products from './src/pages/Products';
+import Product from './src/pages/Product';
 import Supermarket from './src/pages/Supermarket';
 import ShopCart from './src/pages/ShopCart';
 import ShoppingList from './src/pages/ShoppingList';
@@ -28,9 +29,9 @@ export default function App() {
 
   useEffect(() => {
     getLocation()
-  },[])
+  }, [])
 
-  async function getLocation(){
+  async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
       alert('A permissão para acessar o local foi negada');
@@ -41,32 +42,32 @@ export default function App() {
     setMyLocation(location);
   }
 
-  function Tabs({navigation}){
-    if(!state){
+  function Tabs({ navigation }) {
+    if (!state) {
       setState(navigation)
     }
     return (
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused}) => {
-            if(route.name === "Categorias de Produtos"){
-              return <IconMI style={[focused && styles.buttonFocus]} name="category" size={25}/>
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
+            if (route.name === "Categorias de Produtos") {
+              return <IconMI style={[focused && styles.buttonFocus]} name="category" size={25} />
             }
-            else if(route.name == "Supermercados Próximos"){
-              return <IconET style={[focused && styles.buttonFocus]} name="shopping-basket" size={25}/>
+            else if (route.name == "Supermercados Próximos") {
+              return <IconET style={[focused && styles.buttonFocus]} name="shopping-basket" size={25} />
             }
-            else{
-              return <IconFA style={[focused && styles.buttonFocus]} name="clipboard-list" size={25}/>
+            else {
+              return <IconFA style={[focused && styles.buttonFocus]} name="clipboard-list" size={25} />
             }
           },
           headerRight: () => {
-            return <ShopCartButton navigation={navigation}/>
+            return <ShopCartButton navigation={navigation} />
           },
           headerRightContainerStyle: {
             alignItems: 'flex-end',
             marginRight: 40
           },
-          headerStyle:{
+          headerStyle: {
             backgroundColor: '#1E90FF',
           },
           headerTitleStyle: {
@@ -74,126 +75,146 @@ export default function App() {
           }
         })}
       >
-        <Tab.Screen name="Categorias de Produtos" component={CategoryProducts}/>
-        <Tab.Screen name="Supermercados Próximos" component={Supermarkets}/>
-        <Tab.Screen name="Histórico de Compras" component={PurchasesHistoric}/>
+        <Tab.Screen name="Categorias de Produtos" component={CategoryProducts} />
+        <Tab.Screen name="Supermercados Próximos" component={Supermarkets} />
+        <Tab.Screen name="Histórico de Compras" component={PurchasesHistoric} />
       </Tab.Navigator>
     )
   }
 
-  function returnShopCart(){
-    return <ShopCartButton navigation={state}/>
+  function returnShopCart() {
+    return <ShopCartButton navigation={state} />
   }
-  
+
   return (
     <NavigationContainer style={styles.container}>
-        <Stack.Navigator>
-          <Stack.Screen options={{ 
-              headerShown: false,
-            }}
-            name=" " 
-            component={Tabs}
-          />
-          <Stack.Screen 
-            name="Produtos" 
-            component={Products}
-            options={{
-              headerRight: () => {
-                return returnShopCart()
-              },
-              headerRightContainerStyle: {
-                alignItems: 'flex-end',
-                marginRight: 40
-              },
-              headerTintColor: '#ffffff',
-              headerStyle:{
-                backgroundColor: '#1E90FF',
-              },
-              headerTitleStyle: {
-                color: '#ffffff',
-              }
-            }}
-          />
-          <Stack.Screen
-            name="Supermercado" 
-            component={Supermarket}
-            options={{
-                headerRight: () => {
-                  return returnShopCart()
-                },
-                headerRightContainerStyle: {
-                  alignItems: 'flex-end',
-                  marginRight: 40
-                },
-                headerTintColor: '#ffffff',
-                headerStyle:{
-                  backgroundColor: '#1E90FF',
-                },
-                headerTitleStyle: {
-                  color: '#ffffff',
-                }
-              }}
-           />
-          <Stack.Screen 
-            name="Carrinho" 
-            component={ShopCart}
-            options={{
-              headerTintColor: '#ffffff',
-                headerStyle:{
-                  backgroundColor: '#1E90FF',
-                },
-                headerTitleStyle: {
-                  color: '#ffffff',
-                }
-            }}
-          />
-          <Stack.Screen 
-            name="Lista de Compras" 
-            component={ShoppingList}
-            options={{
-              headerTintColor: '#ffffff',
-                headerStyle:{
-                  backgroundColor: '#1E90FF',
-                },
-                headerTitleStyle: {
-                  color: '#ffffff',
-                }
-            }}
-          />
-          <Stack.Screen 
-            name="Supermacados para Comprar" 
-            component={SupermarketShoppingList}
-            options={{
-              headerTintColor: '#ffffff',
-                headerStyle:{
-                  backgroundColor: '#1E90FF',
-                },
-                headerTitleStyle: {
-                  color: '#ffffff',
-                }
-            }}
-          />
-          <Stack.Screen 
-            name="Scanner" 
-            component={Scanner}
-            options={{
-              headerRight: () => {
-                return returnShopCart()
-              },
-              headerRightContainerStyle: {
-                alignItems: 'flex-end',
-                marginRight: 40
-              },
-              headerTintColor: '#ffffff',
-              headerStyle:{
-                backgroundColor: '#1E90FF',
-              },
-              headerTitleStyle: {
-                color: '#ffffff',
-              }
-            }}  
-          />
-        </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen options={{
+          headerShown: false,
+        }}
+          name=" "
+          component={Tabs}
+        />
+        <Stack.Screen
+          name="Produtos"
+          component={Products}
+          options={{
+            headerRight: () => {
+              return returnShopCart()
+            },
+            headerRightContainerStyle: {
+              alignItems: 'flex-end',
+              marginRight: 40
+            },
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Produto"
+          component={Product}
+          options={{
+            headerRight: () => {
+              return returnShopCart()
+            },
+            headerRightContainerStyle: {
+              alignItems: 'flex-end',
+              marginRight: 40
+            },
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Supermercado"
+          component={Supermarket}
+          options={{
+            headerRight: () => {
+              return returnShopCart()
+            },
+            headerRightContainerStyle: {
+              alignItems: 'flex-end',
+              marginRight: 40
+            },
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Carrinho"
+          component={ShopCart}
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Lista de Compras"
+          component={ShoppingList}
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Supermacados para Comprar"
+          component={SupermarketShoppingList}
+          options={{
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Scanner"
+          component={Scanner}
+          options={{
+            headerRight: () => {
+              return returnShopCart()
+            },
+            headerRightContainerStyle: {
+              alignItems: 'flex-end',
+              marginRight: 40
+            },
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
@@ -205,10 +226,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonFocus:{
+  buttonFocus: {
     color: '#1E90FF'
   },
-  headerCart:{
+  headerCart: {
     marginRight: 20
   }
 });
