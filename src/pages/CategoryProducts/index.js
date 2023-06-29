@@ -1,11 +1,11 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
 import React, { useState, useEffect } from "react";
 import styles from './styles';
-import api from "../../service/api";
+import api from '../../service/api';
 import ScannerButton from '../../components/Scanner/ScannerButton';
 
 
-export default function CategoryProducts({navigation}) {
+export default function CategoryProducts({ navigation }) {
   const [catProducts, setCatProducts] = useState([
     {
       id: 1,
@@ -100,7 +100,7 @@ export default function CategoryProducts({navigation}) {
   ])
 
   useEffect(() => {
-    api.get("/CategoriasProdutos").then(response => {
+    api.get("/consultas/CategoriasProdutos").then(response => {
       // console.warn("response:", response)
       setCatProducts(response.data)
     })
@@ -109,12 +109,12 @@ export default function CategoryProducts({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}
+        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
         style={styles.listCategorys}
         data={catProducts}
         numColumns={3}
         key={'_'}
-        renderItem={({item}) => {
+        renderItem={({ item }) => {
           return (
             <Pressable style={styles.categoryItem} onPress={() => navigation.navigate("Produtos", {
               categoryName: item.nome
@@ -125,7 +125,7 @@ export default function CategoryProducts({navigation}) {
           )
         }}
       />
-      <ScannerButton navigation={navigation}/>
+      <ScannerButton navigation={navigation} />
     </SafeAreaView>
   );
 }

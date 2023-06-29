@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
-import ShopCartButton from '../../components/Cart/ShopCartButton';
 
-export default function Products({route, navigation}) {
+export default function Products({ route, navigation }) {
   const [products, setProducts] = useState([
     {
       id: "1",
@@ -75,8 +74,8 @@ export default function Products({route, navigation}) {
   useEffect(() => {
     getCheckProducts()
   }, [isFocused])
-  
-  async function getCheckProducts(){
+
+  async function getCheckProducts() {
     try {
       // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
@@ -87,77 +86,74 @@ export default function Products({route, navigation}) {
       })
       newList.forEach(item => {
         productsListCheked.forEach(itemChecked => {
-          if(item.id == itemChecked[0]){
+          if (item.id == itemChecked[0]) {
             item.inCart = true
           }
         })
       })
       setProducts(newList)
     } catch (e) {
-      console.warn('error',e)
+      console.warn('error', e)
     }
   }
 
 
-  async function addOrRemoveToShopCart(value, id, supermarket){
+  async function addOrRemoveToShopCart(value, id, supermarket) {
     let newList = [...products]
     setProducts(newList.map(item => {
-      if(item.id == id){
+      if (item.id == id) {
         item.inCart = value
       }
       return item
     }))
 
 
-    if(value){
+    if (value) {
       let itemToAdd = products.find(item => item.id == id)
       itemToAdd.quantityItems = 1
       itemToAdd.supermarket = supermarket
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {
-        console.warn('error:',e)
+        console.warn('error:', e)
       }
     }
-    else{
-      try{
+    else {
+      try {
         await AsyncStorage.removeItem(id)
       } catch (e) {
-        console.warn('error:',e)
+        console.warn('error:', e)
       }
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleIcon}>
-        <Text style={styles.titlePage}>
-          {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
-        </Text>
-        <ShopCartButton route={route} navigation={navigation} applyClass={true}/>
-      </View>
+      <Text style={styles.titlePage}>
+        {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
+      </Text>
       <FlatList
         style={styles.listProducts}
         data={products}
         numColumns={1}
         key={'_'}
-        renderItem={({item}) => {
+        renderItem={({ item }) => {
           return (
             <View>
-              <Pressable style={styles.productItem}>
-                <Image style={styles.productIcon} source={item.image}/>
+              <Pressable style={styles.productItem} onPress={() => navigation.navigate("Produto", { nameProduct: item.name })}>
+                <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
                   <Text style={styles.productName}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
                   <Text style={styles.productName}>R$ {`${route.params?.supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
                 </View>
               </Pressable>
               {/* {route.params?.supermarketName && */}
-                <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
-                  <Checkbox
-                    value={item.inCart}
-                  />
-                  <Text style={styles.label}>Adicionar ao carrinho</Text>
-                </Pressable>
+              <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
+                <Checkbox
+                  value={item.inCart}
+                />
+                <Text style={styles.label}>Adicionar ao carrinho</Text>
+              </Pressable>
               {/* } */}
             </View>
           )

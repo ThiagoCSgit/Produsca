@@ -9,11 +9,6 @@ const styles = StyleSheet.create({
       height: "100%",
       width: "100%"
     },
-    titleIcon: {
-      flexDirection: 'row',
-      alignItems: 'baseline',
-      paddingBottom: 10,
-    },
     titlePage: {
       marginBottom: 20,
       fontSize: 25,
@@ -43,7 +38,8 @@ const styles = StyleSheet.create({
     checkboxLabel:{
       flexDirection: 'row',
       marginLeft: 10,
-      marginBottom: 15
+      marginBottom: 15,
+      height: 30,
     },
     label: {
       marginLeft: 10
