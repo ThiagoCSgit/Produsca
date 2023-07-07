@@ -35,14 +35,15 @@ const styles = StyleSheet.create({
     productName: {
       fontSize: 18,
     },
-    checkboxLabel:{
+    checkBoxArea:{
       flexDirection: 'row',
       marginLeft: 10,
       marginBottom: 15,
       height: 30,
     },
-    label: {
-      marginLeft: 10
+    labelCheckBox: {
+      marginLeft: 10,
+      fontSize: 16
     }
   });
 
