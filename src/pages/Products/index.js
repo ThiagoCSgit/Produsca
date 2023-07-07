@@ -11,61 +11,61 @@ export default function Products({ route, navigation }) {
       id: "1",
       name: "Bacon",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "Cofril",
       price: "10,90",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
     {
       id: "2",
       name: "Sobrecoxa de Frango",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "Perdigão",
       price: "15,90",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
     {
       id: "3",
       name: "Filé Mingnon",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "Montana",
       price: "22,90",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
     {
       id: "4",
       name: "Banana Ouro",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "",
       price: "9,75",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
     {
       id: "5",
       name: "Manga Tommy Atkins",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "",
       price: "4,73",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
     {
       id: "6",
       name: "Tomate Orgânico",
       image: require("../../images/foodImage.png"),
+      inCart: false,
       mark: "Viver",
       price: "10,80",
       minPrice: "1,23",
       maxPrice: "72,23",
-      inCart: false,
     },
   ])
   const isFocused = useIsFocused();
@@ -107,7 +107,6 @@ export default function Products({ route, navigation }) {
       return item
     }))
 
-
     if (value) {
       let itemToAdd = products.find(item => item.id == id)
       itemToAdd.quantityItems = 1
@@ -140,7 +139,7 @@ export default function Products({ route, navigation }) {
         renderItem={({ item }) => {
           return (
             <View>
-              <Pressable style={styles.productItem} onPress={() => navigation.navigate("Produto", { nameProduct: item.name })}>
+              <Pressable style={styles.productItem} onPress={() => navigation.navigate("Produto", { nameProduct: item.name, idProduct: item.id, supermarket: route.params?.supermarketName || '', funcAddRemoveCart: addOrRemoveToShopCart })}>
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
                   <Text style={styles.productName}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
@@ -148,11 +147,11 @@ export default function Products({ route, navigation }) {
                 </View>
               </Pressable>
               {/* {route.params?.supermarketName && */}
-              <Pressable style={styles.checkboxLabel} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
+              <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
                 <Checkbox
                   value={item.inCart}
                 />
-                <Text style={styles.label}>Adicionar ao carrinho</Text>
+                <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
               </Pressable>
               {/* } */}
             </View>

@@ -35,14 +35,24 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 18,
   },
-  checkboxLabel: {
+  buttonsArea: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginLeft: 10,
     marginBottom: 15,
-    height: 30,
+    // height: 30,
+    marginTop: 25
   },
-  label: {
-    marginLeft: 10
+  nameProduct: {
+    fontSize: 24
+  },
+  listSupermarktesAvailables: {
+    padding: 10,
+    marginTop: 15,
+  },
+  labelCheckBox: {
+    marginLeft: 10,
+    fontSize: 19
   }
 });
 
