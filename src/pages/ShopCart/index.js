@@ -7,11 +7,13 @@ import Checkbox from 'expo-checkbox';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 
-export default function ShopCart() {
+export default function ShopCart({route}) {
     const [cartList, setCartList] = useState([])
-
+    const {list} = route.params
+    
     useEffect(() => {
         getCartProducts()
+        console.log('list shopcart:',list)
     }, [])
     
     async function getCartProducts(){
@@ -22,7 +24,7 @@ export default function ShopCart() {
                 const newProduct = JSON.parse(product[1])
                 return {product: newProduct, check: false}
             })
-
+            console.warn(newList)
             setCartList(newList)
 
         } catch(e) {
