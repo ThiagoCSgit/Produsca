@@ -2,14 +2,50 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#fff",
     width: "100%",
-    height: "100%"
-  },
-  collapse: {
-    backgroundColor: 'red',
     height: "100%",
-    width: "100%"
+    paddingVertical: 10,
+  },
+  p15: {
+    paddingVertical: 15
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    paddingTop: 15,
+    width: "100%",
+    marginVertical: 15,
+    elevation: 8, // Adiciona sombra no Android
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {width: 5, height: 5},
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
+  buttonOpenCollapse:{
+    flexDirection: "row", 
+    justifyContent: "space-between", 
+    marginHorizontal: 10
+  },
+  listCollapse:{
+    paddingVertical: 10,
+    paddingHorizontal: 10
+  },
+  startShoppingButton: {
+    backgroundColor: "#93be00",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textButton: {
+    color: "#fff",
+    fontSize: 18,
+    marginRight: 10
   }
 });
 

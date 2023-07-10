@@ -40,21 +40,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginLeft: 10,
     marginBottom: 15,
-    marginTop: 25
+    marginTop: 30
   },
   nameProduct: {
     fontSize: 24
-  },
-  listSupermarktesAvailables: {
-    padding: 10,
-    marginTop: 15,
-  },
-  itemSupermarket:{
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "#ffcfa4",
-    borderRadius: 10,
-    paddingTop: 10,
   },
   buttonHistoric: {
     textAlign: 'center',
