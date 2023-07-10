@@ -9,6 +9,7 @@ import CategoryProducts from './src/pages/CategoryProducts';
 import Supermarkets from './src/pages/Supermarkets';
 import Products from './src/pages/Products';
 import Product from './src/pages/Product';
+import ProductSupermarket from './src/pages/ProductSupermarket';
 import Supermarket from './src/pages/Supermarket';
 import ShopCart from './src/pages/ShopCart';
 import ShoppingList from './src/pages/ShoppingList';
@@ -118,6 +119,26 @@ export default function App() {
         <Stack.Screen
           name="Produto"
           component={Product}
+          options={{
+            headerRight: () => {
+              return returnShopCart()
+            },
+            headerRightContainerStyle: {
+              alignItems: 'flex-end',
+              marginRight: 40
+            },
+            headerTintColor: '#ffffff',
+            headerStyle: {
+              backgroundColor: '#1E90FF',
+            },
+            headerTitleStyle: {
+              color: '#ffffff',
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Detalhes do Produto"
+          component={ProductSupermarket}
           options={{
             headerRight: () => {
               return returnShopCart()

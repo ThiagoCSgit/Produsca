@@ -23,7 +23,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function Products({ route, navigation }) {
-  const {nameProduct, idProduct, supermarket, funcAddRemoveCart} = route.params
+  const {nameProduct, idProduct, funcAddRemoveCart} = route.params
 
   const [priceHistory, setPriceHistory] = useState([])
   const [inCart, setInCart] = useState(false)
@@ -76,7 +76,7 @@ export default function Products({ route, navigation }) {
 
 
   function executeAction(){
-    funcAddRemoveCart(!inCart, idProduct, supermarket)
+    funcAddRemoveCart(!inCart, idProduct)
     setInCart(!inCart)
   }
 
@@ -131,29 +131,43 @@ export default function Products({ route, navigation }) {
           <ScrollView style={styles.listSupermarktesAvailables}>
             <Text style={{fontSize: 20, marginBottom: 10}}>Disponível em:</Text>
             {supermarktesAvailables.map(item => (
-              <View style={{height: 50, flexDirection: "row", marginTop: 10}}>
-                <TouchableOpacity>
-                  <Text style={{color: "#1E90FF", fontSize: 20}}>
-                    Supermercado {item.nome}
-                  </Text>
+              <View style={styles.itemSupermarket}>
+                <View style={{flexDirection: "row", justifyContent: "center", paddingBottom: 10}}>
+                  <TouchableOpacity>
+                    <Text style={{color: "#1E90FF", fontSize: 20}}>
+                      Supermercado {item.nome}
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={{fontSize: 20, color: "#623b32"}}> - R${item.produto.preco}</Text>
+                </View>
+                <TouchableOpacity style={styles.buttonHistoric} onPress={() => 
+                  navigation.navigate("Detalhes do Produto", {
+                    supermarket: item.nome,
+                    nameProduct: nameProduct,
+                    idProduct: idProduct,
+                    funcAddRemoveCart: funcAddRemoveCart
+                  })
+                }>
+                  <Text style={styles.buttonHistoricText}>Histórico de preço</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 20}}> - R${item.produto.preco}</Text>
               </View>
             ))}
           </ScrollView>
         </View>
-        <Pressable style={styles.buttonsArea} onPress={() => executeAction(inCart, idProduct, supermarket)}>
-          <View style={{flexDirection: "row", marginLeft: 10}}>
-            <Checkbox
-              value={inCart}
-              style={{height: 25, width: 25}}
-            />
-            <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
-          </View>
+        <View style={styles.buttonsArea}>
+          <Pressable onPress={() => executeAction(inCart, idProduct)}>
+            <View style={{flexDirection: "row", marginLeft: 10}}>
+              <Checkbox
+                value={inCart}
+                style={{height: 25, width: 25}}
+              />
+              <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
+            </View>
+          </Pressable>
           <Pressable onPress={onShare}>
             <Icon style={{marginRight: 25, height: 30, width: 30}} name="share-2" size={27} />
           </Pressable>
-        </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );

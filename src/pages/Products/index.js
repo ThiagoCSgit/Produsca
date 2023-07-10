@@ -98,7 +98,7 @@ export default function Products({ route, navigation }) {
   }
 
 
-  async function addOrRemoveToShopCart(value, id, supermarket) {
+  async function addOrRemoveToShopCart(value, id, supermarket = '') {
     let newList = [...products]
     setProducts(newList.map(item => {
       if (item.id == id) {
@@ -139,21 +139,30 @@ export default function Products({ route, navigation }) {
         renderItem={({ item }) => {
           return (
             <View>
-              <Pressable style={styles.productItem} onPress={() => navigation.navigate("Produto", { nameProduct: item.name, idProduct: item.id, supermarket: route.params?.supermarketName || '', funcAddRemoveCart: addOrRemoveToShopCart })}>
+              <Pressable style={styles.productItem} onPress={() => route.params?.supermarketName 
+              ? navigation.navigate("Detalhes do Produto", {
+                supermarket: route.params?.supermarketName,
+                nameProduct: item.name,
+                idProduct: item.id,
+                funcAddRemoveCart: addOrRemoveToShopCart
+              })
+              : navigation.navigate("Produto", { 
+                nameProduct: item.name, 
+                idProduct: item.id, 
+                funcAddRemoveCart: addOrRemoveToShopCart 
+              })}>
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
                   <Text style={styles.productName}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
                   <Text style={styles.productName}>R$ {`${route.params?.supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
                 </View>
               </Pressable>
-              {/* {route.params?.supermarketName && */}
               <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
                 <Checkbox
                   value={item.inCart}
                 />
                 <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
               </Pressable>
-              {/* } */}
             </View>
           )
         }}
