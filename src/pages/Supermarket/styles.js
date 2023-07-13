@@ -13,11 +13,14 @@ const styles = StyleSheet.create({
       gap: 10
     },
     supermarketInfo: {
-      fontSize: 18,
+      fontSize: 22,
       textAlign: 'center',
     },
-    iconPhone:{
-      marginLeft: 20
+    buttonCall:{
+      height: 50, 
+      width: 50, 
+      marginLeft: 20,
+      marginTop: 5
     },
     listSupermarketCategorys:{
       flex: 1,
