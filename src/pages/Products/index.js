@@ -79,20 +79,26 @@ export default function Products({ route, navigation }) {
     try {
       // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
-      let productsListCheked = await AsyncStorage.multiGet(productKeys)
+      console.warn('productKeys:',productKeys)
       let newList = [...products]
       newList.forEach(item => {
         item.inCart = false
       })
-      newList.forEach(item => {
-        productsListCheked.forEach(itemChecked => {
-          if (item.id == itemChecked[0]) {
-            item.inCart = true
+
+      for(let i=0; i < newList.length; i++){
+        item = newList[i]
+        let productChecked = await AsyncStorage.getItem(`produto-lista-${item.id}`)
+        if(productChecked != null){
+          productChecked = JSON.parse(productChecked)
+          if(item.id == productChecked.id){
+            newList[i] = productChecked
           }
-        })
-      })
+        }
+      }
+      console.warn('newList:',newList)
       setProducts(newList)
-    } catch (e) {
+    } 
+    catch (e) {
       console.warn('error', e)
     }
   }
@@ -106,11 +112,12 @@ export default function Products({ route, navigation }) {
       }
       return item
     }))
-
+    
     if (value) {
       let itemToAdd = products.find(item => item.id == id)
       itemToAdd.quantityItems = 1
       itemToAdd.supermarket = supermarket
+      id = `produto-lista-${id}`
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {
@@ -119,6 +126,7 @@ export default function Products({ route, navigation }) {
     }
     else {
       try {
+        id = `produto-lista-${id}`
         await AsyncStorage.removeItem(id)
       } catch (e) {
         console.warn('error:', e)

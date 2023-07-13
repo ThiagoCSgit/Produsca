@@ -49,7 +49,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
   }
 
   function startShopping(list){
-    // console.log('list:',list)
     navigation.navigate("Carrinho", {
       list: list
     })

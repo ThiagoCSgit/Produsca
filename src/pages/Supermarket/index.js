@@ -102,6 +102,7 @@ export default function Supermarket({route, navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
+        <Text style={styles.supermarketInfo}>{supermarketInfos.name}</Text>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.contact}</Text> 
           <Icon style={styles.iconPhone} name="phone" size={18}/>

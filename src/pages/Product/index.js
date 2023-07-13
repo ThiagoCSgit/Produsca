@@ -66,7 +66,7 @@ export default function Products({ route, navigation }) {
 
   async function getCheckProducts() {
     try {
-      const jsonValue = await AsyncStorage.getItem(`${idProduct}`);
+      const jsonValue = await AsyncStorage.getItem(`produto-lista-${idProduct}`);
       const value = jsonValue != null ? JSON.parse(jsonValue) : {}
       setInCart(value.inCart)
     } catch (e) {
@@ -133,7 +133,9 @@ export default function Products({ route, navigation }) {
             {supermarktesAvailables.map(item => (
               <View style={styles.itemSupermarket}>
                 <View style={{flexDirection: "row", justifyContent: "center", paddingBottom: 10}}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate("Supermercado", {
+                    name: item.nome
+                  })}>
                     <Text style={{color: "#1E90FF", fontSize: 20}}>
                       Supermercado {item.nome}
                     </Text>

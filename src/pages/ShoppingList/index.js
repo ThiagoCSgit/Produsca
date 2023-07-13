@@ -16,11 +16,19 @@ export default function ShoppingList({navigation}) {
     
     async function getCartProducts(){
         try {
+
             let productKeys = await AsyncStorage.getAllKeys()
-            let products = await AsyncStorage.multiGet(productKeys)
+            let filteredKeys = productKeys.filter(key => {
+                if(key.includes("produto-lista-")){
+                    return key
+                }
+            })
+
+            let products = await AsyncStorage.multiGet(filteredKeys)
+
             let newList = products.map(product => {
                 const newProduct = JSON.parse(product[1])
-                return {product: newProduct, check: false}
+                return {product: newProduct}
             })
 
             setCartList(newList)
@@ -57,7 +65,7 @@ export default function ShoppingList({navigation}) {
                                 {item.product.mark ? 
                                 `${item.product.name}, ${item.product.mark} \n ${item.product.supermarket ? item.product.price + ' - ' + item.product.supermarket : 'R$' + item.product.minPrice + ' - R$' + item.product.maxPrice}` : `${item.product.name} \n ${item.product.supermarket ? item.product.price + ' - ' + item.product.supermarket : 'R$' + item.product.minPrice + ' - R$' + item.product.maxPrice}`}
                             </Text>
-                            <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(item.product.id)}/>
+                            <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(`produto-lista-${item.product.id}`)}/>
                         </View>
                     )
                     }}
