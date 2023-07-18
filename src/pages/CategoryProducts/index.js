@@ -4,8 +4,13 @@ import styles from './styles';
 import api from '../../service/api';
 import ScannerButton from '../../components/Scanner/ScannerButton';
 
+import useCustomFonts from '../../fonts';
+
+import { useFonts, OpenSans_400Regular, OpenSans_500Medium } from '@expo-google-fonts/open-sans';
+
 
 export default function CategoryProducts({ navigation }) {
+  
   const [catProducts, setCatProducts] = useState([
     {
       id: 1,
@@ -106,6 +111,22 @@ export default function CategoryProducts({ navigation }) {
     })
   }, [])
 
+  const [fontLoaded] = useFonts({
+    OpenSans_400Regular,
+    OpenSans_500Medium
+  })
+
+  if(!fontLoaded){
+    return <View/>
+  }
+
+  // const fontsLoaded = useCustomFonts();
+
+  // if (!fontsLoaded) {
+  //   return null; // Renderiza um componente de carregamento ou uma tela em branco enquanto as fontes são carregadas
+  // }
+
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -120,7 +141,7 @@ export default function CategoryProducts({ navigation }) {
               categoryName: item.nome
             })}>
               {/* <Image style={styles.categoryIcon} source={item.image}/> */}
-              <Text style={styles.categoryName}>{item.nome}</Text>
+              <Text style={[styles.categoryName, styles.customFonts]}>{item.nome}</Text>
             </Pressable>
           )
         }}

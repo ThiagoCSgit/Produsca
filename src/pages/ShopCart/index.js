@@ -7,10 +7,11 @@ import Checkbox from 'expo-checkbox';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 
-export default function ShopCart({route}) {
+export default function ShopCart({route, navigation}) {
     const [cartList, setCartList] = useState({id: 0, produtos: [], supermercado: ''})
     const [total, setTotal] = useState(0)
     const {list} = route.params
+    console.warn('list:',list)
     
     useEffect(() => {
         getCartProducts()
@@ -22,7 +23,7 @@ export default function ShopCart({route}) {
 
     function getCartProducts(){
         let newList = list.produtos.map((item, index) => {
-            item.check = false,
+            item.check = true,
             item.idProd = index
             item.qtd = 1
             return item
@@ -124,10 +125,24 @@ export default function ShopCart({route}) {
             Alert.alert("Itens não marcados", "Um ou mais produtos da lista não foram marcados")
         }
         else{
+            
             let id = `carrinho-${cartList.id}-${cartList.supermercado}`
             console.warn('id:',id)
             try {
                 await AsyncStorage.setItem(id, JSON.stringify(cartList))
+
+                let productKeys = await AsyncStorage.getAllKeys()
+                productKeys.filter(key => {
+                })
+                // console.warn('productKeys:',productKeys)
+                for(let i=0 ; i<productKeys.length; i++){
+                    let key = productKeys[i]
+                    if(key.includes("produto-lista-")){
+                        // console.warn(`key-${i}:`,key)
+                        await AsyncStorage.removeItem(key)
+                    }
+                    navigation.navigate("Histórico de Compras")
+                }
               } catch (e) {
                 console.warn('error:', e)
               }

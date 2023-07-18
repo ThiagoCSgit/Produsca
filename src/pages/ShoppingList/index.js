@@ -18,6 +18,7 @@ export default function ShoppingList({navigation}) {
         try {
 
             let productKeys = await AsyncStorage.getAllKeys()
+            console.warn(productKeys)
             let filteredKeys = productKeys.filter(key => {
                 if(key.includes("produto-lista-")){
                     return key
@@ -30,7 +31,7 @@ export default function ShoppingList({navigation}) {
                 const newProduct = JSON.parse(product[1])
                 return {product: newProduct}
             })
-
+            console.warn('cartlist:',newList)
             setCartList(newList)
 
         } catch(e) {
@@ -65,7 +66,7 @@ export default function ShoppingList({navigation}) {
                                 {item.product.mark ? 
                                 `${item.product.name}, ${item.product.mark} \n ${item.product.supermarket ? item.product.price + ' - ' + item.product.supermarket : 'R$' + item.product.minPrice + ' - R$' + item.product.maxPrice}` : `${item.product.name} \n ${item.product.supermarket ? item.product.price + ' - ' + item.product.supermarket : 'R$' + item.product.minPrice + ' - R$' + item.product.maxPrice}`}
                             </Text>
-                            <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(`produto-lista-${item.product.id}`)}/>
+                            <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(item.product.supermarket ? `produto-lista-${item.product.supermarket}-${item.product.id}`: `produto-lista-${item.product.id}`)}/>
                         </View>
                     )
                     }}

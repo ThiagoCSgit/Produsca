@@ -50,7 +50,7 @@ import {
   
     async function getCheckProducts() {
       try {
-        const jsonValue = await AsyncStorage.getItem(`produto-lista-${idProduct}`);
+        const jsonValue = await AsyncStorage.getItem(`produto-lista-${supermarket}-${idProduct}`);
         const value = jsonValue != null ? JSON.parse(jsonValue) : {}
         setInCart(value.inCart)
       } catch (e) {

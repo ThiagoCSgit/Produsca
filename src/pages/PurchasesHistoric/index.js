@@ -20,8 +20,9 @@ export default function PurchasesHistoric(){
             return key
         }
     })
+    console.warn("key:",filteredKeys)
     let shopping = await AsyncStorage.multiGet(filteredKeys)
-
+    console.warn("shopping:",shopping)
     let newList = shopping.map(item => {
       let id = item[0]
       let produtos = JSON.parse(item[1]).produtos
