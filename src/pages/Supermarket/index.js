@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
+import { SafeAreaView, Text, Image, FlatList, Pressable, View, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import React, { useState } from "react";
 import styles from './styles';
@@ -98,13 +98,19 @@ export default function Supermarket({route, navigation}) {
     },
   ])
 
+  function callNumber(phoneNumber){
+    Linking.openURL(`tel:${phoneNumber}`);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
+        <Text style={styles.supermarketInfo}>{supermarketInfos.name}</Text>
         <View style={{flexDirection: 'row', textAlign: 'center'}}>
           <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.contact}</Text> 
-          <Icon style={styles.iconPhone} name="phone" size={18}/>
+          <Pressable style={styles.buttonCall} onPress={() => callNumber(supermarketInfos.contact)}>
+            <Icon name="phone" size={22}/>
+          </Pressable>
         </View>
         <Text style={styles.supermarketInfo}>Endereço: {supermarketInfos.address}</Text>
       </View>

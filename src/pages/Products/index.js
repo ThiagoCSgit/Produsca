@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 
 export default function Products({ route, navigation }) {
+  const {categoryName, supermarketName} = route.params
+
   const [products, setProducts] = useState([
     {
       id: "1",
@@ -79,20 +81,34 @@ export default function Products({ route, navigation }) {
     try {
       // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
-      let productsListCheked = await AsyncStorage.multiGet(productKeys)
+      console.warn('productKeys:',productKeys)
       let newList = [...products]
       newList.forEach(item => {
         item.inCart = false
       })
-      newList.forEach(item => {
-        productsListCheked.forEach(itemChecked => {
-          if (item.id == itemChecked[0]) {
-            item.inCart = true
+  
+      let productChecked = null
+
+      for(let i=0; i < newList.length; i++){
+        item = newList[i]
+        if(supermarketName){
+          productChecked = await AsyncStorage.getItem(`produto-lista-${supermarketName}-${item.id}`)
+        }
+        else{
+          productChecked = await AsyncStorage.getItem(`produto-lista-${item.id}`)
+        }
+
+        if(productChecked != null){
+          productChecked = JSON.parse(productChecked)
+          if(item.id == productChecked.id){
+            newList[i] = productChecked
           }
-        })
-      })
+        }
+      }
+      console.warn('newList:',newList)
       setProducts(newList)
-    } catch (e) {
+    } 
+    catch (e) {
       console.warn('error', e)
     }
   }
@@ -106,11 +122,12 @@ export default function Products({ route, navigation }) {
       }
       return item
     }))
-
+    
     if (value) {
       let itemToAdd = products.find(item => item.id == id)
       itemToAdd.quantityItems = 1
       itemToAdd.supermarket = supermarket
+      id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
       } catch (e) {
@@ -119,6 +136,7 @@ export default function Products({ route, navigation }) {
     }
     else {
       try {
+        id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
         await AsyncStorage.removeItem(id)
       } catch (e) {
         console.warn('error:', e)
@@ -129,7 +147,7 @@ export default function Products({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titlePage}>
-        {`${route.params?.supermarketName ? route.params.categoryName + ' - ' + route.params.supermarketName : route.params.categoryName}`}
+        {`${supermarketName ? categoryName + ' - ' + supermarketName : categoryName}`}
       </Text>
       <FlatList
         style={styles.listProducts}
@@ -139,9 +157,9 @@ export default function Products({ route, navigation }) {
         renderItem={({ item }) => {
           return (
             <View>
-              <Pressable style={styles.productItem} onPress={() => route.params?.supermarketName 
+              <Pressable style={styles.productItem} onPress={() => supermarketName 
               ? navigation.navigate("Detalhes do Produto", {
-                supermarket: route.params?.supermarketName,
+                supermarket: supermarketName,
                 nameProduct: item.name,
                 idProduct: item.id,
                 funcAddRemoveCart: addOrRemoveToShopCart
@@ -153,11 +171,11 @@ export default function Products({ route, navigation }) {
               })}>
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
-                  <Text style={styles.productName}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
-                  <Text style={styles.productName}>R$ {`${route.params?.supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
+                  <Text style={styles.nameProduct}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
+                  <Text style={styles.nameProduct}>R$ {`${supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
                 </View>
               </Pressable>
-              <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, route.params?.supermarketName)}>
+              <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, supermarketName)}>
                 <Checkbox
                   value={item.inCart}
                 />

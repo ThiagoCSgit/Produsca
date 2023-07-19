@@ -5,22 +5,27 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      padding: 20,
+      padding: 15,
       height: "100%",
       width: "100%"
     },
     supermarketInfos: {
-      gap: 10
+      gap: 15
     },
     supermarketInfo: {
-      fontSize: 18,
+      fontSize: 22,
       textAlign: 'center',
+      fontFamily: "OpenSans_500Medium"
     },
-    iconPhone:{
-      marginLeft: 20
+    buttonCall:{
+      height: 40, 
+      width: 50, 
+      marginLeft: 20,
+      marginTop: 5
     },
     listSupermarketCategorys:{
       flex: 1,
+      marginTop: 10
     },
     supermarketCategoryItem: {
       margin: 15,
@@ -31,8 +36,9 @@ const styles = StyleSheet.create({
       height: 70
     },
     supermarketCategoryName: {
-      fontSize: 18,
-      textAlign: 'center'
+      fontSize: 17,
+      textAlign: 'center',
+      fontFamily: "OpenSans_500Medium"
     }
   });
 

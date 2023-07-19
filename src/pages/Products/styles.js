@@ -10,10 +10,11 @@ const styles = StyleSheet.create({
       width: "100%"
     },
     titlePage: {
-      marginBottom: 20,
+      marginBottom: 15,
       fontSize: 25,
       position: 'relative',
-      left: 10
+      left: 10,
+      fontFamily: "OpenSans_500Medium"
     },
     listProducts:{
       flex: 1,
@@ -32,8 +33,9 @@ const styles = StyleSheet.create({
       height: 70,
       marginRight: 10
     },
-    productName: {
-      fontSize: 18,
+    nameProduct: {
+      fontSize: 17,
+      fontFamily: "OpenSans_500Medium"
     },
     checkBoxArea:{
       flexDirection: 'row',
@@ -43,7 +45,8 @@ const styles = StyleSheet.create({
     },
     labelCheckBox: {
       marginLeft: 10,
-      fontSize: 16
+      fontSize: 16,
+      fontFamily: "OpenSans_500Medium"
     }
   });
 

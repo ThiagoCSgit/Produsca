@@ -6,6 +6,7 @@ import ScannerButton from '../../components/Scanner/ScannerButton';
 
 
 export default function CategoryProducts({ navigation }) {
+  
   const [catProducts, setCatProducts] = useState([
     {
       id: 1,
@@ -101,10 +102,10 @@ export default function CategoryProducts({ navigation }) {
 
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
-      // console.warn("response:", response)
       setCatProducts(response.data)
     })
   }, [])
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,7 +121,7 @@ export default function CategoryProducts({ navigation }) {
               categoryName: item.nome
             })}>
               {/* <Image style={styles.categoryIcon} source={item.image}/> */}
-              <Text style={styles.categoryName}>{item.nome}</Text>
+              <Text style={[styles.categoryName, styles.customFonts]}>{item.nome}</Text>
             </Pressable>
           )
         }}
