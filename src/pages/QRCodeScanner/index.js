@@ -23,11 +23,11 @@ export default function Scanner() {
     alert(`Bar Code With Type ${type} and data ${data} has been scanned`)
   }
   if (hasPermission === null) {
-    return <Text>Requerindo acesso acamera</Text>
+    return <Text style={{fontFamily: "OpenSans_500Medium"}}>Requerindo acesso acamera</Text>
   }
 
   if (hasPermission === false) {
-    return <Text>Acesso a camera negado</Text>
+    return <Text style={{fontFamily: "OpenSans_500Medium"}}>Acesso a camera negado</Text>
   }
   return (
     <View style={styles.container}>

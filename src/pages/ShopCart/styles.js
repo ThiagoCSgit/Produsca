@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     labelEmptyCart: {
       textAlign: 'center',
       marginTop: 20,
-      fontSize: 20
+      fontSize: 20,
+      fontFamily: "OpenSans_500Medium"
     },
     itemCart: {
       alignItems: 'center',
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       minWidth: "70%",
       maxWidth: "78%",
+      fontFamily: "OpenSans_500Medium"
     },
     actionIcons: {
       gap: 30,
@@ -43,7 +45,8 @@ const styles = StyleSheet.create({
       gap: 15
     },
     quantityValue: {
-      fontSize: 24
+      fontSize: 24,
+      fontFamily: "OpenSans_500Medium"
     },
     bought:{
       textDecorationLine: 'line-through'
@@ -51,7 +54,8 @@ const styles = StyleSheet.create({
     totalValue: {
       textAlign: "center",
       fontSize: 22,
-      marginBottom: 10
+      marginBottom: 10,
+      fontFamily: "OpenSans_500Medium"
     },
     buttonCheckout:{
       width: "80%",
@@ -65,7 +69,8 @@ const styles = StyleSheet.create({
     },
     textButton: {
       color: '#fff',
-      fontSize: 18
+      fontSize: 18,
+      fontFamily: "OpenSans_500Medium"
     }
 })
 

@@ -42,7 +42,7 @@ export default function SupermaketShoppingList({ state, showButton = false, navi
             return (
               <View key={index} style={[styles.card, styles.shadow, !visible[index].open && styles.p15]}>
                 <TouchableOpacity style={styles.buttonOpenCollapse} onPress={() => openCloseCollapse(item.id)}>
-                  <Text style={{fontSize: 20}}>{item.supermercado}</Text>
+                  <Text style={{fontSize: 20, fontFamily: "OpenSans_500Medium"}}>{item.supermercado}</Text>
                   {
                       visible[index].open ?
                           <Icon name="down" size={20} /> :
@@ -55,7 +55,7 @@ export default function SupermaketShoppingList({ state, showButton = false, navi
                       <View style={styles.listCollapse}>
                         {
                           item.produtos.map((produto, indexProd) => 
-                            <Text style={{fontSize: 18, marginVertical: 5}} key={`${index}-${indexProd}`}>{produto.nome} {produto.preco}</Text>)
+                            <Text style={{fontSize: 18, marginVertical: 5, fontFamily: "OpenSans_500Medium"}} key={`${index}-${indexProd}`}>{produto.nome} {produto.preco}</Text>)
                         }
                       </View>
                       {

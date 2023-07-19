@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     categoryName: {
       fontSize: 23,
       textAlign: 'center',
-      // fontFamily: "OpenSans_400Regular"
       fontFamily: "OpenSans_500Medium"
     }
   });

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -22,15 +22,26 @@ import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
 
+import { useFonts, OpenSans_500Medium, OpenSans_600SemiBold } from '@expo-google-fonts/open-sans';
+
 export default function App() {
   const Stack = createStackNavigator()
   const Tab = createBottomTabNavigator()
   const [state, setState] = useState(null)
   const [myLocation, setMyLocation] = useState(null)
-
+  
   useEffect(() => {
     getLocation()
   }, [])
+  
+    const [fontLoaded] = useFonts({
+      OpenSans_500Medium,
+      OpenSans_600SemiBold
+    })
+  
+    if(!fontLoaded){
+      return <View/>
+    }
 
   async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -72,7 +83,8 @@ export default function App() {
             backgroundColor: '#1E90FF',
           },
           headerTitleStyle: {
-            color: '#ffffff',
+            color: "#ffffff",
+            fontFamily: "OpenSans_600SemiBold"
           }
         })}
       >
@@ -105,7 +117,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              marginRight: 40,
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -113,6 +125,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -133,6 +146,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -153,6 +167,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -173,6 +188,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -186,6 +202,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -199,6 +216,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -212,6 +230,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />
@@ -232,6 +251,7 @@ export default function App() {
             },
             headerTitleStyle: {
               color: '#ffffff',
+              fontFamily: "OpenSans_600SemiBold"
             }
           }}
         />

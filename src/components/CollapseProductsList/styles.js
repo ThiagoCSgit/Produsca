@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
   textButton: {
     color: "#fff",
     fontSize: 18,
-    marginRight: 10
+    marginRight: 10,
+    fontFamily: "OpenSans_500Medium"
   }
 });
 

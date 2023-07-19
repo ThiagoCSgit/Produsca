@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     labelEmptyCart: {
       textAlign: 'center',
       marginTop: 20,
-      fontSize: 20
+      fontSize: 20,
+      fontFamily: "OpenSans_500Medium"
     },
     itemCart: {
       alignItems: 'center',
@@ -32,10 +33,11 @@ const styles = StyleSheet.create({
       minHeight: 100
     },
     itemName: {
-      fontSize: 22,
+      fontSize: 21,
       textAlign: 'center',
       minWidth: "70%",
       width: "80%",
+      fontFamily: "OpenSans_500Medium"
     },
     buttonSimulate:{
       width: "80%",
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       backgroundColor: '#1E90FF',
       textAlign: 'center',
-      marginBottom: 20
+      marginBottom: 20,
     },
     iconCalculator:{
       marginRight: 20,
@@ -56,7 +58,8 @@ const styles = StyleSheet.create({
     },
     textButton: {
       color: '#fff',
-      fontSize: 18
+      fontSize: 18,
+      fontFamily: "OpenSans_500Medium"
     },
 })
 

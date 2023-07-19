@@ -112,7 +112,7 @@ export default function Products({ route, navigation }) {
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               propsForLabels: {
-                fontSize: 14, // Defina o tamanho da fonte desejado aqui
+                fontSize: 15, // Defina o tamanho da fonte desejado aqui
               },
               propsForDots: {
                 r: "6",
@@ -129,18 +129,18 @@ export default function Products({ route, navigation }) {
         }
         <View style={{maxHeight: "40%"}}>
           <ScrollView style={styles.listSupermarktesAvailables}>
-            <Text style={{fontSize: 20, marginBottom: 10}}>Disponível em:</Text>
+            <Text style={{fontSize: 20, marginBottom: 10, fontFamily: "OpenSans_500Medium"}}>Disponível em:</Text>
             {supermarktesAvailables.map(item => (
               <View style={styles.itemSupermarket}>
                 <View style={{flexDirection: "row", justifyContent: "center", paddingBottom: 10}}>
                   <TouchableOpacity onPress={() => navigation.navigate("Supermercado", {
                     name: item.nome
                   })}>
-                    <Text style={{color: "#1E90FF", fontSize: 20}}>
+                    <Text style={{color: "#1E90FF", fontSize: 20, fontFamily: "OpenSans_500Medium"}}>
                       Supermercado {item.nome}
                     </Text>
                   </TouchableOpacity>
-                  <Text style={{fontSize: 20, color: "#623b32"}}> - R${item.produto.preco}</Text>
+                  <Text style={{fontSize: 20, color: "#623b32", fontFamily: "OpenSans_500Medium"}}> - R${item.produto.preco}</Text>
                 </View>
                 <TouchableOpacity style={styles.buttonHistoric} onPress={() => 
                   navigation.navigate("Detalhes do Produto", {

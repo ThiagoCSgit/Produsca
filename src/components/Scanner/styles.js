@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: '#fff',
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: "OpenSans_600SemiBold"
   },
   iconCamera:{
     color: '#fff',

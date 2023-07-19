@@ -4,10 +4,6 @@ import styles from './styles';
 import api from '../../service/api';
 import ScannerButton from '../../components/Scanner/ScannerButton';
 
-import useCustomFonts from '../../fonts';
-
-import { useFonts, OpenSans_400Regular, OpenSans_500Medium } from '@expo-google-fonts/open-sans';
-
 
 export default function CategoryProducts({ navigation }) {
   
@@ -106,25 +102,9 @@ export default function CategoryProducts({ navigation }) {
 
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
-      // console.warn("response:", response)
       setCatProducts(response.data)
     })
   }, [])
-
-  const [fontLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_500Medium
-  })
-
-  if(!fontLoaded){
-    return <View/>
-  }
-
-  // const fontsLoaded = useCustomFonts();
-
-  // if (!fontsLoaded) {
-  //   return null; // Renderiza um componente de carregamento ou uma tela em branco enquanto as fontes são carregadas
-  // }
 
 
   return (

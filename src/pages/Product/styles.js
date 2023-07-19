@@ -9,31 +9,9 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%"
   },
-  titlePage: {
-    marginBottom: 20,
-    fontSize: 25,
-    position: 'relative',
-    left: 10
-  },
-  listProducts: {
-    flex: 1,
-    width: '100%',
-  },
-  productItem: {
-    margin: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  productInfos: {
-    justifyContent: 'center'
-  },
-  productIcon: {
-    width: 70,
-    height: 70,
-    marginRight: 10
-  },
   productName: {
     fontSize: 18,
+    fontFamily: "OpenSans_500Medium"
   },
   buttonsArea: {
     flexDirection: 'row',
@@ -43,7 +21,8 @@ const styles = StyleSheet.create({
     marginTop: 25
   },
   nameProduct: {
-    fontSize: 24
+    fontSize: 24,
+    fontFamily: "OpenSans_500Medium"
   },
   listSupermarktesAvailables: {
     padding: 10,
@@ -66,11 +45,13 @@ const styles = StyleSheet.create({
   buttonHistoricText:{
     textAlign: "center", 
     color: "#623b32",
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: "OpenSans_500Medium"
   },
   labelCheckBox: {
     marginLeft: 10,
-    fontSize: 19
+    fontSize: 19,
+    fontFamily: "OpenSans_500Medium"
   }
 });
 
