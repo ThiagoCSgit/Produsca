@@ -3,6 +3,8 @@ import styles from './styles';
 import React, { useState } from "react";
 import ScannerButton from '../../components/Scanner/ScannerButton';
 
+import Loading from '../../components/Loading';
+
 export default function Supermarkets({navigation}) {
 
   const [supermarkets, setSupermarkets] = useState([

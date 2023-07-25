@@ -4,8 +4,12 @@ import styles from './styles';
 import api from '../../service/api';
 import ScannerButton from '../../components/Scanner/ScannerButton';
 
+import Loading from '../../components/Loading';
+
 
 export default function CategoryProducts({ navigation }) {
+
+  const [isLoading, setIsLoading] = useState(true)
   
   const [catProducts, setCatProducts] = useState([
     {
@@ -103,11 +107,12 @@ export default function CategoryProducts({ navigation }) {
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
       setCatProducts(response.data)
+      setIsLoading(false)
     })
   }, [])
 
-
-  return (
+  return ( isLoading ?
+    <Loading/> :
     <SafeAreaView style={styles.container}>
       <FlatList
         contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
@@ -128,5 +133,5 @@ export default function CategoryProducts({ navigation }) {
       />
       <ScannerButton navigation={navigation} />
     </SafeAreaView>
-  );
+  )
 }

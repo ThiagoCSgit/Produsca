@@ -15,7 +15,7 @@ import ShopCart from './src/pages/ShopCart';
 import ShoppingList from './src/pages/ShoppingList';
 import SupermarketShoppingList from './src/pages/SupermarketShoppingList';
 import Scanner from './src/pages/QRCodeScanner';
-import ShopCartButton from './src/components/Cart/ShopCartButton';
+import ShopCartButton from './src/components/Cart';
 import PurchasesHistoric from './src/pages/PurchasesHistoric';
 
 import IconET from 'react-native-vector-icons/Entypo';

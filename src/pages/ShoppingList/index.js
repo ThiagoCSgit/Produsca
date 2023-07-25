@@ -31,7 +31,6 @@ export default function ShoppingList({navigation}) {
                 const newProduct = JSON.parse(product[1])
                 return {product: newProduct}
             })
-            console.warn('cartlist:',newList)
             setCartList(newList)
 
         } catch(e) {
