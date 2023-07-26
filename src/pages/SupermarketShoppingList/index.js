@@ -1,12 +1,14 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import styles from './styles';
 import { useEffect, useState } from 'react';
 import api from '../../service/api'
 
-import CollapseProductsList from "../../components/CollapseProductsList";
+import CollapseProductsList from '../../components/CollapseProductsList';
+import Loading from '../../components/Loading';
 
 export default function SupermaketShoppingList({ route, navigation }) {
   const [state, setState] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let listNomeProd = route.params.list.map(item => {
@@ -29,11 +31,13 @@ export default function SupermaketShoppingList({ route, navigation }) {
         }
       ]
       setState(data)
+      setIsLoading(false)
     })
   }, [])
 
 
-  return (
+  return ( isLoading ?
+    <Loading/> :
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{justifyContent: "center", paddingHorizontal: 10}}>
         {state != null && 

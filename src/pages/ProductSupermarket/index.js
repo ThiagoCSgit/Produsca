@@ -16,6 +16,8 @@ import {
   import api from '../../service/api';
   
   import Icon from 'react-native-vector-icons/Feather';
+
+  import Loading from '../../components/Loading';
   
   import { format } from 'date-fns';
   import { ptBR } from 'date-fns/locale';
@@ -25,6 +27,8 @@ import {
   
     const [priceHistory, setPriceHistory] = useState([])
     const [inCart, setInCart] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+
     const isFocused = useIsFocused();
   
   
@@ -42,6 +46,7 @@ import {
         // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
         api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=batata&supermercado=EPA`).then(response => {
           setPriceHistory(response.data)
+          setIsLoading(false)
         })
       } catch(error){
         console.log('error:',error)
@@ -71,6 +76,8 @@ import {
     };
   
     return (
+      isLoading ? 
+      <Loading/> :
       <SafeAreaView style={styles.container}>
         <Text style={styles.nameProduct}>{nameProduct} - {supermarket}</Text>
         <View>

@@ -17,6 +17,8 @@ import { LineChart } from "react-native-chart-kit";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../service/api';
 
+import Loading from '../../components/Loading';
+
 import Icon from 'react-native-vector-icons/Feather';
 
 import { format } from 'date-fns';
@@ -28,6 +30,8 @@ export default function Products({ route, navigation }) {
   const [priceHistory, setPriceHistory] = useState([])
   const [inCart, setInCart] = useState(false)
   const [supermarktesAvailables, setSupermarktesAvailables] = useState([])
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true)
+  const [isLoadingMarkets, setIsLoadingMarkets] = useState(true)
   const isFocused = useIsFocused();
 
 
@@ -46,6 +50,7 @@ export default function Products({ route, navigation }) {
       // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
       api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`).then(response => {
         setPriceHistory(response.data)
+        setIsLoadingHistory(false)
       })
     } catch(error){
       console.log('error:',error)
@@ -57,6 +62,7 @@ export default function Products({ route, navigation }) {
       // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
       api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
         setSupermarktesAvailables(response.data)
+        setIsLoadingMarkets(false)
       })
     } catch(error){
       console.log('error:',error)
@@ -86,7 +92,8 @@ export default function Products({ route, navigation }) {
     });
   };
 
-  return (
+  return ( isLoadingHistory && isLoadingMarkets ?
+    <Loading/> :
     <SafeAreaView style={styles.container}>
       <Text style={styles.nameProduct}>{nameProduct}</Text>
       <View>
@@ -172,5 +179,5 @@ export default function Products({ route, navigation }) {
         </View>
       </View>
     </SafeAreaView>
-  );
+  )
 }

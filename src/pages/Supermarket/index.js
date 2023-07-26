@@ -3,6 +3,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import React, { useState } from "react";
 import styles from './styles';
 
+import Loading from '../../components/Loading';
+
 export default function Supermarket({route, navigation}) {
   const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
   const [supermarketProducts, setSupermarketProducts] = useState([
