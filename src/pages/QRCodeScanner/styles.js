@@ -3,20 +3,18 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center'
+    paddingTop: 100,
+    backgroundColor: 'rgba(122, 118, 114, 0.4)',
   },
-  //   flashButton: {
-  //   position: 'absolute',
-  //   bottom: 20,
-  //   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  //   padding: 10,
-  //   borderRadius: 5,
-  // },
-  // flashButtonText: {
-  //   color: 'white',
-  //   fontSize: 16,
-  // },
+    flashButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })
 
 export default styles

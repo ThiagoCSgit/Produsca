@@ -65,13 +65,13 @@ export default function App() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             if (route.name === "Categorias de Produtos") {
-              return <IconMI style={[focused && styles.buttonFocus]} name="category" size={25} />
+              return <IconMI style={[focused ? styles.buttonFocus : styles.noFocus]} name="category" size={25} />
             }
             else if (route.name == "Supermercados Próximos") {
-              return <IconET style={[focused && styles.buttonFocus]} name="shopping-basket" size={25} />
+              return <IconET style={[focused ? styles.buttonFocus : styles.noFocus]} name="shopping-basket" size={25} />
             }
             else {
-              return <IconFA style={[focused && styles.buttonFocus]} name="clipboard-list" size={25} />
+              return <IconFA style={[focused ? styles.buttonFocus : styles.noFocus]} name="clipboard-list" size={25} />
             }
           },
           headerRight: () => {
@@ -79,7 +79,7 @@ export default function App() {
           },
           headerRightContainerStyle: {
             alignItems: 'flex-end',
-            marginRight: 40
+            paddingRight: 50
           },
           headerStyle: {
             backgroundColor: '#1E90FF',
@@ -87,6 +87,14 @@ export default function App() {
           headerTitleStyle: {
             color: "#ffffff",
             fontFamily: "OpenSans_600SemiBold"
+          },
+          tabBarActiveTintColor: '#1E90FF',
+          tabBarInactiveTintColor: '#fff',
+          tabBarStyle:{
+            paddingBottom: 5,
+            paddingTop: 5,
+            height: 60,
+            backgroundColor: '#140f07',
           }
         })}
       >
@@ -119,7 +127,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40,
+              paddingRight: 50,
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -140,7 +148,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -161,7 +169,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -182,7 +190,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -245,7 +253,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -268,6 +276,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  noFocus:{
+    color: '#fff'
   },
   buttonFocus: {
     color: '#1E90FF'
