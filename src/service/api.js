@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const route = axios.create({
-    baseURL: 'https://edu176.bsite.net'
+    baseURL: 'https://feijao12.bsite.net'
 })
 
 export default route

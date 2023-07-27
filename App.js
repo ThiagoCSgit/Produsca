@@ -22,6 +22,8 @@ import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
 
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 import { useFonts, OpenSans_500Medium, OpenSans_600SemiBold } from '@expo-google-fonts/open-sans';
 
 export default function App() {

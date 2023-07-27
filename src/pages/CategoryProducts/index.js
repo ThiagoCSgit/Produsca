@@ -106,6 +106,7 @@ export default function CategoryProducts({ navigation }) {
 
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
+      console.warn('response:',response.data)
       setCatProducts(response.data)
       setIsLoading(false)
     })
