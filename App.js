@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as Location from 'expo-location';
 
 import CategoryProducts from './src/pages/CategoryProducts';
 import Supermarkets from './src/pages/Supermarkets';
@@ -22,7 +21,6 @@ import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
 
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useFonts, OpenSans_500Medium, OpenSans_600SemiBold } from '@expo-google-fonts/open-sans';
 
@@ -30,11 +28,6 @@ export default function App() {
   const Stack = createStackNavigator()
   const Tab = createBottomTabNavigator()
   const [state, setState] = useState(null)
-  const [myLocation, setMyLocation] = useState(null)
-  
-  useEffect(() => {
-    getLocation()
-  }, [])
   
     const [fontLoaded] = useFonts({
       OpenSans_500Medium,
@@ -44,17 +37,6 @@ export default function App() {
     if(!fontLoaded){
       return <View/>
     }
-
-  async function getLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      alert('A permissão para acessar o local foi negada');
-      return;
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    setMyLocation(location);
-  }
 
   function Tabs({ navigation }) {
     if (!state) {

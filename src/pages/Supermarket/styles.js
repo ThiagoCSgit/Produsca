@@ -12,13 +12,18 @@ const styles = StyleSheet.create({
     supermarketInfos: {
       gap: 15
     },
+    supermarketName: {
+      fontSize: 30,
+      textAlign: 'center',
+      fontFamily: "OpenSans_500Medium"
+    },
     supermarketInfo: {
-      fontSize: 22,
+      fontSize: 21,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     },
     buttonCall:{
-      height: 40, 
+      // height: 30, 
       width: 50, 
       marginLeft: 20,
       marginTop: 5
