@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
+import api from "../../service/api"
 
 export default function Products({ route, navigation }) {
   const {categoryName, supermarketName} = route.params
-
+  const [isLoading, setIsLoading] = useState(true)
   const [products, setProducts] = useState([
     {
       id: "1",
@@ -72,6 +73,63 @@ export default function Products({ route, navigation }) {
   ])
   const isFocused = useIsFocused();
 
+  useEffect(() => {
+    console.log('oi:',supermarketName)
+    if(supermarketName){
+      api.get(`/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&supermercado=${supermarketName}`).then(response => {
+        console.warn('response:',response.data)
+        let listProd = response.data
+        if(listProd != null && listProd.length > 0){
+          setProducts(listProd.map((item, index) => {
+            return {
+              id: index + 1,
+              name: item.nome,
+              image: require("../../images/foodImage.png"),
+              inCart: false,
+              mark: "Viver",
+              price: "10,80",
+              minPrice: "1,23",
+              maxPrice: "72,23",
+            }
+          }))
+
+          api.get(`/consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
+            console.warn('response:',response.data)
+            // setCatProducts(response.data)
+            setIsLoading(false)
+          })
+        }
+        else{
+          setProducts([])
+        }
+        setIsLoading(false)
+      })
+    }
+    else{
+      api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}&supermercado=qualquer`).then(response => {
+        console.warn('response:',response.data)
+        let listProd = response.data
+        if(listProd != null && listProd.length > 0){
+          setProducts(listProd.map((item, index) => {
+            return {
+              id: index + 1,
+              name: item.nome,
+              image: require("../../images/foodImage.png"),
+              inCart: false,
+              mark: "Viver",
+              price: "10,80",
+              minPrice: "1,23",
+              maxPrice: "72,23",
+            }
+          }))
+        }
+        else{
+          setProducts([])
+        }
+        setIsLoading(false)
+      })
+    }
+  }, [])
 
   useEffect(() => {
     getCheckProducts()
@@ -81,7 +139,7 @@ export default function Products({ route, navigation }) {
     try {
       // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
-      console.warn('productKeys:',productKeys)
+      // console.warn('productKeys:',productKeys)
       let newList = [...products]
       newList.forEach(item => {
         item.inCart = false
@@ -105,7 +163,7 @@ export default function Products({ route, navigation }) {
           }
         }
       }
-      console.warn('newList:',newList)
+      // console.warn('newList:',newList)
       setProducts(newList)
     } 
     catch (e) {

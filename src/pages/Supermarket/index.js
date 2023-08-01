@@ -1,7 +1,8 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from './styles';
+import api from "../../service/api"
 
 import Loading from '../../components/Loading';
 
@@ -15,6 +16,7 @@ export default function Supermarket({route, navigation}) {
     number: route.params.number
   }
   // const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
+  const [isLoading, setIsLoading] = useState(true)
   const [supermarketProducts, setSupermarketProducts] = useState([
     {
       id: 1,
@@ -108,11 +110,38 @@ export default function Supermarket({route, navigation}) {
     },
   ])
 
+  useEffect(() => {
+    // api.get(`//consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
+    //   console.warn('response:',response.data)
+    //   // setCatProducts(response.data)
+    //   setIsLoading(false)
+    // })
+    api.get("/consultas/CategoriasProdutos").then(response => {
+      console.warn('response categoria:',response.data)
+      let listCategorys = response.data
+      if(listCategorys != null && listCategorys.length > 0){
+        setSupermarketProducts(listCategorys.map((item, index) => {
+          return{
+            name: item.nome,
+            id: index + 1,
+            image: require("../../images/foodImage.png")
+          }
+        }))
+      }
+      else{
+        setSupermarketProducts([])
+      }
+      setIsLoading(false)
+    })
+  }, [])
+
   function callNumber(phoneNumber){
     Linking.openURL(`tel:${phoneNumber}`);
   }
 
-  return (
+  return ( 
+    isLoading ? 
+    <Loading/> :
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
         <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>

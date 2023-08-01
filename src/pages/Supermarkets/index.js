@@ -62,25 +62,30 @@ export default function Supermarkets({navigation}) {
 
   useEffect(() => {
     if(myLocation){
-      console.warn('lat:',myLocation.coords.latitude)
-      console.warn('lon:',myLocation.coords.longitude)
+      console.log('lat:',myLocation.coords.latitude)
+      console.log('lon:',myLocation.coords.longitude)
       api.get(`consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}`).then(response => {
         console.warn('response:',response.data)
-        setSupermarkets(response.data.map((item, index) => {
-          return {
-            id: index + 1,
-            name: item.nome,
-            city: item.cidade,
-            state: item.estado,
-            publicPlace: item.logradouro,
-            number: item.numero,
-            phone: item.telefone,
-            rate: item.avaliacao,
-            district: item.bairro,
-            image: require("../../images/foodImage.png"),
-          }
-        }))
-        // setCatProducts(response.data)
+        let listMarkets = response.data
+        if (listMarkets != null && listMarkets.length > 0){
+          setSupermarkets(listMarkets.map((item, index) => {
+            return {
+              id: index + 1,
+              name: item.nome,
+              city: item.cidade,
+              state: item.estado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              phone: item.telefone,
+              rate: item.avaliacao,
+              district: item.bairro,
+              image: require("../../images/foodImage.png"),
+            }
+          }))
+        }
+        else{
+          setSupermarkets([])
+        }
         setIsLoading(false)
       })
     }

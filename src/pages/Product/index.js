@@ -59,8 +59,8 @@ export default function Products({ route, navigation }) {
   
   function getSupermarketsProduct(){
     try{
-      // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
-      api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
+      api.get(`/consultas/SupermercadosProduto?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
+      // api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
         setSupermarktesAvailables(response.data)
         setIsLoadingMarkets(false)
       })
@@ -95,7 +95,7 @@ export default function Products({ route, navigation }) {
   return ( isLoadingHistory && isLoadingMarkets ?
     <Loading/> :
     <SafeAreaView style={styles.container}>
-      <Text style={styles.nameProduct}>{nameProduct}</Text>
+      <Text style={styles.nameProduct}>{nameProduct} OI</Text>
       <View>
         {
           priceHistory.length > 0 &&

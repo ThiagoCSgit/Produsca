@@ -17,7 +17,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
       }
     })
     console.warn('listNomeProd:',listNomeProd)
-    api.post("/envios/ProdutosEscolhidosCarrinho", JSON.stringfy({listaNomeProduto: listNomeProd})).then(response => {
+    api.post("/envios/ProdutosEscolhidosCarrinho", JSON.stringify({listaNomeProduto: listNomeProd})).then(response => {
       console.warn('supermcados para comprar:',response.data)
       let listaNomeProduto = response.data
       let data = [
