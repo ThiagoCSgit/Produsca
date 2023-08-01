@@ -1,12 +1,14 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
 import styles from './styles';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ScannerButton from '../../components/Scanner/ScannerButton';
+import * as Location from 'expo-location';
+
+import api from "../../service/api"
 
 import Loading from '../../components/Loading';
 
 export default function Supermarkets({navigation}) {
-
   const [supermarkets, setSupermarkets] = useState([
     {
       id: 1,
@@ -51,8 +53,58 @@ export default function Supermarkets({navigation}) {
       city: "Vila Velha"
     },
   ])
+  const [myLocation, setMyLocation] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  return (
+  useEffect(() => {
+    getLocation()
+  }, [])
+
+  useEffect(() => {
+    if(myLocation){
+      console.log('lat:',myLocation.coords.latitude)
+      console.log('lon:',myLocation.coords.longitude)
+      api.get(`consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}`).then(response => {
+        console.warn('response:',response.data)
+        let listMarkets = response.data
+        if (listMarkets != null && listMarkets.length > 0){
+          setSupermarkets(listMarkets.map((item, index) => {
+            return {
+              id: index + 1,
+              name: item.nome,
+              city: item.cidade,
+              state: item.estado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              phone: item.telefone,
+              rate: item.avaliacao,
+              district: item.bairro,
+              image: require("../../images/foodImage.png"),
+            }
+          }))
+        }
+        else{
+          setSupermarkets([])
+        }
+        setIsLoading(false)
+      })
+    }
+  }, [myLocation])
+
+  async function getLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      alert('A permissão para acessar o local foi negada');
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    console.warn('location aqui:',location)
+    setMyLocation(location);
+  }
+
+  return ( isLoading ? 
+    <Loading/> :
     <SafeAreaView style={styles.container}>
       <FlatList
         style={styles.listSupermarkets}
@@ -62,12 +114,20 @@ export default function Supermarkets({navigation}) {
         renderItem={({item}) => {
           return (
             <Pressable style={styles.supermarketItem} onPress={() => navigation.navigate("Supermercado", {
-              name: item.name
+              name: item.name,
+              phone: item.phone,
+              publicPlace: item.publicPlace,
+              district: item.district,
+              city: item.city,
+              state: item.state,
+              number: item.number
             })}>
               <Image style={styles.supermarketIcon} source={item.image}/>
               <View>
                 <Text style={styles.supermarketName}>{item.name} - {item.city}</Text>
-                <Text style={styles.supermarketName}>{item.address}</Text>
+                <Text style={styles.supermarketName}>{item.publicPlace}, 
+                  {'\n'}{item.number}
+                </Text>
               </View>
             </Pressable>
           )

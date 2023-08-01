@@ -1,4 +1,4 @@
-import { View, ScrollView} from 'react-native';
+import { View, ScrollView ,Image, Text } from 'react-native';
 import styles from './styles';
 import CollapseProductsList from "../../components/CollapseProductsList";
 
@@ -35,13 +35,18 @@ export default function PurchasesHistoric(){
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{justifyContent: "center", paddingHorizontal: 10}}>
-        {historic != null && 
+      {historic != null && historic.lenght > 0 ? 
+        <ScrollView contentContainerStyle={{justifyContent: "center", paddingHorizontal: 10}}>
           <CollapseProductsList
             state={historic}
           />
-        }
-      </ScrollView>
+        </ScrollView>
+        :
+        <View style={styles.emptyHistoric}>
+            <Image style={styles.image} source={require("../../images/folha-vazia.png")}/>
+            <Text style={styles.text}>Sua lista de compras está vazia</Text>
+        </View>
+    }
     </View>
   )
 }

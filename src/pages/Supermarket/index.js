@@ -1,12 +1,22 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from './styles';
+import api from "../../service/api"
 
 import Loading from '../../components/Loading';
 
 export default function Supermarket({route, navigation}) {
-  const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
+  const supermarketInfos = {
+    name: route.params.name,
+    phone: route.params.phone,
+    publicPlace: route.params.publicPlace,
+    city: route.params.city,
+    state: route.params.state,
+    number: route.params.number
+  }
+  // const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
+  const [isLoading, setIsLoading] = useState(true)
   const [supermarketProducts, setSupermarketProducts] = useState([
     {
       id: 1,
@@ -100,21 +110,51 @@ export default function Supermarket({route, navigation}) {
     },
   ])
 
+  useEffect(() => {
+    // api.get(`//consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
+    //   console.warn('response:',response.data)
+    //   // setCatProducts(response.data)
+    //   setIsLoading(false)
+    // })
+    api.get("/consultas/CategoriasProdutos").then(response => {
+      console.warn('response categoria:',response.data)
+      let listCategorys = response.data
+      if(listCategorys != null && listCategorys.length > 0){
+        setSupermarketProducts(listCategorys.map((item, index) => {
+          return{
+            name: item.nome,
+            id: index + 1,
+            image: require("../../images/foodImage.png")
+          }
+        }))
+      }
+      else{
+        setSupermarketProducts([])
+      }
+      setIsLoading(false)
+    })
+  }, [])
+
   function callNumber(phoneNumber){
     Linking.openURL(`tel:${phoneNumber}`);
   }
 
-  return (
+  return ( 
+    isLoading ? 
+    <Loading/> :
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
-        <Text style={styles.supermarketInfo}>{supermarketInfos.name}</Text>
-        <View style={{flexDirection: 'row', textAlign: 'center'}}>
-          <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.contact}</Text> 
-          <Pressable style={styles.buttonCall} onPress={() => callNumber(supermarketInfos.contact)}>
+        <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>
+        <View style={{flexDirection: 'row', textAlign: 'center', justifyContent: 'center'}}>
+          <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.phone}</Text> 
+          <Pressable style={styles.buttonCall} onPress={() => callNumber(supermarketInfos.phone)}>
             <Icon name="phone" size={22}/>
           </Pressable>
         </View>
-        <Text style={styles.supermarketInfo}>Endereço: {supermarketInfos.address}</Text>
+        <Text style={styles.supermarketInfo}>
+          Endereço: {'\n'} {supermarketInfos.publicPlace} {supermarketInfos.number} {'\n'}
+          {supermarketInfos.district} {supermarketInfos.city}, {supermarketInfos.state}
+        </Text>
       </View>
       <FlatList
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}

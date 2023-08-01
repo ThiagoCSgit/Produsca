@@ -24,7 +24,7 @@ import {
   
   export default function ProductSupermarket({ route, navigation }) {
     const {nameProduct, idProduct, supermarket, funcAddRemoveCart} = route.params
-  
+    console.log(route.params)
     const [priceHistory, setPriceHistory] = useState([])
     const [inCart, setInCart] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
@@ -44,7 +44,7 @@ import {
     function getHistoricoPreco(){
       try{
         // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
-        api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=batata&supermercado=EPA`).then(response => {
+        api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=${nameProduct}&supermercado=${supermarket}`).then(response => {
           setPriceHistory(response.data)
           setIsLoading(false)
         })

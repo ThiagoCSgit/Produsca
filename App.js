@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import * as Location from 'expo-location';
 
 import CategoryProducts from './src/pages/CategoryProducts';
 import Supermarkets from './src/pages/Supermarkets';
@@ -22,17 +21,13 @@ import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
 
+
 import { useFonts, OpenSans_500Medium, OpenSans_600SemiBold } from '@expo-google-fonts/open-sans';
 
 export default function App() {
   const Stack = createStackNavigator()
   const Tab = createBottomTabNavigator()
   const [state, setState] = useState(null)
-  const [myLocation, setMyLocation] = useState(null)
-  
-  useEffect(() => {
-    getLocation()
-  }, [])
   
     const [fontLoaded] = useFonts({
       OpenSans_500Medium,
@@ -43,17 +38,6 @@ export default function App() {
       return <View/>
     }
 
-  async function getLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      alert('A permissão para acessar o local foi negada');
-      return;
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    setMyLocation(location);
-  }
-
   function Tabs({ navigation }) {
     if (!state) {
       setState(navigation)
@@ -63,13 +47,13 @@ export default function App() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             if (route.name === "Categorias de Produtos") {
-              return <IconMI style={[focused && styles.buttonFocus]} name="category" size={25} />
+              return <IconMI style={[focused ? styles.buttonFocus : styles.noFocus]} name="category" size={25} />
             }
             else if (route.name == "Supermercados Próximos") {
-              return <IconET style={[focused && styles.buttonFocus]} name="shopping-basket" size={25} />
+              return <IconET style={[focused ? styles.buttonFocus : styles.noFocus]} name="shopping-basket" size={25} />
             }
             else {
-              return <IconFA style={[focused && styles.buttonFocus]} name="clipboard-list" size={25} />
+              return <IconFA style={[focused ? styles.buttonFocus : styles.noFocus]} name="clipboard-list" size={25} />
             }
           },
           headerRight: () => {
@@ -77,7 +61,7 @@ export default function App() {
           },
           headerRightContainerStyle: {
             alignItems: 'flex-end',
-            marginRight: 40
+            paddingRight: 50
           },
           headerStyle: {
             backgroundColor: '#1E90FF',
@@ -85,6 +69,14 @@ export default function App() {
           headerTitleStyle: {
             color: "#ffffff",
             fontFamily: "OpenSans_600SemiBold"
+          },
+          tabBarActiveTintColor: '#1E90FF',
+          tabBarInactiveTintColor: '#fff',
+          tabBarStyle:{
+            paddingBottom: 5,
+            paddingTop: 5,
+            height: 60,
+            backgroundColor: '#140f07',
           }
         })}
       >
@@ -117,7 +109,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40,
+              paddingRight: 50,
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -138,7 +130,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -159,7 +151,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -180,7 +172,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -243,7 +235,7 @@ export default function App() {
             },
             headerRightContainerStyle: {
               alignItems: 'flex-end',
-              marginRight: 40
+              paddingRight: 50
             },
             headerTintColor: '#ffffff',
             headerStyle: {
@@ -266,6 +258,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  noFocus:{
+    color: '#fff'
   },
   buttonFocus: {
     color: '#1E90FF'

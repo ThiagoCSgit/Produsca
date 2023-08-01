@@ -106,7 +106,19 @@ export default function CategoryProducts({ navigation }) {
 
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
-      setCatProducts(response.data)
+      let listCategorys = response.data
+      if(listCategorys != null && listCategorys.length > 0){
+        setCatProducts(listCategorys.map((item, index) => {
+          return {
+            name: item.nome,
+            id: index + 1,
+            image: require("../../images/foodImage.png")
+          }
+        }))
+      }
+      else{
+        setCatProducts([])
+      }
       setIsLoading(false)
     })
   }, [])
@@ -123,10 +135,11 @@ export default function CategoryProducts({ navigation }) {
         renderItem={({ item }) => {
           return (
             <Pressable style={styles.categoryItem} onPress={() => navigation.navigate("Produtos", {
-              categoryName: item.nome
+              categoryName: item.name,
+              supermarketName: null
             })}>
-              {/* <Image style={styles.categoryIcon} source={item.image}/> */}
-              <Text style={[styles.categoryName, styles.customFonts]}>{item.nome}</Text>
+              <Image style={styles.categoryIcon} source={item.image}/>
+              <Text style={[styles.categoryName, styles.customFonts]}>{item.name}</Text>
             </Pressable>
           )
         }}
