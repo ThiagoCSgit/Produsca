@@ -65,18 +65,29 @@ export default function App() {
           },
           headerStyle: {
             backgroundColor: '#1E90FF',
+            // backgroundColor: '#f499e9',
+            // backgroundColor: '#ff75df',
+            // backgroundColor: '#9653b7',
+            // backgroundColor: '#8257E6',
+            // backgroundColor: '#ff7d1a',
           },
           headerTitleStyle: {
             color: "#ffffff",
             fontFamily: "OpenSans_600SemiBold"
           },
           tabBarActiveTintColor: '#1E90FF',
+          // tabBarActiveTintColor: '#f499e9',
+          // tabBarActiveTintColor: '#ff75df',
+          // tabBarActiveTintColor: '#9653b7',
+          // tabBarActiveTintColor: '#8257E6',
+          // tabBarActiveTintColor: '#ff7d1a',
           tabBarInactiveTintColor: '#fff',
           tabBarStyle:{
             paddingBottom: 5,
             paddingTop: 5,
             height: 60,
             backgroundColor: '#140f07',
+            // backgroundColor: '#78767c',
           }
         })}
       >
@@ -264,6 +275,11 @@ const styles = StyleSheet.create({
   },
   buttonFocus: {
     color: '#1E90FF'
+    // color: '#9653b7'
+    // color: '#8257E6'
+    // color: '#ff7d1a'
+    // color: '#f499e9'
+    // color: '#f499e9'
   },
   headerCart: {
     marginRight: 20

@@ -106,8 +106,9 @@ export default function Products({ route, navigation }) {
       })
     }
     else{
-      api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}&supermercado=qualquer`).then(response => {
-        console.warn('response:',response.data)
+      // api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}&supermercado=qualquer`).then(response => {
+      api.get(`/consultas/ProdutosCategoria?categoria=higiene&supermercado=qualquer`).then(response => {
+        console.warn('response sem supermercado:',response.data)
         let listProd = response.data
         if(listProd != null && listProd.length > 0){
           setProducts(listProd.map((item, index) => {

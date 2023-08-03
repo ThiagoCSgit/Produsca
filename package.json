@@ -12,6 +12,7 @@
     "@expo-google-fonts/open-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.18.2",
     "@react-native-community/checkbox": "^0.5.15",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
@@ -19,6 +20,7 @@
     "date-fns": "^2.30.0",
     "expo": "^49.0.0",
     "expo-barcode-scanner": "~12.5.3",
+    "expo-camera": "~13.4.2",
     "expo-checkbox": "~2.4.0",
     "expo-font": "~11.4.0",
     "expo-location": "~16.1.0",
@@ -32,8 +34,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.19.6",
-    "expo-camera": "~13.4.2"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
