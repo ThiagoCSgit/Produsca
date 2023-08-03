@@ -43,8 +43,8 @@ import {
     
     function getHistoricoPreco(){
       try{
-        // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
-        api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=${nameProduct}&supermercado=${supermarket}`).then(response => {
+        // api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=${nameProduct.toLowerCase()}&supermercado=${supermarket}`).then(response => {
+        api.get(`/consultas/HistoricoPrecoSupermercado?nomeProduto=batata&supermercado=EPA`).then(response => {
           setPriceHistory(response.data)
           setIsLoading(false)
         })

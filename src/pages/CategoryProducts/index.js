@@ -144,7 +144,9 @@ export default function CategoryProducts({ navigation }) {
           )
         }}
       />
-      <ScannerButton navigation={navigation} />
+      <View style={{width: "80%"}}>
+        <ScannerButton navigation={navigation} />
+      </View>
     </SafeAreaView>
   )
 }

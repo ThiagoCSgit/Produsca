@@ -1,12 +1,16 @@
-import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
+import { SafeAreaView, Text, Image, FlatList, Pressable, View, Modal, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import React, { useState, useEffect } from "react";
 import ScannerButton from '../../components/Scanner/ScannerButton';
+import Loading from '../../components/Loading';
 import * as Location from 'expo-location';
+import IconAD from 'react-native-vector-icons/AntDesign';
+import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import Slider from '@react-native-community/slider';
 
 import api from "../../service/api"
 
-import Loading from '../../components/Loading';
 
 export default function Supermarkets({navigation}) {
   const [supermarkets, setSupermarkets] = useState([
@@ -55,16 +59,24 @@ export default function Supermarkets({navigation}) {
   ])
   const [myLocation, setMyLocation] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [range, setRange] = useState(1000);
+  const [previousRange, setPreviousRange] = useState(0)
 
   useEffect(() => {
     getLocation()
   }, [])
 
   useEffect(() => {
-    if(myLocation){
-      console.log('lat:',myLocation.coords.latitude)
-      console.log('lon:',myLocation.coords.longitude)
-      api.get(`consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}`).then(response => {
+    console.log('myLocation:',myLocation)
+    console.log('range:',range)
+    console.log('previousRange:',previousRange)
+    if(myLocation && !modalVisible && (range != previousRange)){
+      // console.log('lat:',myLocation.coords.latitude)
+      // console.log('lon:',myLocation.coords.longitude)
+      setPreviousRange(range)
+      console.log('chamou a rota')
+      api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
         console.warn('response:',response.data)
         let listMarkets = response.data
         if (listMarkets != null && listMarkets.length > 0){
@@ -89,7 +101,7 @@ export default function Supermarkets({navigation}) {
         setIsLoading(false)
       })
     }
-  }, [myLocation])
+  }, [myLocation, range, modalVisible])
 
   async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -105,7 +117,7 @@ export default function Supermarkets({navigation}) {
 
   return ( isLoading ? 
     <Loading/> :
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: modalVisible ? 'rgba(122, 118, 114, 0.4)' : '#fff'}]}>
       <FlatList
         style={styles.listSupermarkets}
         data={supermarkets}
@@ -133,7 +145,40 @@ export default function Supermarkets({navigation}) {
           )
         }}
       />
-      <ScannerButton navigation={navigation}/>
+      <View style={{gap: 10}}>
+        <View style={{opacity: modalVisible ? 0.4 : 1}}>
+          <ScannerButton navigation={navigation}/>
+        </View>
+        <TouchableOpacity style={[styles.buttonRange, {opacity: modalVisible ? 0.4 : 1}]} onPress={() => setModalVisible(!modalVisible)}>
+          <IconMCI style={styles.iconGPS} name='crosshairs-gps' size={25}/>
+          <Text style={styles.textButtonRange}>Ajustar distância</Text>
+        </TouchableOpacity>
+        <Modal
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+          animationType="fade"
+          transparent={true}
+        >
+            <View style={styles.containerModal}>
+              <Pressable style={styles.closeButton} onPress={() => setModalVisible(!modalVisible)}>
+                <IconAD name='close' size={27}/>
+              </Pressable>
+              <Text style={styles.rangeLabel}>Raio de alcance {'\n'} {range}m</Text>
+              <Slider
+                style={{width: 250, height: 50}}
+                minimumValue={1000}
+                maximumValue={10000}
+                onValueChange={value => setRange(parseInt(value))}
+                value={range}
+                step={50}
+                minimumTrackTintColor='#1E90FF'
+                thumbTintColor='#1E90FF'
+              />
+            </View>
+        </Modal>
+      </View>
     </SafeAreaView>
   );
 }
