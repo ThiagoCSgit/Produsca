@@ -44,7 +44,7 @@ export default function PurchasesHistoric(){
         :
         <View style={styles.emptyHistoric}>
             <Image style={styles.image} source={require("../../images/folha-vazia.png")}/>
-            <Text style={styles.text}>Sua lista de compras está vazia</Text>
+            <Text style={styles.text}>Seu histórico de compras está vazio</Text>
         </View>
     }
     </View>

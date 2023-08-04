@@ -12,7 +12,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     textAlign: "center",
-    backgroundColor: '#1E90FF'
+    // backgroundColor: '#1E90FF'
+    backgroundColor: '#f58634',
+    background: 'linear-gradient(135deg, #f58634, #e26b13)',
     // backgroundColor: '#9653b7'
     // backgroundColor: '#8257E6'
     // backgroundColor: '#ff7d1a'

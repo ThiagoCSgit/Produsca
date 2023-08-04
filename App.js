@@ -64,7 +64,8 @@ export default function App() {
             paddingRight: 50
           },
           headerStyle: {
-            backgroundColor: '#1E90FF',
+            // backgroundColor: '#1E90FF',
+            backgroundColor: '#f58634',
             // backgroundColor: '#f499e9',
             // backgroundColor: '#ff75df',
             // backgroundColor: '#9653b7',
@@ -75,7 +76,8 @@ export default function App() {
             color: "#ffffff",
             fontFamily: "OpenSans_600SemiBold"
           },
-          tabBarActiveTintColor: '#1E90FF',
+          // tabBarActiveTintColor: '#1E90FF',
+          tabBarActiveTintColor: '#f58634',
           // tabBarActiveTintColor: '#f499e9',
           // tabBarActiveTintColor: '#ff75df',
           // tabBarActiveTintColor: '#9653b7',
@@ -274,7 +276,8 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   buttonFocus: {
-    color: '#1E90FF'
+    color: '#1E90FF',
+    color: '#f58634'
     // color: '#9653b7'
     // color: '#8257E6'
     // color: '#ff7d1a'

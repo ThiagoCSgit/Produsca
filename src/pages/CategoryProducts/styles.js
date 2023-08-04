@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -33,15 +33,16 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     categoryItem: {
-      margin: 15,
+      margin: 10,
       alignItems: 'center',
+      width: Dimensions.get('window').width/4,
     },
     categoryIcon: {
-      width: 70,
-      height: 70
+      width: Dimensions.get('window').width/6,
+      height: Dimensions.get('window').width/6,
     },
     categoryName: {
-      fontSize: 23,
+      fontSize: 18,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     }

@@ -72,6 +72,7 @@ export default function Supermarkets({navigation}) {
     console.log('range:',range)
     console.log('previousRange:',previousRange)
     if(myLocation && !modalVisible && (range != previousRange)){
+      setIsLoading(true)
       // console.log('lat:',myLocation.coords.latitude)
       // console.log('lon:',myLocation.coords.longitude)
       setPreviousRange(range)
