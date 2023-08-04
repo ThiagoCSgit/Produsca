@@ -1,6 +1,6 @@
-import { StyleSheet, View } from 'react-native';
-import { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, View, Text, SafeAreaView, Pressable } from 'react-native';
+import { useState } from 'react';
+import { NavigationContainer, useNavigationContainerRef  } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -17,26 +17,31 @@ import Scanner from './src/pages/QRCodeScanner';
 import ShopCartButton from './src/components/Cart';
 import PurchasesHistoric from './src/pages/PurchasesHistoric';
 
+
+import IconAD from 'react-native-vector-icons/AntDesign';
 import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
+
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 import { useFonts, OpenSans_500Medium, OpenSans_600SemiBold } from '@expo-google-fonts/open-sans';
 
 export default function App() {
-  const Stack = createStackNavigator()
   const Tab = createBottomTabNavigator()
+  const Stack = createStackNavigator()
   const [state, setState] = useState(null)
+  const navigationRef = useNavigationContainerRef()
   
-    const [fontLoaded] = useFonts({
-      OpenSans_500Medium,
-      OpenSans_600SemiBold
-    })
-  
-    if(!fontLoaded){
-      return <View/>
-    }
+  const [fontLoaded] = useFonts({
+    OpenSans_500Medium,
+    OpenSans_600SemiBold
+  })
+
+  if(!fontLoaded){
+    return <View/>
+  }
 
   function Tabs({ navigation }) {
     if (!state) {
@@ -56,40 +61,28 @@ export default function App() {
               return <IconFA style={[focused ? styles.buttonFocus : styles.noFocus]} name="clipboard-list" size={25} />
             }
           },
-          headerRight: () => {
-            return <ShopCartButton navigation={navigation} />
+          header: (scene) => {
+            const title = scene.route.name
+            return (
+              <SafeAreaView>
+                <LinearGradient
+                  colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.headerGradient}
+                >
+                  <Text style={styles.titlePage}>{title}</Text>
+                  <ShopCartButton navigation={navigation} />
+                </LinearGradient>
+              </SafeAreaView>
+            )
           },
-          headerRightContainerStyle: {
-            alignItems: 'flex-end',
-            paddingRight: 50
-          },
-          headerStyle: {
-            // backgroundColor: '#1E90FF',
-            backgroundColor: '#f58634',
-            // backgroundColor: '#f499e9',
-            // backgroundColor: '#ff75df',
-            // backgroundColor: '#9653b7',
-            // backgroundColor: '#8257E6',
-            // backgroundColor: '#ff7d1a',
-          },
-          headerTitleStyle: {
-            color: "#ffffff",
-            fontFamily: "OpenSans_600SemiBold"
-          },
-          // tabBarActiveTintColor: '#1E90FF',
           tabBarActiveTintColor: '#f58634',
-          // tabBarActiveTintColor: '#f499e9',
-          // tabBarActiveTintColor: '#ff75df',
-          // tabBarActiveTintColor: '#9653b7',
-          // tabBarActiveTintColor: '#8257E6',
-          // tabBarActiveTintColor: '#ff7d1a',
-          tabBarInactiveTintColor: '#fff',
           tabBarStyle:{
             paddingBottom: 5,
             paddingTop: 5,
             height: 60,
             backgroundColor: '#140f07',
-            // backgroundColor: '#78767c',
           }
         })}
       >
@@ -104,12 +97,30 @@ export default function App() {
     return <ShopCartButton navigation={state} />
   }
 
+  const CustomHeader = (title, showCart = true) => {
+    return (
+      <LinearGradient
+        colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={showCart ? styles.headerGradient : styles.headerGradientAlternative}
+      >
+        <Pressable onPress={() => navigationRef.goBack()} style={styles.backButton}>
+          <IconAD name="arrowleft" size={30} style={{color: '#000'}}/>
+        </Pressable>
+        <Text style={styles.titlePage}>{title}</Text>
+        {showCart && returnShopCart()}
+      </LinearGradient>
+    )
+  }
+
   return (
-    <NavigationContainer style={styles.container}>
+    <NavigationContainer style={styles.container} ref={navigationRef}>
       <Stack.Navigator>
-        <Stack.Screen options={{
-          headerShown: false,
-        }}
+        <Stack.Screen 
+          options={{
+            headerShown: false,
+          }}
           name=" "
           component={Tabs}
         />
@@ -117,147 +128,112 @@ export default function App() {
           name="Produtos"
           component={Products}
           options={{
-            headerRight: () => {
-              return returnShopCart()
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title)}
+                </SafeAreaView>
+              )
             },
-            headerRightContainerStyle: {
-              alignItems: 'flex-end',
-              paddingRight: 50,
-            },
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
-            },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Produto"
           component={Product}
           options={{
-            headerRight: () => {
-              return returnShopCart()
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title)}
+                </SafeAreaView>
+              )
             },
-            headerRightContainerStyle: {
-              alignItems: 'flex-end',
-              paddingRight: 50
-            },
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
-            },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Detalhes do Produto"
           component={ProductSupermarket}
           options={{
-            headerRight: () => {
-              return returnShopCart()
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title)}
+                </SafeAreaView>
+              )
             },
-            headerRightContainerStyle: {
-              alignItems: 'flex-end',
-              paddingRight: 50
-            },
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
-            },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Supermercado"
           component={Supermarket}
           options={{
-            headerRight: () => {
-              return returnShopCart()
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title)}
+                </SafeAreaView>
+              )
             },
-            headerRightContainerStyle: {
-              alignItems: 'flex-end',
-              paddingRight: 50
-            },
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
-            },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Carrinho"
           component={ShopCart}
           options={{
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+              <SafeAreaView>
+                {CustomHeader(title, false)}
+              </SafeAreaView>
+              )
             },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Lista de Compras"
           component={ShoppingList}
           options={{
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+              <SafeAreaView>
+                {CustomHeader(title, false)}
+              </SafeAreaView>
+              )
             },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Supermacados para Comprar"
           component={SupermarketShoppingList}
           options={{
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title, false)}
+                </SafeAreaView>
+              )
             },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
         <Stack.Screen
           name="Scanner"
           component={Scanner}
           options={{
-            headerRight: () => {
-              return returnShopCart()
+            header: (scene) => {
+              const title = scene.route.name
+              return (
+                <SafeAreaView>
+                  {CustomHeader(title)}
+                </SafeAreaView>
+              )
             },
-            headerRightContainerStyle: {
-              alignItems: 'flex-end',
-              paddingRight: 50
-            },
-            headerTintColor: '#ffffff',
-            headerStyle: {
-              backgroundColor: '#1E90FF',
-            },
-            headerTitleStyle: {
-              color: '#ffffff',
-              fontFamily: "OpenSans_600SemiBold"
-            }
           }}
         />
       </Stack.Navigator>
@@ -272,6 +248,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  titlePage:{
+    color: "#000",
+    fontFamily: "OpenSans_600SemiBold",
+    fontSize: 19
+  },
+  headerGradient:{
+    paddingTop: 50,
+    paddingBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  headerGradientAlternative:{
+    paddingTop: 50,
+    paddingBottom: 20,
+    paddingLeft: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20
+  },
+  // backButton:{
+  //   width: 30,
+  //   height: 20
+  // },
   noFocus:{
     color: '#fff'
   },

@@ -59,8 +59,8 @@ export default function Products({ route, navigation }) {
   
   function getSupermarketsProduct(){
     try{
-      api.get(`/consultas/SupermercadosProduto?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
-      // api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
+      // api.get(`/consultas/SupermercadosProduto?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
+      api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
         setSupermarktesAvailables(response.data)
         setIsLoadingMarkets(false)
       })

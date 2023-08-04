@@ -30,12 +30,13 @@ export default function PurchasesHistoric(){
 
       return {id: id, produtos: produtos, supermercado:supermercado}
     })
+    console.warn('newList historic:',newList)
     setHistoric(newList)
   }
 
   return (
     <View style={styles.container}>
-      {historic != null && historic.lenght > 0 ? 
+      {historic != null && historic.length > 0 ? 
         <ScrollView contentContainerStyle={{justifyContent: "center", paddingHorizontal: 10}}>
           <CollapseProductsList
             state={historic}
@@ -46,7 +47,7 @@ export default function PurchasesHistoric(){
             <Image style={styles.image} source={require("../../images/folha-vazia.png")}/>
             <Text style={styles.text}>Seu histórico de compras está vazio</Text>
         </View>
-    }
+      }
     </View>
   )
 }
