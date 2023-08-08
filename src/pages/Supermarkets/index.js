@@ -73,10 +73,12 @@ export default function Supermarkets({navigation}) {
     console.log('previousRange:',previousRange)
     if(myLocation && !modalVisible && (range != previousRange)){
       setIsLoading(true)
+      // const lat = myLocation.coords.latitude
       console.log('lat:',myLocation.coords.latitude)
       console.log('lon:',myLocation.coords.longitude)
       setPreviousRange(range)
       console.log('chamou a rota')
+      console.log('rota:',`/consultas/SupermercadosProximos?latitude=${-20.3353993}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`)
       api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
         console.warn('response:',response.data)
         let listMarkets = response.data

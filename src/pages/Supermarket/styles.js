@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
       fontFamily: "OpenSans_500Medium"
     },
     buttonCall:{
-      // height: 30, 
       width: 50, 
       marginLeft: 20,
       marginTop: 5
@@ -33,12 +32,13 @@ const styles = StyleSheet.create({
       marginTop: 10
     },
     supermarketCategoryItem: {
-      margin: 15,
+      margin: 10,
       alignItems: 'center',
+      width: Dimensions.get('window').width/4,
     },
     supermarketCategoryIcon: {
-      width: 70,
-      height: 70
+      width: Dimensions.get('window').width/6,
+      height: Dimensions.get('window').width/6,
     },
     supermarketCategoryName: {
       fontSize: 17,
