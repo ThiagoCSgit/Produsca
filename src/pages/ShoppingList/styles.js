@@ -39,25 +39,24 @@ const styles = StyleSheet.create({
       width: "80%",
       fontFamily: "OpenSans_500Medium"
     },
-    buttonSimulate:{
-      width: "80%",
-      height: 50,
+    buttonGradient: {
       borderRadius: 100,
-      padding: 10,
-      marginBottom: 5,
+      marginBottom: 20,
+    },
+    buttonSimulate:{
+      paddingVertical: 12,
+      paddingHorizontal: 20,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      backgroundColor: '#1E90FF',
-      textAlign: 'center',
-      marginBottom: 20,
+      textAlign: "center",
     },
     iconCalculator:{
       marginRight: 20,
-      color: '#fff'
+      color: '#000'
     },
     textButton: {
-      color: '#fff',
+      color: '#000',
       fontSize: 18,
       fontFamily: "OpenSans_500Medium"
     },

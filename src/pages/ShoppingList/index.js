@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IconE from 'react-native-vector-icons/EvilIcons';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -70,12 +71,19 @@ export default function ShoppingList({navigation}) {
                     )
                     }}
                 />
-                <TouchableOpacity style={styles.buttonSimulate} onPress={() => navigation.navigate("Supermacados para Comprar", {
-                    list: cartList
-                })}>
-                  <IconMCI style={styles.iconCalculator} name="calculator-variant-outline" size={25}/>
-                  <Text style={styles.textButton}>Simular Compra</Text>
-                </TouchableOpacity>
+                <LinearGradient
+                    colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.buttonGradient}
+                    >
+                    <TouchableOpacity style={styles.buttonSimulate} onPress={() => navigation.navigate("Supermacados para Comprar", {
+                        list: cartList
+                    })}>
+                        <IconMCI style={styles.iconCalculator} name="calculator-variant-outline" size={25}/>
+                        <Text style={styles.textButton}>Simular Compra</Text>
+                    </TouchableOpacity>
+                </LinearGradient>
               </View>
               :
               <View>

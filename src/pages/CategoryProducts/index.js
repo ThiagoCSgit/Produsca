@@ -107,10 +107,11 @@ export default function CategoryProducts({ navigation }) {
   useEffect(() => {
     api.get("/consultas/CategoriasProdutos").then(response => {
       let listCategorys = response.data
+      console.log('listCategorys:',listCategorys)
       if(listCategorys != null && listCategorys.length > 0){
         setCatProducts(listCategorys.map((item, index) => {
           return {
-            name: item.nome,
+            name: capitalizeWords(item.nome),
             id: index + 1,
             image: require("../../images/foodImage.png")
           }
@@ -122,6 +123,10 @@ export default function CategoryProducts({ navigation }) {
       setIsLoading(false)
     })
   }, [])
+
+  function capitalizeWords(text) {
+    return text.replace(/\b\w{3,}/g, (match) => match.charAt(0).toUpperCase() + match.slice(1));
+  }
 
   return ( isLoading ?
     <Loading/> :

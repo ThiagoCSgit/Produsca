@@ -13,6 +13,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "OpenSans_500Medium"
   },
+  selectDays: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 15,
+  },
   buttonsArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useEffect, useState } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SupermaketShoppingList({ state, showButton = false, navigation = null }) {
 
@@ -60,11 +61,20 @@ export default function SupermaketShoppingList({ state, showButton = false, navi
                       </View>
                       {
                         showButton &&
-                        <TouchableOpacity style={styles.startShoppingButton} onPress={() => startShopping(state[index])}>
-                            <Text style={styles.textButton}>Iniciar Compra</Text>
-                            <Icon name="shoppingcart" size={20} style={{color: "#fff"}}/>
-                        </TouchableOpacity>
-                      }
+                        <LinearGradient
+                          // colors={['#69c906', '#84be00']}
+                          // colors={['#e8c525', '#ebd31c']}
+                          colors={['#25e8c8', '#1ca8eb']}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                          style={styles.buttonGradient}
+                        >
+                          <TouchableOpacity style={styles.startShoppingButton} onPress={() => startShopping(state[index])}>
+                              <Text style={styles.textButton}>Iniciar Compra</Text>
+                              <Icon name="shoppingcart" size={20} style={{color: "#fff"}}/>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                }
                     </View>
                 }
               </View>

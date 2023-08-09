@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 3,
   },
+  buttonGradient: {
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
   buttonOpenCollapse:{
     flexDirection: "row", 
     justifyContent: "space-between", 
@@ -28,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   startShoppingButton: {
-    backgroundColor: "#93be00",
+    // backgroundColor: "#93be00",
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     padding: 10,

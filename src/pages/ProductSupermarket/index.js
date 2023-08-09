@@ -18,6 +18,7 @@ import {
   import Icon from 'react-native-vector-icons/Feather';
 
   import Loading from '../../components/Loading';
+  import RadioButtonDays from '../../components/RadioButtonDays';
   
   import { format } from 'date-fns';
   import { ptBR } from 'date-fns/locale';
@@ -28,6 +29,7 @@ import {
     const [priceHistory, setPriceHistory] = useState([])
     const [inCart, setInCart] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
+    const [quantDays, setQuantDays] = useState(7)
 
     const isFocused = useIsFocused();
   
@@ -40,6 +42,10 @@ import {
       getHistoricoPreco()
       getCheckProducts()
     }, [])
+
+    useEffect(() => {
+      console.log('quantDays detalhes:',quantDays)
+    },[quantDays])
     
     function getHistoricoPreco(){
       try{
@@ -118,6 +124,11 @@ import {
               }}
             />
           }
+          <View style={styles.selectDays}>
+            {
+              <RadioButtonDays quantDays={quantDays} setQuantDays={setQuantDays}/>
+            }
+          </View>
           <View style={styles.buttonsArea}>
             <Pressable onPress={() => executeAction(inCart, idProduct, supermarket)}>
               <View style={{flexDirection: "row", marginLeft: 10}}>

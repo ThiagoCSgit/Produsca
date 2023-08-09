@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   text:{
     fontFamily: "OpenSans_500Medium",
-    fontSize: 22,
+    fontSize: 20,
     textAlign: "center"
   }
 });
