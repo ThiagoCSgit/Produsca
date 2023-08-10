@@ -40,9 +40,13 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       alignItems: 'center'
     },
+    iconTrash: {
+      marginBottom: 5
+    },
     quantItems: {
       flexDirection: "row",
-      gap: 15
+      gap: 15,
+      alignItems: "center",
     },
     quantityValue: {
       fontSize: 24,
@@ -57,18 +61,21 @@ const styles = StyleSheet.create({
       marginBottom: 10,
       fontFamily: "OpenSans_500Medium"
     },
-    buttonCheckout:{
-      width: "80%",
-      height: 50,
+    buttonGradient: {
       borderRadius: 100,
-      padding: 10,
-      marginVertical: 10,
+      width: "80%",
+      marginBottom: 20,
+    },
+    buttonCheckout:{
+      paddingVertical: 15,
+      paddingHorizontal: 20,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#1E90FF'
+      flexDirection: 'row',
+      textAlign: "center",
     },
     textButton: {
-      color: '#fff',
+      color: '#000',
       fontSize: 18,
       fontFamily: "OpenSans_500Medium"
     }

@@ -9,74 +9,77 @@ import api from "../../service/api"
 export default function Products({ route, navigation }) {
   const {categoryName, supermarketName} = route.params
   const [isLoading, setIsLoading] = useState(true)
-  const [products, setProducts] = useState([
-    {
-      id: "1",
-      name: "Bacon",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "Cofril",
-      price: "10,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "2",
-      name: "Sobrecoxa de Frango",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "Perdigão",
-      price: "15,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "3",
-      name: "Filé Mingnon",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "Montana",
-      price: "22,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "4",
-      name: "Banana Ouro",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "",
-      price: "9,75",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "5",
-      name: "Manga Tommy Atkins",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "",
-      price: "4,73",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "6",
-      name: "Tomate Orgânico",
-      image: require("../../images/foodImage.png"),
-      inCart: false,
-      mark: "Viver",
-      price: "10,80",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-  ])
+  // const [products, setProducts] = useState([
+  //   {
+  //     id: "1",
+  //     name: "Bacon",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "Cofril",
+  //     price: "10,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Sobrecoxa de Frango",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "Perdigão",
+  //     price: "15,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Filé Mingnon",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "Montana",
+  //     price: "22,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Banana Ouro",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "",
+  //     price: "9,75",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Manga Tommy Atkins",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "",
+  //     price: "4,73",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "6",
+  //     name: "Tomate Orgânico",
+  //     image: require("../../images/foodImage.png"),
+  //     inCart: false,
+  //     mark: "Viver",
+  //     price: "10,80",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  // ])
+  const [products, setProducts] = useState([])
   const isFocused = useIsFocused();
 
   useEffect(() => {
     console.log('oi:',supermarketName)
     if(supermarketName){
-      api.get(`/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&supermercado=${supermarketName}`).then(response => {
+      let nameNoSpace = supermarketName.split(/\s+/).join('').toLowerCase()
+      console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
+      api.get(`/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`).then(response => {
         console.warn('response:',response.data)
         let listProd = response.data
         if(listProd != null && listProd.length > 0){
@@ -106,18 +109,17 @@ export default function Products({ route, navigation }) {
       })
     }
     else{
-      // api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}&supermercado=qualquer`).then(response => {
-      api.get(`/consultas/ProdutosCategoria?categoria=higiene&supermercado=qualquer`).then(response => {
+      console.log(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
+      api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}`).then(response => {
         console.warn('response sem supermercado:',response.data)
         let listProd = response.data
         if(listProd != null && listProd.length > 0){
           setProducts(listProd.map((item, index) => {
             return {
               id: index + 1,
-              name: item.nome,
+              name: item.nome_produto,
               image: require("../../images/foodImage.png"),
               inCart: false,
-              mark: "Viver",
               price: "10,80",
               minPrice: "1,23",
               maxPrice: "72,23",
@@ -230,7 +232,7 @@ export default function Products({ route, navigation }) {
               })}>
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
-                  <Text style={styles.nameProduct}>{item.mark ? item.name + ' - ' + item.mark : item.name}</Text>
+                  <Text style={styles.nameProduct}>{item.name}</Text>
                   <Text style={styles.nameProduct}>R$ {`${supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
                 </View>
               </Pressable>

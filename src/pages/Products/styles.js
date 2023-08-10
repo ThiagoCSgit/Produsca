@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -31,11 +31,12 @@ const styles = StyleSheet.create({
     productIcon: {
       width: 70,
       height: 70,
-      marginRight: 10
+      marginRight: 10,
     },
     nameProduct: {
-      fontSize: 17,
-      fontFamily: "OpenSans_500Medium"
+      fontSize: 16,
+      fontFamily: "OpenSans_500Medium",
+      width: Dimensions.get("window").width - 140
     },
     checkBoxArea:{
       flexDirection: 'row',

@@ -44,16 +44,25 @@ export default function Products({ route, navigation }) {
   }, [isFocused])
 
   useEffect(() => {
-    getHistoricoPreco()
+    // getHistoricoPreco()
     getCheckProducts()
-    getSupermarketsProduct()
+    // getSupermarketsProduct()
   }, [])
+
+  useEffect(() => {
+    getHistoricoPreco()
+  }, [quantDays])
 
   
   function getHistoricoPreco(){
     try{
-      // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
-      api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`).then(response => {
+      let nameNoSpace = nameProduct.split(/\s+/).join('').toLowerCase()
+      let dataInicial = format(new Date(), 'yyyy-MM-dd')
+      let dataFinal = new Date()
+      dataFinal.setDate(dataFinal.getDate() - quantDays)
+      dataFinal = format(dataFinal, 'yyyy-MM-dd')
+      console.log(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`)
+      api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
         setPriceHistory(response.data)
         setIsLoadingHistory(false)
       })

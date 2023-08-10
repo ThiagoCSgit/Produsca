@@ -10,22 +10,30 @@ const styles = StyleSheet.create({
       width: "100%"
     },
     supermarketInfos: {
-      gap: 15
+      gap: 20,
+      marginTop: 10,
+      paddingBottom: 5,
     },
     supermarketName: {
-      fontSize: 30,
+      fontSize: 24,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     },
+    callNumber: {
+      flexDirection: 'row', 
+      textAlign: 'center', 
+      justifyContent: 'center', 
+      alignItems: 'center'
+    },
     supermarketInfo: {
-      fontSize: 21,
+      fontSize: 18,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     },
     buttonCall:{
       width: 50, 
-      marginLeft: 20,
-      marginTop: 5
+      marginLeft: 10,
+      marginTop: 2
     },
     listSupermarketCategorys:{
       flex: 1,
@@ -41,7 +49,7 @@ const styles = StyleSheet.create({
       height: Dimensions.get('window').width/6,
     },
     supermarketCategoryName: {
-      fontSize: 17,
+      fontSize: 18,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     }

@@ -8,6 +8,7 @@ import IconAD from 'react-native-vector-icons/AntDesign';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import Slider from '@react-native-community/slider';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import api from "../../service/api"
 
@@ -78,7 +79,7 @@ export default function Supermarkets({navigation}) {
       console.log('lon:',myLocation.coords.longitude)
       setPreviousRange(range)
       console.log('chamou a rota')
-      console.log('rota:',`/consultas/SupermercadosProximos?latitude=${-20.3353993}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`)
+      console.log('rota:',`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`)
       api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
         console.warn('response:',response.data)
         let listMarkets = response.data
@@ -87,13 +88,12 @@ export default function Supermarkets({navigation}) {
             return {
               id: index + 1,
               name: item.nome,
-              city: item.cidade,
-              state: item.estado,
+              city: item.nomeCidade,
+              state: item.nomeEstado,
               publicPlace: item.logradouro,
               number: item.numero,
               phone: item.telefone,
-              rate: item.avaliacao,
-              district: item.bairro,
+              district: item.nomeBairro,
               image: require("../../images/foodImage.png"),
             }
           }))
@@ -139,23 +139,30 @@ export default function Supermarkets({navigation}) {
             })}>
               <Image style={styles.supermarketIcon} source={item.image}/>
               <View>
-                <Text style={styles.supermarketName}>{item.name} - {item.city}</Text>
-                <Text style={styles.supermarketName}>{item.publicPlace}, 
+                <Text style={styles.supermarketName}>{item.name} - {item.publicPlace} {item.number}, {item.city}</Text>
+                {/* <Text style={styles.supermarketName}>{item.publicPlace}, 
                   {'\n'}{item.number}
-                </Text>
+                </Text> */}
               </View>
             </Pressable>
           )
         }}
       />
-      <View style={{gap: 10}}>
+      <View style={{gap: 10, paddingVertical: 15}}>
         <View style={{opacity: modalVisible ? 0.4 : 1}}>
           <ScannerButton navigation={navigation}/>
         </View>
-        <TouchableOpacity style={[styles.buttonRange, {opacity: modalVisible ? 0.4 : 1}]} onPress={() => setModalVisible(!modalVisible)}>
-          <IconMCI style={styles.iconGPS} name='crosshairs-gps' size={25}/>
-          <Text style={styles.textButtonRange}>Ajustar distância</Text>
-        </TouchableOpacity>
+        <LinearGradient
+          colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.buttonGradient}
+        >
+          <TouchableOpacity style={[styles.buttonRange, {opacity: modalVisible ? 0.4 : 1}]} onPress={() => setModalVisible(!modalVisible)}>
+            <IconMCI style={styles.iconGPS} name='crosshairs-gps' size={25}/>
+            <Text style={styles.textButtonRange}>Ajustar distância</Text>
+          </TouchableOpacity>
+        </LinearGradient>
         <Modal
           visible={modalVisible}
           onRequestClose={() => {

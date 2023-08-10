@@ -145,7 +145,7 @@ export default function Supermarket({route, navigation}) {
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
         <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>
-        <View style={{flexDirection: 'row', textAlign: 'center', justifyContent: 'center'}}>
+        <View style={styles.callNumber}>
           <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.phone}</Text> 
           <Pressable style={styles.buttonCall} onPress={() => callNumber(supermarketInfos.phone)}>
             <Icon name="phone" size={22}/>
