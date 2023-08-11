@@ -36,6 +36,8 @@ export default function Products({ route, navigation }) {
   const [supermarktesAvailables, setSupermarktesAvailables] = useState([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(true)
   const [isLoadingMarkets, setIsLoadingMarkets] = useState(true)
+  
+
   const isFocused = useIsFocused();
 
 

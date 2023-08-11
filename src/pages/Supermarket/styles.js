@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     callNumber: {
       flexDirection: 'row', 
       textAlign: 'center', 
-      justifyContent: 'center', 
+      justifyContent: 'space-between', 
       alignItems: 'center',
       borderWidth: 1,
       borderColor: "#00da28",
@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     phone:{
       paddingLeft: 20,
       paddingRight: 10,
-      color: "#000"
+      color: "#000",
+      justifyContent: 'center',
     },
     supermarketInfo: {
       fontSize: 18,

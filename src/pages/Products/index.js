@@ -5,10 +5,13 @@ import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 import api from "../../service/api"
+import Loading from '../../components/Loading';
+import NoData from '../../components/NoData';
 
 export default function Products({ route, navigation }) {
   const {categoryName, supermarketName} = route.params
   const [isLoading, setIsLoading] = useState(true)
+  const [noData, setNoData] = useState(null)
   // const [products, setProducts] = useState([
   //   {
   //     id: "1",
@@ -75,7 +78,17 @@ export default function Products({ route, navigation }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    getCategoryProducts()
+  }, [])
+
+  useEffect(() => {
+    getCheckProducts()
+  }, [isFocused])
+
+  async function getCategoryProducts(){
     console.log('oi:',supermarketName)
+    setIsLoading(true)
+
     if(supermarketName){
       let nameNoSpace = supermarketName.split(/\s+/).join('').toLowerCase()
       console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
@@ -104,6 +117,7 @@ export default function Products({ route, navigation }) {
         }
         else{
           setProducts([])
+          setNoData(response.data)
         }
         setIsLoading(false)
       })
@@ -128,15 +142,12 @@ export default function Products({ route, navigation }) {
         }
         else{
           setProducts([])
+          setNoData(response.data)
         }
         setIsLoading(false)
       })
     }
-  }, [])
-
-  useEffect(() => {
-    getCheckProducts()
-  }, [isFocused])
+  }
 
   async function getCheckProducts() {
     try {
@@ -205,7 +216,12 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  return (
+  return ( isLoading ? 
+    <Loading/> 
+    :
+    noData != null ?
+    <NoData message={noData.message} executeAction={getCategoryProducts}/> 
+    :
     <SafeAreaView style={styles.container}>
       <Text style={styles.titlePage}>
         {`${supermarketName ? categoryName + ' - ' + supermarketName : categoryName}`}

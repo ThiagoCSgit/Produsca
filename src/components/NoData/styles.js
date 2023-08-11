@@ -3,7 +3,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start', 
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 20
   },
   image: {
     width: "95%", 

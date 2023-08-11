@@ -69,10 +69,9 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 10,
     color: "#000",
-    backgroundColor: 'red'
   },
   shareIcon:{
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingLeft: 15,
     paddingRight: 18,
     alignItems: 'center',

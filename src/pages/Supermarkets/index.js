@@ -6,7 +6,7 @@ import NoData from '../../components/NoData';
 import * as Location from 'expo-location';
 import IconAD from 'react-native-vector-icons/AntDesign';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons'
-// import IconFA from 'react-native-vector-icons/FontAwesome'
+
 
 import Slider from '@react-native-community/slider';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -126,40 +126,8 @@ export default function Supermarkets({navigation}) {
     })
   }
 
-  return ( isLoading ? 
-    <Loading/> :
-    noData != null 
-    ?
-    <NoData message={noData.message} getNearbySupermarkets={getNearbySupermarkets}/>
-    :
-    <SafeAreaView style={[styles.container, {backgroundColor: modalVisible ? 'rgba(122, 118, 114, 0.4)' : '#fff'}]}>
-      <FlatList
-        style={styles.listSupermarkets}
-        data={supermarkets}
-        numColumns={1}
-        key={'_'}
-        renderItem={({item}) => {
-          return (
-            <Pressable style={styles.supermarketItem} onPress={() => navigation.navigate("Supermercado", {
-              name: item.name,
-              phone: item.phone,
-              publicPlace: item.publicPlace,
-              district: item.district,
-              city: item.city,
-              state: item.state,
-              number: item.number
-            })}>
-              <Image style={styles.supermarketIcon} source={item.image}/>
-              <View>
-                <Text style={styles.supermarketName}>{item.name} - {item.publicPlace} {item.number}, {item.city}</Text>
-                {/* <Text style={styles.supermarketName}>{item.publicPlace}, 
-                  {'\n'}{item.number}
-                </Text> */}
-              </View>
-            </Pressable>
-          )
-        }}
-      />
+  function adjustDistance(){
+    return (
       <View style={{gap: 10, paddingVertical: 15}}>
         <LinearGradient
           colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
@@ -198,6 +166,49 @@ export default function Supermarkets({navigation}) {
             </View>
         </Modal>
       </View>
+    )
+  }
+
+  return ( isLoading ? 
+    <Loading/> :
+    noData != null 
+    ?
+    <View>
+      <NoData message={noData.message} executeAction={getNearbySupermarkets}/>
+      <View style={{alignItems: 'center', marginTop: -45}}>
+        {adjustDistance()}
+      </View>
+    </View>
+    :
+    <SafeAreaView style={[styles.container, {backgroundColor: modalVisible ? 'rgba(122, 118, 114, 0.4)' : '#fff'}]}>
+      <FlatList
+        style={styles.listSupermarkets}
+        data={supermarkets}
+        numColumns={1}
+        key={'_'}
+        renderItem={({item}) => {
+          return (
+            <Pressable style={styles.supermarketItem} onPress={() => navigation.navigate("Supermercado", {
+              name: item.name,
+              phone: item.phone,
+              publicPlace: item.publicPlace,
+              district: item.district,
+              city: item.city,
+              state: item.state,
+              number: item.number
+            })}>
+              <Image style={styles.supermarketIcon} source={item.image}/>
+              <View>
+                <Text style={styles.supermarketName}>{item.name} - {item.publicPlace} {item.number}, {item.city}</Text>
+                {/* <Text style={styles.supermarketName}>{item.publicPlace}, 
+                  {'\n'}{item.number}
+                </Text> */}
+              </View>
+            </Pressable>
+          )
+        }}
+      />
+      {adjustDistance()}
     </SafeAreaView>
   );
 }

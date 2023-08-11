@@ -4,11 +4,12 @@ import styles from './styles';
 import api from '../../service/api';
 
 import Loading from '../../components/Loading';
-
+import NoData from '../../components/NoData';
 
 export default function CategoryProducts({ navigation }) {
 
   const [isLoading, setIsLoading] = useState(true)
+  const [noData, setNoData] = useState(null)
   
   const [catProducts, setCatProducts] = useState([
     {
@@ -104,6 +105,11 @@ export default function CategoryProducts({ navigation }) {
   ])
 
   useEffect(() => {
+    getCategories()
+  }, [])
+
+  async function getCategories(){
+    setIsLoading(true)
     api.get("/consultas/CategoriasProdutos").then(response => {
       let listCategorys = response.data
       console.log('listCategorys:',listCategorys)
@@ -118,17 +124,22 @@ export default function CategoryProducts({ navigation }) {
       }
       else{
         setCatProducts([])
+        setNoData(response.data)
       }
       setIsLoading(false)
     })
-  }, [])
+  }
 
   function capitalizeWords(text) {
     return text.replace(/\b\w{3,}/g, (match) => match.charAt(0).toUpperCase() + match.slice(1));
   }
 
   return ( isLoading ?
-    <Loading/> :
+    <Loading/> 
+    :
+    noData != null ?
+    <NoData message={noData.message} executeAction={getCategories}/>
+    :
     <SafeAreaView style={styles.container}>
       <FlatList
         contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
