@@ -2,7 +2,6 @@ import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-nati
 import React, { useState, useEffect } from "react";
 import styles from './styles';
 import api from '../../service/api';
-import ScannerButton from '../../components/Scanner/ScannerButton';
 
 import Loading from '../../components/Loading';
 
@@ -149,9 +148,6 @@ export default function CategoryProducts({ navigation }) {
           )
         }}
       />
-      <View style={{width: "80%", paddingVertical: 15}}>
-        <ScannerButton navigation={navigation} />
-      </View>
     </SafeAreaView>
   )
 }

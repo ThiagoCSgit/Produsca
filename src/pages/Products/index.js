@@ -233,7 +233,7 @@ export default function Products({ route, navigation }) {
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
-                  <Text style={styles.nameProduct}>R$ {`${supermarketName ? item.price : item.minPrice + ' - ' + item.maxPrice}`}</Text>
+                  {supermarketName && <Text style={styles.nameProduct}>R$ {item.price}</Text>}
                 </View>
               </Pressable>
               <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, supermarketName)}>

@@ -1,11 +1,12 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View, Modal, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import React, { useState, useEffect } from "react";
-import ScannerButton from '../../components/Scanner/ScannerButton';
 import Loading from '../../components/Loading';
+import NoData from '../../components/NoData';
 import * as Location from 'expo-location';
 import IconAD from 'react-native-vector-icons/AntDesign';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons'
+// import IconFA from 'react-native-vector-icons/FontAwesome'
 
 import Slider from '@react-native-community/slider';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -60,6 +61,7 @@ export default function Supermarkets({navigation}) {
   ])
   const [myLocation, setMyLocation] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [noData, setNoData] = useState(null)
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0)
@@ -68,41 +70,19 @@ export default function Supermarkets({navigation}) {
     getLocation()
   }, [])
 
+
   useEffect(() => {
     console.log('myLocation:',myLocation)
     console.log('range:',range)
     console.log('previousRange:',previousRange)
     if(myLocation && !modalVisible && (range != previousRange)){
-      setIsLoading(true)
       // const lat = myLocation.coords.latitude
       console.log('lat:',myLocation.coords.latitude)
       console.log('lon:',myLocation.coords.longitude)
       setPreviousRange(range)
       console.log('chamou a rota')
       console.log('rota:',`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`)
-      api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
-        console.warn('response:',response.data)
-        let listMarkets = response.data
-        if (listMarkets != null && listMarkets.length > 0){
-          setSupermarkets(listMarkets.map((item, index) => {
-            return {
-              id: index + 1,
-              name: item.nome,
-              city: item.nomeCidade,
-              state: item.nomeEstado,
-              publicPlace: item.logradouro,
-              number: item.numero,
-              phone: item.telefone,
-              district: item.nomeBairro,
-              image: require("../../images/foodImage.png"),
-            }
-          }))
-        }
-        else{
-          setSupermarkets([])
-        }
-        setIsLoading(false)
-      })
+      getNearbySupermarkets()
     }
   }, [myLocation, range, modalVisible])
 
@@ -118,8 +98,40 @@ export default function Supermarkets({navigation}) {
     setMyLocation(location);
   }
 
+  async function getNearbySupermarkets(){
+    setIsLoading(true)
+    api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
+      console.warn('response:',response.data)
+      let listMarkets = response.data
+      if (listMarkets != null && listMarkets.length > 0){
+        setSupermarkets(listMarkets.map((item, index) => {
+          return {
+            id: index + 1,
+            name: item.nome,
+            city: item.nomeCidade,
+            state: item.nomeEstado,
+            publicPlace: item.logradouro,
+            number: item.numero,
+            phone: item.telefone,
+            district: item.nomeBairro,
+            image: require("../../images/icone_mercado.png"),
+          }
+        }))
+      }
+      else{
+        setSupermarkets([])
+        setNoData(response.data)
+      }
+      setIsLoading(false)
+    })
+  }
+
   return ( isLoading ? 
     <Loading/> :
+    noData != null 
+    ?
+    <NoData message={noData.message} getNearbySupermarkets={getNearbySupermarkets}/>
+    :
     <SafeAreaView style={[styles.container, {backgroundColor: modalVisible ? 'rgba(122, 118, 114, 0.4)' : '#fff'}]}>
       <FlatList
         style={styles.listSupermarkets}
@@ -149,9 +161,6 @@ export default function Supermarkets({navigation}) {
         }}
       />
       <View style={{gap: 10, paddingVertical: 15}}>
-        <View style={{opacity: modalVisible ? 0.4 : 1}}>
-          <ScannerButton navigation={navigation}/>
-        </View>
         <LinearGradient
           colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
           start={{ x: 0, y: 0 }}

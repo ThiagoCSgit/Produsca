@@ -1,5 +1,5 @@
-import { SafeAreaView, Text, Image, FlatList, Pressable, View, Linking } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { SafeAreaView, Text, Image, FlatList, Pressable, View, Linking, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import React, { useState, useEffect } from "react";
 import styles from './styles';
 import api from "../../service/api"
@@ -122,7 +122,7 @@ export default function Supermarket({route, navigation}) {
       if(listCategorys != null && listCategorys.length > 0){
         setSupermarketProducts(listCategorys.map((item, index) => {
           return{
-            name: item.nome,
+            name: capitalizeWords(item.nome),
             id: index + 1,
             image: require("../../images/foodImage.png")
           }
@@ -139,22 +139,41 @@ export default function Supermarket({route, navigation}) {
     Linking.openURL(`tel:${phoneNumber}`);
   }
 
+  function capitalizeWords(text) {
+    return text.replace(/\b\w{3,}/g, (match) => match.charAt(0).toUpperCase() + match.slice(1));
+  }
+
+  function openMaps(address){
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    try{
+      Linking.openURL(url)
+    }
+    catch(error){
+      console.warn(error)
+    }
+  }
+
   return ( 
     isLoading ? 
     <Loading/> :
     <SafeAreaView style={styles.container}>
       <View style={styles.supermarketInfos}>
         <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>
-        <View style={styles.callNumber}>
-          <Text style={styles.supermarketInfo}>Telefone: {supermarketInfos.phone}</Text> 
-          <Pressable style={styles.buttonCall} onPress={() => callNumber(supermarketInfos.phone)}>
-            <Icon name="phone" size={22}/>
-          </Pressable>
-        </View>
-        <Text style={styles.supermarketInfo}>
-          Endereço: {'\n'} {supermarketInfos.publicPlace} {supermarketInfos.number} {'\n'}
-          {supermarketInfos.district} {supermarketInfos.city}, {supermarketInfos.state}
-        </Text>
+        <TouchableOpacity style={styles.callNumber} onPress={() => callNumber(supermarketInfos.phone)}>
+          <Text style={[styles.supermarketInfo, styles.phone]}>Telefone: {supermarketInfos.phone}</Text> 
+          <View style={styles.buttonCall}>
+            <Icon name="phone-call" size={22} style={{color: "#fff"}}/>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openMaps(`${supermarketInfos.publicPlace} ${supermarketInfos.number} ${supermarketInfos.city} ${supermarketInfos.state}`)}>
+          <Text style={[styles.supermarketInfo, {color: "#000"}]}>
+            Endereço: {'\n'}
+            <Text style={{color: "#1E90FF"}}>
+              {supermarketInfos.publicPlace} {supermarketInfos.number} {'\n'}
+              {supermarketInfos.district} {supermarketInfos.city}, {supermarketInfos.state}
+            </Text>
+          </Text>
+        </TouchableOpacity>
       </View>
       <FlatList
         contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}}

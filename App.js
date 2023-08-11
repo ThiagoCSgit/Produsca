@@ -22,6 +22,7 @@ import IconAD from 'react-native-vector-icons/AntDesign';
 import IconET from 'react-native-vector-icons/Entypo';
 import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconFA from 'react-native-vector-icons/FontAwesome5';
+import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -51,14 +52,17 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
-            if (route.name === "Categorias de Produtos") {
+            if (route.name === "Categorias") {
               return <IconMI style={[focused ? styles.buttonFocus : styles.noFocus]} name="category" size={25} />
             }
-            else if (route.name == "Supermercados Próximos") {
+            else if (route.name == "Supermercados") {
               return <IconET style={[focused ? styles.buttonFocus : styles.noFocus]} name="shopping-basket" size={25} />
             }
-            else {
+            else if (route.name == "Histórico") {
               return <IconFA style={[focused ? styles.buttonFocus : styles.noFocus]} name="clipboard-list" size={25} />
+            }
+            else{
+              return <IconMCI style={[focused ? styles.buttonFocus : styles.noFocus]} name="qrcode-scan" size={25} />
             }
           },
           header: (scene) => {
@@ -86,9 +90,10 @@ export default function App() {
           }
         })}
       >
-        <Tab.Screen name="Categorias de Produtos" component={CategoryProducts} />
-        <Tab.Screen name="Supermercados Próximos" component={Supermarkets} />
-        <Tab.Screen name="Histórico de Compras" component={PurchasesHistoric} />
+        <Tab.Screen name="Categorias" component={CategoryProducts} />
+        <Tab.Screen name="Supermercados" component={Supermarkets} />
+        <Tab.Screen name="Histórico" component={PurchasesHistoric} />
+        <Tab.Screen name="Scanner" component={Scanner} />
       </Tab.Navigator>
     )
   }
@@ -217,20 +222,6 @@ export default function App() {
               return (
                 <SafeAreaView>
                   {CustomHeader(title, false)}
-                </SafeAreaView>
-              )
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Scanner"
-          component={Scanner}
-          options={{
-            header: (scene) => {
-              const title = scene.route.name
-              return (
-                <SafeAreaView>
-                  {CustomHeader(title)}
                 </SafeAreaView>
               )
             },

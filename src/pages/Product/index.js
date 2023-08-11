@@ -46,7 +46,7 @@ export default function Products({ route, navigation }) {
   useEffect(() => {
     // getHistoricoPreco()
     getCheckProducts()
-    // getSupermarketsProduct()
+    getSupermarketsProduct()
   }, [])
 
   useEffect(() => {
@@ -62,7 +62,8 @@ export default function Products({ route, navigation }) {
       dataFinal.setDate(dataFinal.getDate() - quantDays)
       dataFinal = format(dataFinal, 'yyyy-MM-dd')
       console.log(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`)
-      api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
+      // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
+      api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`).then(response => {
         setPriceHistory(response.data)
         setIsLoadingHistory(false)
       })
@@ -75,7 +76,28 @@ export default function Products({ route, navigation }) {
     try{
       // api.get(`/consultas/SupermercadosProduto?nomeproduto=${route.params?.nameProduct.toLowerCase()}`).then(response => {
       api.get(`/consultas/SupermercadosProduto?nomeProduto=batata`).then(response => {
+        console.log('response supermercados produtos:', response.data)
         setSupermarktesAvailables(response.data)
+        let listMarkets = response.data
+        if (listMarkets != null && listMarkets.length > 0){
+          setSupermarktesAvailables(listMarkets.map((item, index) => {
+            return {
+              id: index + 1,
+              name: item.nome,
+              city: item.cidade,
+              state: item.estado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              phone: item.telefone || "(27) 33984455",
+              district: item.bairro,
+              product: item.produto,
+              image: require("../../images/icone_mercado.png"),
+            }
+          }))
+        }
+        else{
+          setSupermarktesAvailables([])
+        }
         setIsLoadingMarkets(false)
       })
     } catch(error){
@@ -162,17 +184,23 @@ export default function Products({ route, navigation }) {
                   <View style={styles.itemSupermarket}>
                     <View style={{flexDirection: "row", justifyContent: "center", paddingBottom: 10}}>
                       <TouchableOpacity onPress={() => navigation.navigate("Supermercado", {
-                        name: item.nome
+                        name: item.name,
+                        phone: item.phone,
+                        publicPlace: item.publicPlace,
+                        district: item.district,
+                        city: item.city,
+                        state: item.state,
+                        number: item.number
                       })}>
                         <Text style={{color: "#1E90FF", fontSize: 20, fontFamily: "OpenSans_500Medium"}}>
-                          Supermercado {item.nome}
+                          Supermercado {item.name}
                         </Text>
                       </TouchableOpacity>
-                      <Text style={{fontSize: 20, color: "#623b32", fontFamily: "OpenSans_500Medium"}}> - R${item.produto.preco}</Text>
+                      <Text style={{fontSize: 20, color: "#623b32", fontFamily: "OpenSans_500Medium"}}> - R${item.product?.preco}</Text>
                     </View>
                     <TouchableOpacity style={styles.buttonHistoric} onPress={() => 
                       navigation.navigate("Detalhes do Produto", {
-                        supermarket: item.nome,
+                        supermarket: item.name,
                         nameProduct: nameProduct,
                         idProduct: idProduct,
                         funcAddRemoveCart: funcAddRemoveCart
@@ -182,8 +210,8 @@ export default function Products({ route, navigation }) {
                     </TouchableOpacity>
                   </View>
                 ))}
-                <View style={styles.buttonsArea}>
-                  <Pressable onPress={() => executeAction(inCart, idProduct)}>
+                {/* <View style={styles.buttonsArea}> */}
+                  {/* <Pressable onPress={() => executeAction(inCart, idProduct)}>
                     <View style={{flexDirection: "row", marginLeft: 10}}>
                       <Checkbox
                         value={inCart}
@@ -191,11 +219,14 @@ export default function Products({ route, navigation }) {
                       />
                       <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
                     </View>
-                  </Pressable>
-                  <Pressable onPress={onShare}>
-                    <IconFE style={{marginRight: 25, height: 30, width: 30}} name="share-2" size={27} />
-                  </Pressable>
-                </View>
+                  </Pressable> */}
+                  <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
+                    <Text style={styles.shareText}>Compartilhar</Text>
+                    <View style={styles.shareIcon}>
+                      <IconFE style={{color: "#fff"}} name="share-2" size={27} />
+                    </View>
+                  </TouchableOpacity>
+                {/* </View> */} 
               </View>
             </View>
           </View>

@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     supermarketIcon: {
       width: 70,
       height: 70,
-      marginRight: 10
+      marginRight: 10,
+      borderRadius: 100
     },
     supermarketName: {
       fontSize: 16,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
       position: "absolute",
       top: 12,
       right: 10,
-    }
+    },
   });
 
 

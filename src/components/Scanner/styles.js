@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   buttonGradient: {
     borderRadius: 100,
+    backgroundColor: "#000"
   },
   buttonScanner:{
     paddingVertical: 12,

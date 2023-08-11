@@ -23,7 +23,15 @@ const styles = StyleSheet.create({
       flexDirection: 'row', 
       textAlign: 'center', 
       justifyContent: 'center', 
-      alignItems: 'center'
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: "#00da28",
+      borderRadius: 100,
+    },
+    phone:{
+      paddingLeft: 20,
+      paddingRight: 10,
+      color: "#000"
     },
     supermarketInfo: {
       fontSize: 18,
@@ -31,9 +39,14 @@ const styles = StyleSheet.create({
       fontFamily: "OpenSans_500Medium"
     },
     buttonCall:{
-      width: 50, 
-      marginLeft: 10,
-      marginTop: 2
+      paddingVertical: 15,
+      paddingLeft: 15,
+      paddingRight: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: "#69ba12",
+      borderTopRightRadius: 100,
+      borderBottomRightRadius: 100
     },
     listSupermarketCategorys:{
       flex: 1,
