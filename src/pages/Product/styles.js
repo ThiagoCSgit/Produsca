@@ -60,14 +60,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#1E90FF",
     borderRadius: 100,
+    width: 355
   },
   shareText: {
     fontFamily: "OpenSans_500Medium",
     textAlign: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     fontSize: 18,
-    paddingLeft: 20,
-    paddingRight: 10,
+    paddingLeft: "20%",
     color: "#000",
   },
   shareIcon:{

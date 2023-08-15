@@ -76,11 +76,10 @@ export default function Supermarkets({navigation}) {
     console.log('range:',range)
     console.log('previousRange:',previousRange)
     if(myLocation && !modalVisible && (range != previousRange)){
-      // const lat = myLocation.coords.latitude
       console.log('lat:',myLocation.coords.latitude)
       console.log('lon:',myLocation.coords.longitude)
       setPreviousRange(range)
-      console.log('chamou a rota')
+      // console.log('chamou a rota')
       console.log('rota:',`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`)
       getNearbySupermarkets()
     }
@@ -103,7 +102,9 @@ export default function Supermarkets({navigation}) {
     api.get(`/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`).then(response => {
       console.warn('response:',response.data)
       let listMarkets = response.data
+      console.log('listMarkets:',listMarkets)
       if (listMarkets != null && listMarkets.length > 0){
+        console.log('tem dados:')
         setSupermarkets(listMarkets.map((item, index) => {
           return {
             id: index + 1,
@@ -120,6 +121,7 @@ export default function Supermarkets({navigation}) {
       }
       else{
         setSupermarkets([])
+        console.log('sem dados:',response.data)
         setNoData(response.data)
       }
       setIsLoading(false)
@@ -173,7 +175,7 @@ export default function Supermarkets({navigation}) {
     <Loading/> :
     noData != null 
     ?
-    <View>
+    <View style={{opacity: modalVisible ? 0.4 : 1}}>
       <NoData message={noData.message} executeAction={getNearbySupermarkets}/>
       <View style={{alignItems: 'center', marginTop: -45}}>
         {adjustDistance()}

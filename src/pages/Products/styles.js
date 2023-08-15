@@ -38,17 +38,27 @@ const styles = StyleSheet.create({
       fontFamily: "OpenSans_500Medium",
       width: Dimensions.get("window").width - 140
     },
-    checkBoxArea:{
-      flexDirection: 'row',
-      marginLeft: 10,
-      marginBottom: 15,
-      height: 30,
+    quantItems: {
+      flexDirection: "row",
+      gap: 15,
+      alignItems: "center",
+      justifyContent: 'center',
     },
-    labelCheckBox: {
-      marginLeft: 10,
-      fontSize: 16,
+    quantityValue: {
+      fontSize: 24,
       fontFamily: "OpenSans_500Medium"
-    }
+    },
+    // checkBoxArea:{
+    //   flexDirection: 'row',
+    //   marginLeft: 10,
+    //   marginBottom: 15,
+    //   height: 30,
+    // },
+    // labelCheckBox: {
+    //   marginLeft: 10,
+    //   fontSize: 16,
+    //   fontFamily: "OpenSans_500Medium"
+    // }
   });
 
 

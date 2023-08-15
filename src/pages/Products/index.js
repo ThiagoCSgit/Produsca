@@ -1,12 +1,14 @@
 import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
-import Checkbox from 'expo-checkbox';
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import styles from './styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
-import api from "../../service/api"
+import api from "../../service/api";
+
 import Loading from '../../components/Loading';
 import NoData from '../../components/NoData';
+
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function Products({ route, navigation }) {
   const {categoryName, supermarketName} = route.params
@@ -78,22 +80,30 @@ export default function Products({ route, navigation }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCategoryProducts()
+    getCategoryProducts();
   }, [])
+ 
+  // useEffect(() => {
+  //   if(isFocused && !isLoading && products.length > 0){
+  //     console.log('foi')
+  //     getCheckProducts()
+  //   }
+  // }, [isFocused, isLoading])
 
-  useEffect(() => {
-    getCheckProducts()
-  }, [isFocused])
+  useMemo(() => {
+    if(isFocused && !isLoading && products.length > 0){
+      return getCheckProducts()
+    }
+  }, [isFocused, isLoading])
 
   async function getCategoryProducts(){
-    console.log('oi:',supermarketName)
     setIsLoading(true)
 
     if(supermarketName){
       let nameNoSpace = supermarketName.split(/\s+/).join('').toLowerCase()
-      console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
+      // console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
       api.get(`/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`).then(response => {
-        console.warn('response:',response.data)
+        // console.warn('response:',response.data)
         let listProd = response.data
         if(listProd != null && listProd.length > 0){
           setProducts(listProd.map((item, index) => {
@@ -101,16 +111,12 @@ export default function Products({ route, navigation }) {
               id: index + 1,
               name: item.nome,
               image: require("../../images/foodImage.png"),
-              inCart: false,
-              mark: "Viver",
               price: "10,80",
-              minPrice: "1,23",
-              maxPrice: "72,23",
+              qtd: 0
             }
           }))
-
           api.get(`/consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
-            console.warn('response:',response.data)
+            // console.warn('response:',response.data)
             // setCatProducts(response.data)
             setIsLoading(false)
           })
@@ -123,9 +129,9 @@ export default function Products({ route, navigation }) {
       })
     }
     else{
-      console.log(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
+      // console.log(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
       api.get(`/consultas/ProdutosCategoria?categoria=${categoryName}`).then(response => {
-        console.warn('response sem supermercado:',response.data)
+        // console.warn('response sem supermercado:',response.data)
         let listProd = response.data
         if(listProd != null && listProd.length > 0){
           setProducts(listProd.map((item, index) => {
@@ -133,10 +139,8 @@ export default function Products({ route, navigation }) {
               id: index + 1,
               name: item.nome_produto,
               image: require("../../images/foodImage.png"),
-              inCart: false,
               price: "10,80",
-              minPrice: "1,23",
-              maxPrice: "72,23",
+              qtd: 0
             }
           }))
         }
@@ -153,10 +157,11 @@ export default function Products({ route, navigation }) {
     try {
       // await AsyncStorage.clear()
       let productKeys = await AsyncStorage.getAllKeys()
-      // console.warn('productKeys:',productKeys)
+      console.warn('productKeys:',productKeys)
       let newList = [...products]
+      // console.log('newList recebendo products:',newList)
       newList.forEach(item => {
-        item.inCart = false
+        item.qtd = 0
       })
   
       let productChecked = null
@@ -177,11 +182,50 @@ export default function Products({ route, navigation }) {
           }
         }
       }
-      // console.warn('newList:',newList)
       setProducts(newList)
     } 
     catch (e) {
       console.warn('error', e)
+    }
+  }
+
+  async function increaseQuantity(id, supermarket = null){
+    let newList = [...products]
+
+    setProducts(newList.map(item => {
+      if (item.id == id) {
+        item.qtd++
+      }
+      return item
+    }))
+
+    let itemToAdd = products.find(item => item.id == id)
+    itemToAdd.supermarket = supermarket
+    id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
+    try {
+      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
+    } catch (e) {
+      console.warn('error:', e)
+    }
+}
+
+  async function decreaseQuantity(id, supermarket = null){
+    let newList = [...products]
+
+    setProducts(newList.map(item => {
+      if (item.id == id && item.qtd > 0) {
+        item.qtd--
+      }
+      return item
+    }))
+  
+    let itemToAdd = products.find(item => item.id == id)
+    itemToAdd.supermarket = supermarket
+    id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
+    try {
+      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
+    } catch (e) {
+      console.warn('error:', e)
     }
   }
 
@@ -252,12 +296,11 @@ export default function Products({ route, navigation }) {
                   {supermarketName && <Text style={styles.nameProduct}>R$ {item.price}</Text>}
                 </View>
               </Pressable>
-              <Pressable style={styles.checkBoxArea} onPress={() => addOrRemoveToShopCart(!item.inCart, item.id, supermarketName)}>
-                <Checkbox
-                  value={item.inCart}
-                />
-                <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
-              </Pressable>
+              <View style={styles.quantItems}>
+                <Icon name="minuscircleo" size={28} onPress={() => decreaseQuantity(item.id, supermarketName)}/>
+                <Text style={styles.quantityValue}>{item.qtd}</Text>
+                <Icon name="pluscircleo" size={28} onPress={() => increaseQuantity(item.id, supermarketName)}/>
+              </View>
             </View>
           )
         }}

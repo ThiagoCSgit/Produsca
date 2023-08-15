@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
       gap: 20,
       marginTop: 10,
       paddingBottom: 5,
+      alignItems: 'center'
     },
     supermarketName: {
       fontSize: 24,
@@ -22,17 +23,19 @@ const styles = StyleSheet.create({
     callNumber: {
       flexDirection: 'row', 
       textAlign: 'center', 
-      justifyContent: 'space-between', 
+      justifyContent: 'center', 
       alignItems: 'center',
       borderWidth: 1,
       borderColor: "#00da28",
       borderRadius: 100,
+      width: "80%"
     },
     phone:{
-      paddingLeft: 20,
-      paddingRight: 10,
+      paddingLeft: "15%",
+      paddingRight: 20,
       color: "#000",
       justifyContent: 'center',
+      alignItems: 'center',
     },
     supermarketInfo: {
       fontSize: 18,
