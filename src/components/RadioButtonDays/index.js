@@ -20,7 +20,7 @@ export default function RadioButtonDays({quantDays, setQuantDays}){
             color="#1E90FF"
             uncheckedColor="#ddd"
             background="transparent"
-            onPress={() => setQuantDays(item)}
+            onPress={() => setQuantDays(parseInt(item))}
           />
         </View>
       </Pressable>

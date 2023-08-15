@@ -24,7 +24,7 @@ import {
   import { ptBR } from 'date-fns/locale';
   
   export default function ProductSupermarket({ route, navigation }) {
-    const {nameProduct, idProduct, supermarket, funcAddRemoveCart} = route.params
+    const {nameProduct, idProduct, supermarket} = route.params
     console.log(route.params)
     const [priceHistory, setPriceHistory] = useState([])
     const [inCart, setInCart] = useState(false)
@@ -69,11 +69,6 @@ import {
       }
     }
   
-  
-    function executeAction(){
-      funcAddRemoveCart(!inCart, idProduct, supermarket)
-      setInCart(!inCart)
-    }
   
     const onShare = async () => {
       const result = await Share.share({

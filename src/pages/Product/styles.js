@@ -13,13 +13,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "OpenSans_500Medium"
   },
-  buttonsArea: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginLeft: 10,
-    marginBottom: 15,
-    marginTop: 25
-  },
   nameProduct: {
     fontSize: 24,
     fontFamily: "OpenSans_500Medium"
@@ -57,7 +50,37 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 19,
     fontFamily: "OpenSans_500Medium"
-  }
+  },
+  buttonShare: {
+    marginTop: 25,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    textAlign: 'center', 
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: "#1E90FF",
+    borderRadius: 100,
+    width: 355
+  },
+  shareText: {
+    fontFamily: "OpenSans_500Medium",
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 18,
+    paddingLeft: "20%",
+    color: "#000",
+  },
+  shareIcon:{
+    paddingVertical: 10,
+    paddingLeft: 15,
+    paddingRight: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: "#1E90FF",
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 100,
+  },
 });
 
 

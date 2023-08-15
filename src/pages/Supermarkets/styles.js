@@ -3,9 +3,9 @@ import { StyleSheet, Dimensions } from "react-native";
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#fff",
       alignItems: "center",
       padding: 20,
+      paddingBottom: 0,
       height: "100%",
       width: "100%"
     },
@@ -32,32 +32,36 @@ const styles = StyleSheet.create({
     supermarketIcon: {
       width: 70,
       height: 70,
-      marginRight: 10
+      marginRight: 10,
+      borderRadius: 100
     },
     supermarketName: {
-      fontSize: 18,
+      fontSize: 16,
       textAlign: "left",
-      fontFamily: "OpenSans_500Medium"
+      fontFamily: "OpenSans_500Medium",
+      width: Dimensions.get("window").width - 140
     },
-    buttonRange: {
-      // height: 50,
+    buttonGradient: {
       borderRadius: 100,
       paddingVertical: 12,
       paddingHorizontal: 20,
       marginBottom: 5,
+    },
+    buttonRange: {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      backgroundColor: '#1E90FF',
     },
     iconGPS: {
       color: "#fff",
-      marginRight: 10
+      marginRight: 10,
+      color: '#000'
     },
     textButtonRange: {
       color: "#fff",
       fontSize: 18,
-      fontFamily: "OpenSans_500Medium"
+      fontFamily: "OpenSans_500Medium",
+      color: '#000'
     },
     containerModal: {
       justifyContent: "center",
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
       position: "absolute",
       top: 12,
       right: 10,
-    }
+    },
   });
 
 

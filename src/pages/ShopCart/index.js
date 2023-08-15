@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import IconE from 'react-native-vector-icons/EvilIcons';
 import Checkbox from 'expo-checkbox';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function ShopCart({route, navigation}) {
@@ -113,39 +114,54 @@ export default function ShopCart({route, navigation}) {
         setTotal(valor)
     }
 
-    async function checkout(){
-        let leftProduct = false
+    function checkout(){
+        let hasUncheckProduct = false
         cartList.produtos.forEach(item => {
             if(!item.check){
-                leftProduct = true
+                hasUncheckProduct = true
             }
         })
 
-        if(leftProduct) {
-            Alert.alert("Itens não marcados", "Um ou mais produtos da lista não foram marcados")
+        if(hasUncheckProduct) {
+            Alert.alert(
+                "Itens não marcados", 
+                "Um ou mais produtos da lista não foram marcados", 
+                [
+                    {
+                        text: "Continuar sem marcar todos",
+                        onPress: () => saveToHistory()
+                    },
+                    {
+                        text: "Voltar para marcar",
+                        onPress: () => {}
+                    },
+                ]
+            )
         }
-        else{
-            
-            let id = `carrinho-${cartList.id}-${cartList.supermercado}`
-            console.warn('id:',id)
-            try {
-                await AsyncStorage.setItem(id, JSON.stringify(cartList))
+        else {
+            saveToHistory()
+        }
+    }
 
-                let productKeys = await AsyncStorage.getAllKeys()
-                productKeys.filter(key => {
-                })
-                // console.warn('productKeys:',productKeys)
-                for(let i=0 ; i<productKeys.length; i++){
-                    let key = productKeys[i]
-                    if(key.includes("produto-lista-")){
-                        // console.warn(`key-${i}:`,key)
-                        await AsyncStorage.removeItem(key)
-                    }
-                    navigation.navigate("Histórico de Compras")
+    async function saveToHistory(){
+        let id = `carrinho-${cartList.id}-${cartList.supermercado}`
+            console.warn('id:',id)
+        try {
+            await AsyncStorage.setItem(id, JSON.stringify(cartList))
+            let productKeys = await AsyncStorage.getAllKeys()
+            productKeys.filter(key => {
+            })
+            // console.warn('productKeys:',productKeys)
+            for(let i=0 ; i<productKeys.length; i++){
+                let key = productKeys[i]
+                if(key.includes("produto-lista-")){
+                    // console.warn(`key-${i}:`,key)
+                    await AsyncStorage.removeItem(key)
                 }
-              } catch (e) {
-                console.warn('error:', e)
-              }
+                navigation.navigate("Histórico de Compras")
+            }
+        } catch (e) {
+            console.warn('error:', e)
         }
     }
 
@@ -183,9 +199,16 @@ export default function ShopCart({route, navigation}) {
                         )
                         }}
                     />
-                    <TouchableOpacity style={styles.buttonCheckout} onPress={() => checkout()}>
-                        <Text style={styles.textButton}>Finalizar Compra</Text>
-                    </TouchableOpacity>
+                    <LinearGradient
+                        colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={styles.buttonGradient}
+                    >
+                        <TouchableOpacity style={styles.buttonCheckout} onPress={() => checkout()}>
+                            <Text style={styles.textButton}>Finalizar Compra</Text>
+                        </TouchableOpacity>
+                    </LinearGradient>
                 </View>
                 :
                 <View>

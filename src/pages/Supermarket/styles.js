@@ -10,22 +10,47 @@ const styles = StyleSheet.create({
       width: "100%"
     },
     supermarketInfos: {
-      gap: 15
+      gap: 20,
+      marginTop: 10,
+      paddingBottom: 5,
+      alignItems: 'center'
     },
     supermarketName: {
-      fontSize: 30,
+      fontSize: 24,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     },
+    callNumber: {
+      flexDirection: 'row', 
+      textAlign: 'center', 
+      justifyContent: 'center', 
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: "#00da28",
+      borderRadius: 100,
+      width: "80%"
+    },
+    phone:{
+      paddingLeft: "15%",
+      paddingRight: 20,
+      color: "#000",
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     supermarketInfo: {
-      fontSize: 21,
+      fontSize: 18,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     },
     buttonCall:{
-      width: 50, 
-      marginLeft: 20,
-      marginTop: 5
+      paddingVertical: 15,
+      paddingLeft: 15,
+      paddingRight: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: "#69ba12",
+      borderTopRightRadius: 100,
+      borderBottomRightRadius: 100
     },
     listSupermarketCategorys:{
       flex: 1,
@@ -41,7 +66,7 @@ const styles = StyleSheet.create({
       height: Dimensions.get('window').width/6,
     },
     supermarketCategoryName: {
-      fontSize: 17,
+      fontSize: 18,
       textAlign: 'center',
       fontFamily: "OpenSans_500Medium"
     }
