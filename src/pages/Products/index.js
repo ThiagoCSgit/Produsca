@@ -230,35 +230,35 @@ export default function Products({ route, navigation }) {
   }
 
 
-  async function addOrRemoveToShopCart(value, id, supermarket = '') {
-    let newList = [...products]
-    setProducts(newList.map(item => {
-      if (item.id == id) {
-        item.inCart = value
-      }
-      return item
-    }))
+  // async function addOrRemoveToShopCart(value, id, supermarket = '') {
+  //   let newList = [...products]
+  //   setProducts(newList.map(item => {
+  //     if (item.id == id) {
+  //       item.inCart = value
+  //     }
+  //     return item
+  //   }))
     
-    if (value) {
-      let itemToAdd = products.find(item => item.id == id)
-      itemToAdd.quantityItems = 1
-      itemToAdd.supermarket = supermarket
-      id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-      try {
-        await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
-      } catch (e) {
-        console.warn('error:', e)
-      }
-    }
-    else {
-      try {
-        id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-        await AsyncStorage.removeItem(id)
-      } catch (e) {
-        console.warn('error:', e)
-      }
-    }
-  }
+  //   if (value) {
+  //     let itemToAdd = products.find(item => item.id == id)
+  //     itemToAdd.quantityItems = 1
+  //     itemToAdd.supermarket = supermarket
+  //     id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
+  //     try {
+  //       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
+  //     } catch (e) {
+  //       console.warn('error:', e)
+  //     }
+  //   }
+  //   else {
+  //     try {
+  //       id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
+  //       await AsyncStorage.removeItem(id)
+  //     } catch (e) {
+  //       console.warn('error:', e)
+  //     }
+  //   }
+  // }
 
   return ( isLoading ? 
     <Loading/> 
@@ -283,12 +283,12 @@ export default function Products({ route, navigation }) {
                 supermarket: supermarketName,
                 nameProduct: item.name,
                 idProduct: item.id,
-                funcAddRemoveCart: addOrRemoveToShopCart
+                // funcAddRemoveCart: addOrRemoveToShopCart
               })
               : navigation.navigate("Produto", { 
                 nameProduct: item.name, 
                 idProduct: item.id, 
-                funcAddRemoveCart: addOrRemoveToShopCart 
+                // funcAddRemoveCart: addOrRemoveToShopCart 
               })}>
                 <Image style={styles.productIcon} source={item.image} />
                 <View style={styles.productInfos}>

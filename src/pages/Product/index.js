@@ -25,7 +25,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function Products({ route, navigation }) {
-  const {nameProduct, idProduct, funcAddRemoveCart} = route.params
+  const {nameProduct, idProduct} = route.params
 
   const [priceHistory, setPriceHistory] = useState([])
   const [quantDays, setQuantDays] = useState(7)
@@ -214,7 +214,7 @@ export default function Products({ route, navigation }) {
                         supermarket: item.name,
                         nameProduct: nameProduct,
                         idProduct: idProduct,
-                        funcAddRemoveCart: funcAddRemoveCart
+                        // funcAddRemoveCart: funcAddRemoveCart
                       })
                     }>
                       <Text style={styles.buttonHistoricText}>Histórico de preço</Text>
