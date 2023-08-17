@@ -10,8 +10,11 @@ import {
 } from "react-native";
 import styles from "./styles";
 import React, { useState, useEffect } from "react";
+
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
+import { useLocation } from "../../context/LocationProvider";
+
 import * as Location from "expo-location";
 import IconAD from "react-native-vector-icons/AntDesign";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
@@ -66,16 +69,18 @@ export default function Supermarkets({ navigation }) {
       city: "Vila Velha",
     },
   ]);
-  const [myLocation, setMyLocation] = useState(null);
+  // const [myLocation, setMyLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  const myLocation = useLocation();
+
+  // useEffect(() => {
+  //   getLocation();
+  // }, []);
 
   useEffect(() => {
     console.log("myLocation:", myLocation);
@@ -94,19 +99,20 @@ export default function Supermarkets({ navigation }) {
     }
   }, [myLocation, range, modalVisible]);
 
-  async function getLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      alert("A permissão para acessar o local foi negada");
-      return;
-    }
+  // async function getLocation() {
+  //   let { status } = await Location.requestForegroundPermissionsAsync();
+  //   if (status !== "granted") {
+  //     alert("A permissão para acessar o local foi negada");
+  //     return;
+  //   }
 
-    let location = await Location.getCurrentPositionAsync({});
-    // console.warn('location aqui:',location)
-    setMyLocation(location);
-  }
+  //   let location = await Location.getCurrentPositionAsync({});
+  //   // console.warn('location aqui:',location)
+  //   setMyLocation(location);
+  // }
 
   async function getNearbySupermarkets() {
+    console.log("minha localização:", myLocation);
     setIsLoading(true);
     api
       .get(

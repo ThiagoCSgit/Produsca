@@ -7,11 +7,15 @@ import CollapseProductsList from "../../components/CollapseProductsList";
 import Loading from "../../components/Loading";
 import AdjustDistance from "../../components/AdjustDistance";
 
+import { useLocation } from "../../context/LocationProvider";
+
 export default function SupermaketShoppingList({ route, navigation }) {
   const [state, setState] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [range, setRange] = useState(1000);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const myLocation = useLocation();
 
   useEffect(() => {
     if (!modalVisible) {
@@ -20,6 +24,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   }, [range, modalVisible]);
 
   function postShopList() {
+    console.warn("minha localização:", myLocation);
     let listNomeProd = route.params.list.map((item) => {
       return {
         nome: item.name,
