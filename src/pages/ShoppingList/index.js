@@ -38,6 +38,7 @@ export default function ShoppingList({ navigation }) {
         const newProduct = JSON.parse(product[1]);
         return newProduct;
       });
+      console.warn("preenchendo cartList:", newList);
       setCartList(newList);
     } catch (e) {
       console.warn("error", e);
@@ -117,7 +118,7 @@ export default function ShoppingList({ navigation }) {
                   <Text style={styles.itemName}>
                     {item.supermarket
                       ? `${item.name} \n R$${item.price} - ${item.supermarket}`
-                      : `${item.name} \n R$${item.price}`}
+                      : `${item.name}`}
                   </Text>
                   <View style={styles.quantItems}>
                     <IconAD

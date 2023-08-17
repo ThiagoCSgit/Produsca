@@ -155,7 +155,7 @@ export default function Products({ route, navigation }) {
                   id: index + 1,
                   name: item.nome_produto,
                   image: require("../../images/foodImage.png"),
-                  price: "10,80",
+                  // price: "10,80",
                   qtd: 0,
                 };
               })
@@ -249,6 +249,7 @@ export default function Products({ route, navigation }) {
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
+      console.log("itemToAdd:", itemToAdd);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
