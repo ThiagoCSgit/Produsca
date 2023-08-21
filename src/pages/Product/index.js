@@ -52,6 +52,7 @@ export default function Products({ route, navigation }) {
   function callApis() {
     setIsLoadingHistory(true);
     setIsLoadingMarkets(true);
+    setNoData(null);
 
     getPriceHistory();
     getSupermarketsProduct();
@@ -242,7 +243,7 @@ export default function Products({ route, navigation }) {
                     <Text
                       style={{
                         fontSize: 20,
-                        color: "#623b32",
+                        color: "#140F07",
                         fontFamily: "OpenSans_500Medium",
                       }}
                     >

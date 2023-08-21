@@ -105,6 +105,7 @@ export default function Products({ route, navigation }) {
 
   async function getCategoryProducts() {
     setIsLoading(true);
+    setNoData(null);
 
     if (supermarketName) {
       let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
@@ -114,7 +115,7 @@ export default function Products({ route, navigation }) {
           `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`
         )
         .then((response) => {
-          // console.warn('response:',response.data)
+          console.warn("response da api:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
@@ -146,7 +147,7 @@ export default function Products({ route, navigation }) {
       api
         .get(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
         .then((response) => {
-          // console.warn('response sem supermercado:',response.data)
+          console.warn("response sem supermercado:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
@@ -154,7 +155,7 @@ export default function Products({ route, navigation }) {
                 return {
                   id: index + 1,
                   name: item.nome_produto,
-                  image: require("../../images/foodImage.png"),
+                  image: `${item.link_imagem}`,
                   // price: "10,80",
                   qtd: 0,
                 };
@@ -332,7 +333,10 @@ export default function Products({ route, navigation }) {
                       })
                 }
               >
-                <Image style={styles.productIcon} source={item.image} />
+                <Image
+                  style={styles.productIcon}
+                  source={{ uri: item.image }}
+                />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
                   {supermarketName && (

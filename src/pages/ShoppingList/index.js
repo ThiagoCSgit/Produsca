@@ -9,7 +9,7 @@ import {
 import styles from "./styles";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import IconE from "react-native-vector-icons/EvilIcons";
+import IconF from "react-native-vector-icons/Feather";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAD from "react-native-vector-icons/AntDesign";
 
@@ -136,18 +136,26 @@ export default function ShoppingList({ navigation }) {
                         increaseQuantity(item.id, item.supermarket)
                       }
                     />
-                    <IconE
-                      style={styles.iconTrash}
-                      name="trash"
-                      size={45}
-                      onPress={() =>
-                        removeItem(
-                          item.supermarket
-                            ? `produto-lista-${item.supermarket}-${item.id}`
-                            : `produto-lista-${item.id}`
-                        )
-                      }
-                    />
+                    <View
+                      style={{
+                        backgroundColor: "rgba(190, 62, 62, 0.88)",
+                        borderRadius: 100,
+                      }}
+                    >
+                      <IconF
+                        style={styles.iconTrash}
+                        color="#FF0051"
+                        name="trash-2"
+                        size={30}
+                        onPress={() =>
+                          removeItem(
+                            item.supermarket
+                              ? `produto-lista-${item.supermarket}-${item.id}`
+                              : `produto-lista-${item.id}`
+                          )
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               );
@@ -169,7 +177,7 @@ export default function ShoppingList({ navigation }) {
             <TouchableOpacity
               style={styles.buttonSimulate}
               onPress={() =>
-                navigation.navigate("Supermacados para Comprar", {
+                navigation.navigate("Supermercados disponíveis", {
                   list: cartList,
                 })
               }

@@ -245,7 +245,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Supermacados para Comprar"
+            name="Supermercados disponíveis"
             component={SupermarketShoppingList}
             options={{
               header: (scene) => {

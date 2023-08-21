@@ -53,7 +53,7 @@ export default function adjustDistance({
             <IconAD name="close" size={27} />
           </Pressable>
           <Text style={styles.rangeLabel}>
-            Raio de alcance {"\n"} {range}m
+            Raio de alcance {"\n"} {range / 1000}km
           </Text>
           <Slider
             style={{ width: 250, height: 50 }}
@@ -61,7 +61,7 @@ export default function adjustDistance({
             maximumValue={10000}
             onValueChange={(value) => setRange(parseInt(value))}
             value={range}
-            step={50}
+            step={100}
             minimumTrackTintColor="#1E90FF"
             thumbTintColor="#1E90FF"
           />

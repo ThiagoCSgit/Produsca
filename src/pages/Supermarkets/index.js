@@ -5,22 +5,14 @@ import {
   FlatList,
   Pressable,
   View,
-  Modal,
-  TouchableOpacity,
 } from "react-native";
 import styles from "./styles";
 import React, { useState, useEffect } from "react";
 
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
+import AdjustDistance from "../../components/AdjustDistance";
 import { useLocation } from "../../context/LocationProvider";
-
-import * as Location from "expo-location";
-import IconAD from "react-native-vector-icons/AntDesign";
-import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
-
-import Slider from "@react-native-community/slider";
-import { LinearGradient } from "expo-linear-gradient";
 
 import api from "../../service/api";
 
@@ -69,7 +61,6 @@ export default function Supermarkets({ navigation }) {
       city: "Vila Velha",
     },
   ]);
-  // const [myLocation, setMyLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,10 +68,6 @@ export default function Supermarkets({ navigation }) {
   const [previousRange, setPreviousRange] = useState(0);
 
   const myLocation = useLocation();
-
-  // useEffect(() => {
-  //   getLocation();
-  // }, []);
 
   useEffect(() => {
     console.log("myLocation:", myLocation);
@@ -99,20 +86,9 @@ export default function Supermarkets({ navigation }) {
     }
   }, [myLocation, range, modalVisible]);
 
-  // async function getLocation() {
-  //   let { status } = await Location.requestForegroundPermissionsAsync();
-  //   if (status !== "granted") {
-  //     alert("A permissão para acessar o local foi negada");
-  //     return;
-  //   }
-
-  //   let location = await Location.getCurrentPositionAsync({});
-  //   // console.warn('location aqui:',location)
-  //   setMyLocation(location);
-  // }
-
   async function getNearbySupermarkets() {
     console.log("minha localização:", myLocation);
+    setNoData(null);
     setIsLoading(true);
     api
       .get(
@@ -148,71 +124,18 @@ export default function Supermarkets({ navigation }) {
       });
   }
 
-  function adjustDistance() {
-    return (
-      <View style={{ gap: 10, paddingVertical: 15 }}>
-        <LinearGradient
-          colors={[
-            "#f09c33",
-            "#f59234",
-            "#f98736",
-            "#fd7b38",
-            "#ff6e3c",
-            "#ff5f41",
-          ]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.buttonGradient}
-        >
-          <TouchableOpacity
-            style={[styles.buttonRange, { opacity: modalVisible ? 0.4 : 1 }]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <IconMCI style={styles.iconGPS} name="crosshairs-gps" size={25} />
-            <Text style={styles.textButtonRange}>Ajustar distância</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-        <Modal
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          animationType="fade"
-          transparent={true}
-        >
-          <View style={styles.containerModal}>
-            <Pressable
-              style={styles.closeButton}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <IconAD name="close" size={27} />
-            </Pressable>
-            <Text style={styles.rangeLabel}>
-              Raio de alcance {"\n"} {range}m
-            </Text>
-            <Slider
-              style={{ width: 250, height: 50 }}
-              minimumValue={1000}
-              maximumValue={10000}
-              onValueChange={(value) => setRange(parseInt(value))}
-              value={range}
-              step={50}
-              minimumTrackTintColor="#1E90FF"
-              thumbTintColor="#1E90FF"
-            />
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-
   return isLoading ? (
     <Loading />
   ) : noData != null ? (
     <View style={{ opacity: modalVisible ? 0.4 : 1 }}>
       <NoData message={noData.message} executeAction={getNearbySupermarkets} />
       <View style={{ alignItems: "center", marginTop: -45 }}>
-        {adjustDistance()}
+        <AdjustDistance
+          range={range}
+          setRange={setRange}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
       </View>
     </View>
   ) : (
@@ -248,15 +171,17 @@ export default function Supermarkets({ navigation }) {
                 <Text style={styles.supermarketName}>
                   {item.name} - {item.publicPlace} {item.number}, {item.city}
                 </Text>
-                {/* <Text style={styles.supermarketName}>{item.publicPlace}, 
-                  {'\n'}{item.number}
-                </Text> */}
               </View>
             </Pressable>
           );
         }}
       />
-      {adjustDistance()}
+      <AdjustDistance
+        range={range}
+        setRange={setRange}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </SafeAreaView>
   );
 }

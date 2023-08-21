@@ -1,221 +1,264 @@
-import {SafeAreaView, Text, Image, FlatList, View, TouchableOpacity, Alert} from 'react-native';
-import styles from './styles';
-import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import IconE from 'react-native-vector-icons/EvilIcons';
-import Checkbox from 'expo-checkbox';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { LinearGradient } from 'expo-linear-gradient';
+import {
+  SafeAreaView,
+  Text,
+  Image,
+  FlatList,
+  View,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import styles from "./styles";
+import { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import IconF from "react-native-vector-icons/Feather";
+import Checkbox from "expo-checkbox";
+import Icon from "react-native-vector-icons/AntDesign";
+import { LinearGradient } from "expo-linear-gradient";
 
+export default function ShopCart({ route, navigation }) {
+  const [cartList, setCartList] = useState({
+    id: 0,
+    produtos: [],
+    supermercado: "",
+  });
+  const [total, setTotal] = useState(0);
+  const { list } = route.params;
+  console.warn("list:", list);
 
-export default function ShopCart({route, navigation}) {
-    const [cartList, setCartList] = useState({id: 0, produtos: [], supermercado: ''})
-    const [total, setTotal] = useState(0)
-    const {list} = route.params
-    console.warn('list:',list)
-    
-    useEffect(() => {
-        getCartProducts()
-    }, [])
+  useEffect(() => {
+    getCartProducts();
+  }, []);
 
-    useEffect(() => {
-        totalValue()
-    }, [cartList])
+  useEffect(() => {
+    totalValue();
+  }, [cartList]);
 
-    function getCartProducts(){
-        let newList = list.produtos.map((item, index) => {
-            item.check = true,
-            item.idProd = index
-            item.qtd = 1
-            return item
-        })
-        setCartList({
-            id: list.id,
-            produtos: newList,
-            supermercado: list.supermercado
-        })
+  function getCartProducts() {
+    let newList = list.produtos.map((item, index) => {
+      (item.check = true), (item.idProd = index);
+      item.qtd = 1;
+      return item;
+    });
+    setCartList({
+      id: list.id,
+      produtos: newList,
+      supermercado: list.supermercado,
+    });
+  }
+
+  function checkedProduct(value, id) {
+    let newList = cartList.produtos.map((item) => {
+      if (item.idProd == id) {
+        item.check = value;
+      }
+      return item;
+    });
+    setCartList({
+      id: list.id,
+      produtos: newList,
+      supermercado: list.supermercado,
+    });
+  }
+
+  async function removeItem(index) {
+    let newList = [...cartList.produtos];
+    newList.splice(index, 1);
+    setCartList({
+      id: list.id,
+      produtos: newList,
+      supermercado: list.supermercado,
+    });
+  }
+
+  function increaseQuantity(id) {
+    let newList = cartList.produtos.map((item) => {
+      if (item.idProd == id) {
+        item.qtd = parseInt(item.qtd) + 1;
+      }
+      return item;
+    });
+    setCartList({
+      id: list.id,
+      produtos: newList,
+      supermercado: list.supermercado,
+    });
+  }
+
+  function decreaseQuantity(id) {
+    let newList = cartList.produtos.map((item) => {
+      if (item.idProd == id && item.qtd > 0) {
+        item.qtd = parseInt(item.qtd) - 1;
+      }
+      return item;
+    });
+    setCartList({
+      id: list.id,
+      produtos: newList,
+      supermercado: list.supermercado,
+    });
+  }
+
+  function unformatedParseFloatValue(value) {
+    if (value != "") {
+      return parseFloat(value.replaceAll(".", "").replace(",", "."));
     }
+    return 0;
+  }
 
-    function checkedProduct(value, id){
-        let newList = cartList.produtos.map(item => {
-            if(item.idProd == id){
-                item.check = value
-            }
-            return item
-        })
-        setCartList({
-            id: list.id,
-            produtos: newList,
-            supermercado: list.supermercado
-        })
+  function itemPrice(value, quantity = 1) {
+    let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity);
+    let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
+    return Number.parseFloat(valueFixed).toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+    });
+  }
+
+  function totalValue() {
+    let sum = 0;
+    if (cartList.produtos.length > 0) {
+      cartList.produtos.forEach((item) => {
+        sum += item.preco * item.qtd;
+      });
     }
+    let valor = itemPrice(`${sum}`);
+    setTotal(valor);
+  }
 
-    async function removeItem(index){
-        let newList = [...cartList.produtos]
-        newList.splice(index, 1)
-        setCartList({
-            id: list.id,
-            produtos: newList,
-            supermercado: list.supermercado
-        })
+  function checkout() {
+    let hasUncheckProduct = false;
+    cartList.produtos.forEach((item) => {
+      if (!item.check) {
+        hasUncheckProduct = true;
+      }
+    });
+
+    if (hasUncheckProduct) {
+      Alert.alert(
+        "Itens não marcados",
+        "Um ou mais produtos da lista não foram marcados",
+        [
+          {
+            text: "Continuar sem marcar todos",
+            onPress: () => saveToHistory(),
+          },
+          {
+            text: "Voltar para marcar",
+            onPress: () => {},
+          },
+        ]
+      );
+    } else {
+      saveToHistory();
     }
+  }
 
-    function increaseQuantity(id){
-        let newList = cartList.produtos.map(item => {
-            if(item.idProd == id){
-                item.qtd = parseInt(item.qtd) + 1
-            }
-            return item
-        })
-        setCartList({
-            id: list.id,
-            produtos: newList,
-            supermercado: list.supermercado
-        })
-    }
-
-    function decreaseQuantity(id){
-        let newList = cartList.produtos.map(item => {
-            if(item.idProd == id && item.qtd > 0){
-                item.qtd = parseInt(item.qtd) - 1
-            }
-            return item
-        })
-        setCartList({
-            id: list.id,
-            produtos: newList,
-            supermercado: list.supermercado
-        })
-    }
-
-    function unformatedParseFloatValue(value) {
-        if (value != "") {
-            return parseFloat(value.replaceAll(".", "").replace(",", "."));
+  async function saveToHistory() {
+    let id = `carrinho-${cartList.id}-${cartList.supermercado}`;
+    console.warn("id:", id);
+    try {
+      await AsyncStorage.setItem(id, JSON.stringify(cartList));
+      let productKeys = await AsyncStorage.getAllKeys();
+      productKeys.filter((key) => {});
+      // console.warn('productKeys:',productKeys)
+      for (let i = 0; i < productKeys.length; i++) {
+        let key = productKeys[i];
+        if (key.includes("produto-lista-")) {
+          // console.warn(`key-${i}:`,key)
+          await AsyncStorage.removeItem(key);
         }
-        return 0;
+        navigation.navigate("Histórico de Compras");
+      }
+    } catch (e) {
+      console.warn("error:", e);
     }
+  }
 
-    function itemPrice(value, quantity = 1){
-        let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity)
-        let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
-        return Number.parseFloat(valueFixed).toLocaleString("pt-br", {
-            minimumFractionDigits: 2,
-        })
-    }
-
-    function totalValue(){
-        let sum = 0
-        if(cartList.produtos.length > 0){
-            cartList.produtos.forEach(item => {
-                sum += item.preco * item.qtd
-            })
-        }
-        let valor = itemPrice(`${sum}`)
-        setTotal(valor)
-    }
-
-    function checkout(){
-        let hasUncheckProduct = false
-        cartList.produtos.forEach(item => {
-            if(!item.check){
-                hasUncheckProduct = true
-            }
-        })
-
-        if(hasUncheckProduct) {
-            Alert.alert(
-                "Itens não marcados", 
-                "Um ou mais produtos da lista não foram marcados", 
-                [
-                    {
-                        text: "Continuar sem marcar todos",
-                        onPress: () => saveToHistory()
-                    },
-                    {
-                        text: "Voltar para marcar",
-                        onPress: () => {}
-                    },
-                ]
-            )
-        }
-        else {
-            saveToHistory()
-        }
-    }
-
-    async function saveToHistory(){
-        let id = `carrinho-${cartList.id}-${cartList.supermercado}`
-            console.warn('id:',id)
-        try {
-            await AsyncStorage.setItem(id, JSON.stringify(cartList))
-            let productKeys = await AsyncStorage.getAllKeys()
-            productKeys.filter(key => {
-            })
-            // console.warn('productKeys:',productKeys)
-            for(let i=0 ; i<productKeys.length; i++){
-                let key = productKeys[i]
-                if(key.includes("produto-lista-")){
-                    // console.warn(`key-${i}:`,key)
-                    await AsyncStorage.removeItem(key)
-                }
-                navigation.navigate("Histórico de Compras")
-            }
-        } catch (e) {
-            console.warn('error:', e)
-        }
-    }
-
-    return(
-        <SafeAreaView style={styles.container}>
-            {
-                cartList?.produtos.length > 0 ?
-                <View style={{width: "100%", height: "100%", alignItems: "center"}}>
-                    <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
-                    <FlatList
-                        data={cartList.produtos}
-                        numColumns={1}
-                        key={'_'}
-                        contentContainerStyle={{gap: 15}}
-                        renderItem={({item, index}) => {
-                        return (
-                            <View style={styles.itemCart}>
-                                <Text style={[styles.itemName, item.check && styles.bought]}>
-                                    {item?.marca ? `${item.nome}, ${item.marca} \n R$${itemPrice(`${item.preco}`, `${item.qtd}`)} - ${cartList.supermercado}` : `${item.nome} \n R$${itemPrice(`${item.preco}`, `${item.qtd}`)} - ${cartList.supermercado}`}
-                                </Text>
-                                <View style={styles.actionIcons}>
-                                    <Checkbox
-                                        value={item.check}
-                                        onValueChange={(newValue) => checkedProduct(newValue, item.idProd)}
-                                        style={{width: 28, height: 28}}
-                                    />
-                                    <View style={styles.quantItems}>
-                                        <Icon name="minuscircleo" size={28} onPress={() => decreaseQuantity(item.idProd)}/>
-                                        <Text style={styles.quantityValue}>{item.qtd}</Text>
-                                        <Icon name="pluscircleo" size={28} onPress={() => increaseQuantity(item.idProd)}/>
-                                    </View>
-                                    <IconE style={styles.iconTrash} name="trash" size={40} onPress={() => removeItem(index)}/>
-                                </View>
-                            </View>
-                        )
-                        }}
+  return (
+    <SafeAreaView style={styles.container}>
+      {cartList?.produtos.length > 0 ? (
+        <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+          <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
+          <FlatList
+            data={cartList.produtos}
+            numColumns={1}
+            key={"_"}
+            contentContainerStyle={{ gap: 15 }}
+            renderItem={({ item, index }) => {
+              return (
+                <View style={styles.itemCart}>
+                  <Text style={[styles.itemName, item.check && styles.bought]}>
+                    {item?.marca
+                      ? `${item.nome}, ${item.marca} \n R$${itemPrice(
+                          `${item.preco}`,
+                          `${item.qtd}`
+                        )} - ${cartList.supermercado}`
+                      : `${item.nome} \n R$${itemPrice(
+                          `${item.preco}`,
+                          `${item.qtd}`
+                        )} - ${cartList.supermercado}`}
+                  </Text>
+                  <View style={styles.actionIcons}>
+                    <Checkbox
+                      value={item.check}
+                      onValueChange={(newValue) =>
+                        checkedProduct(newValue, item.idProd)
+                      }
+                      style={{ width: 28, height: 28 }}
                     />
-                    <LinearGradient
-                        colors={['#f09c33', '#f59234', '#f98736', '#fd7b38', '#ff6e3c', '#ff5f41']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.buttonGradient}
-                    >
-                        <TouchableOpacity style={styles.buttonCheckout} onPress={() => checkout()}>
-                            <Text style={styles.textButton}>Finalizar Compra</Text>
-                        </TouchableOpacity>
-                    </LinearGradient>
+                    <View style={styles.quantItems}>
+                      <Icon
+                        name="minuscircleo"
+                        size={28}
+                        onPress={() => decreaseQuantity(item.idProd)}
+                      />
+                      <Text style={styles.quantityValue}>{item.qtd}</Text>
+                      <Icon
+                        name="pluscircleo"
+                        size={28}
+                        onPress={() => increaseQuantity(item.idProd)}
+                      />
+                    </View>
+                    <IconF
+                      style={styles.iconTrash}
+                      name="trash-2"
+                      size={40}
+                      onPress={() => removeItem(index)}
+                    />
+                  </View>
                 </View>
-                :
-                <View>
-                    <Image style={styles.emptyCartImage} source={require("../../images/shoppingCart.png")}/>
-                    <Text style={styles.labelEmptyCart}>Seu carrinho está vazio</Text>
-                </View>
-            }
-        </SafeAreaView>
-    )
+              );
+            }}
+          />
+          <LinearGradient
+            colors={[
+              "#f09c33",
+              "#f59234",
+              "#f98736",
+              "#fd7b38",
+              "#ff6e3c",
+              "#ff5f41",
+            ]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.buttonGradient}
+          >
+            <TouchableOpacity
+              style={styles.buttonCheckout}
+              onPress={() => checkout()}
+            >
+              <Text style={styles.textButton}>Finalizar Compra</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
+      ) : (
+        <View>
+          <Image
+            style={styles.emptyCartImage}
+            source={require("../../images/shoppingCart.png")}
+          />
+          <Text style={styles.labelEmptyCart}>Seu carrinho está vazio</Text>
+        </View>
+      )}
+    </SafeAreaView>
+  );
 }

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   productIcon: {
     width: 70,
-    height: 70,
+    height: 100,
     marginRight: 10,
   },
   nameProduct: {

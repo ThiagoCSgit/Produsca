@@ -67,7 +67,7 @@ export default function SupermaketShoppingList({
                   <Text
                     style={{ fontSize: 20, fontFamily: "OpenSans_500Medium" }}
                   >
-                    {item.supermercado}
+                    {item.supermarket}
                   </Text>
                   {visible[index].open ? (
                     <Icon name="down" size={20} />
@@ -78,7 +78,7 @@ export default function SupermaketShoppingList({
                 {visible[index].open && (
                   <View>
                     <View style={styles.listCollapse}>
-                      {item.produtos.map((produto, indexProd) => (
+                      {item?.products.map((products, indexProd) => (
                         <Text
                           style={{
                             fontSize: 18,
@@ -87,7 +87,7 @@ export default function SupermaketShoppingList({
                           }}
                           key={`${index}-${indexProd}`}
                         >
-                          {produto.nome} {produto.preco}
+                          {products.name} {products.price}
                         </Text>
                       ))}
                     </View>

@@ -116,6 +116,7 @@ export default function CategoryProducts({ navigation }) {
 
   async function getCategories() {
     setIsLoading(true);
+    setNoData(null);
     api.get("/consultas/CategoriasProdutos").then((response) => {
       let listCategorys = response.data;
       // console.log('listCategorys:',listCategorys)
