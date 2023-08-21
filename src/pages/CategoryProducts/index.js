@@ -14,7 +14,7 @@ import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
 
 export default function CategoryProducts({ navigation }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
 
   const [catProducts, setCatProducts] = useState([
@@ -111,31 +111,35 @@ export default function CategoryProducts({ navigation }) {
   ]);
 
   useEffect(() => {
-    getCategories();
+    // getCategories();
   }, []);
 
   async function getCategories() {
     setIsLoading(true);
     setNoData(null);
-    api.get("/consultas/CategoriasProdutos").then((response) => {
-      let listCategorys = response.data;
-      // console.log('listCategorys:',listCategorys)
-      if (listCategorys != null && listCategorys.length > 0) {
-        setCatProducts(
-          listCategorys.map((item, index) => {
-            return {
-              name: capitalizeWords(item.nome),
-              id: index + 1,
-              image: require("../../images/foodImage.png"),
-            };
-          })
-        );
-      } else {
-        setCatProducts([]);
-        setNoData(response.data);
-      }
-      setIsLoading(false);
-    });
+    try {
+      api.get("/consultas/CategoriasProdutos").then((response) => {
+        let listCategorys = response.data;
+        // console.log('listCategorys:',listCategorys)
+        if (listCategorys != null && listCategorys.length > 0) {
+          setCatProducts(
+            listCategorys.map((item, index) => {
+              return {
+                name: capitalizeWords(item.nome),
+                id: index + 1,
+                image: require("../../images/foodImage.png"),
+              };
+            })
+          );
+        } else {
+          setCatProducts([]);
+          setNoData(response.data);
+        }
+        setIsLoading(false);
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function capitalizeWords(text) {

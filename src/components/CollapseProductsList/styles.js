@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   p15: {
-    paddingVertical: 15
+    paddingTop: 15,
   },
   card: {
     backgroundColor: "#fff",
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   shadow: {
     shadowColor: "#000",
-    shadowOffset: {width: 5, height: 5},
+    shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 1,
     shadowRadius: 3,
   },
@@ -22,31 +22,44 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
   },
-  buttonOpenCollapse:{
-    flexDirection: "row", 
-    justifyContent: "space-between", 
-    marginHorizontal: 10
+  supermarketInfos: {
+    fontFamily: "OpenSans_400Regular",
+    color: "#9D9FA0",
+    fontStyle: "italic",
+    fontSize: 16,
+    marginHorizontal: 20,
   },
-  listCollapse:{
+  buttonOpenCollapse: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 20,
+    marginBottom: 10,
+  },
+  listCollapse: {
     paddingVertical: 10,
-    paddingHorizontal: 10
+    paddingHorizontal: 20,
+    marginTop: 15,
+  },
+  itemList: {
+    fontSize: 16,
+    marginVertical: 5,
+    fontFamily: "OpenSans_400Regular",
+    color: "#5C5A66",
   },
   startShoppingButton: {
-    // backgroundColor: "#93be00",
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     padding: 10,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   textButton: {
     color: "#fff",
     fontSize: 18,
     marginRight: 10,
-    fontFamily: "OpenSans_500Medium"
-  }
+    fontFamily: "OpenSans_500Medium",
+  },
 });
-
 
 export default styles;

@@ -61,7 +61,7 @@ export default function Supermarkets({ navigation }) {
       city: "Vila Velha",
     },
   ]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);
@@ -82,7 +82,7 @@ export default function Supermarkets({ navigation }) {
         "rota:",
         `/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`
       );
-      getNearbySupermarkets();
+      // getNearbySupermarkets();
     }
   }, [myLocation, range, modalVisible]);
 
@@ -126,9 +126,12 @@ export default function Supermarkets({ navigation }) {
 
   return isLoading ? (
     <Loading />
-  ) : noData != null ? (
+  ) : noData == null ? (
     <View style={{ opacity: modalVisible ? 0.4 : 1 }}>
-      <NoData message={noData.message} executeAction={getNearbySupermarkets} />
+      <NoData
+        message="Acho não mano, tenta de novo depois"
+        executeAction={getNearbySupermarkets}
+      />
       <View style={{ alignItems: "center", marginTop: -45 }}>
         <AdjustDistance
           range={range}

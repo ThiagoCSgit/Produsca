@@ -11,8 +11,57 @@ import NoData from "../../components/NoData";
 import { useLocation } from "../../context/LocationProvider";
 
 export default function SupermaketShoppingList({ route, navigation }) {
-  const [state, setState] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [state, setState] = useState([
+    {
+      supermarket: {
+        name: "EPA",
+        city: "Vitória",
+        state: "ES",
+        publicPlace: "Rua da Fantasia",
+        number: 123,
+        phone: "27 33439846",
+        district: "Natal Amigo",
+      },
+      products: [
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+        { name: "batata", price: 10 },
+      ],
+      id: 1,
+    },
+    {
+      supermarket: {
+        name: "Extrabom",
+        city: "Vitória",
+        state: "ES",
+        publicPlace: "Rua da Fantasia",
+        number: 123,
+        phone: "27 33439846",
+        district: "Natal Amigo",
+      },
+      products: [{ name: "batata", price: 10 }],
+      id: 2,
+    },
+  ]);
+  const [isLoading, setIsLoading] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,7 +72,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
-      postShopList();
+      // postShopList();
     }
   }, [myLocation, range, modalVisible]);
 

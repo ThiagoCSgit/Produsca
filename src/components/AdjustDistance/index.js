@@ -1,7 +1,6 @@
 import { View, Pressable, TouchableOpacity, Text, Modal } from "react-native";
 import React, { useState, useEffect } from "react";
 import Slider from "@react-native-community/slider";
-import { LinearGradient } from "expo-linear-gradient";
 
 import IconAD from "react-native-vector-icons/AntDesign";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,28 +14,14 @@ export default function adjustDistance({
   setModalVisible,
 }) {
   return (
-    <View style={{ gap: 10, paddingVertical: 15 }}>
-      <LinearGradient
-        colors={[
-          "#f09c33",
-          "#f59234",
-          "#f98736",
-          "#fd7b38",
-          "#ff6e3c",
-          "#ff5f41",
-        ]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.buttonGradient}
+    <View style={{ paddingTop: 15, paddingBottom: 10 }}>
+      <TouchableOpacity
+        style={[styles.buttonRange, { opacity: modalVisible ? 0.4 : 1 }]}
+        onPress={() => setModalVisible(true)}
       >
-        <TouchableOpacity
-          style={[styles.buttonRange, { opacity: modalVisible ? 0.4 : 1 }]}
-          onPress={() => setModalVisible(true)}
-        >
-          <IconMCI style={styles.iconGPS} name="crosshairs-gps" size={25} />
-          <Text style={styles.textButtonRange}>Ajustar distância</Text>
-        </TouchableOpacity>
-      </LinearGradient>
+        <IconMCI style={styles.iconGPS} name="crosshairs-gps" size={25} />
+        <Text style={styles.textButtonRange}>Ajustar distância</Text>
+      </TouchableOpacity>
       <Modal
         visible={modalVisible}
         onRequestClose={() => {

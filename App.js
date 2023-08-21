@@ -32,6 +32,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import {
   useFonts,
+  OpenSans_400Regular,
   OpenSans_500Medium,
   OpenSans_600SemiBold,
 } from "@expo-google-fonts/open-sans";
@@ -46,6 +47,7 @@ export default function App() {
   // console.warn("currenLocation:", currenLocation);
 
   const [fontLoaded] = useFonts({
+    OpenSans_400Regular,
     OpenSans_500Medium,
     OpenSans_600SemiBold,
   });
@@ -101,14 +103,11 @@ export default function App() {
             return (
               <SafeAreaView>
                 <LinearGradient
-                  colors={[
-                    "#f09c33",
-                    "#f59234",
-                    "#f98736",
-                    "#fd7b38",
-                    "#ff6e3c",
-                    "#ff5f41",
-                  ]}
+                  // colors={["#bbbbbb", "#d3eee7", "#bcc4c2"]}
+                  // colors={["#dddbdb", "#cfddd9", "#b4c1bd"]}
+                  colors={["#d4eee2", "#bcd4cd", "#b4cfc6"]}
+                  // colors={["#fff", "#fff"]}
+                  // colors={["red", "blue"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.headerGradient}
@@ -119,12 +118,12 @@ export default function App() {
               </SafeAreaView>
             );
           },
-          tabBarActiveTintColor: "#f58634",
+          tabBarActiveTintColor: "#253D4E",
           tabBarStyle: {
             paddingBottom: 5,
             paddingTop: 5,
             height: 60,
-            backgroundColor: "#140f07",
+            backgroundColor: "#D4EEE2",
           },
         })}
       >
@@ -143,25 +142,23 @@ export default function App() {
   const CustomHeader = (title, showCart = true) => {
     return (
       <LinearGradient
-        colors={[
-          "#f09c33",
-          "#f59234",
-          "#f98736",
-          "#fd7b38",
-          "#ff6e3c",
-          "#ff5f41",
-        ]}
+        // colors={[
+        //   "#f09c33",
+        //   "#f59234",
+        //   "#f98736",
+        //   "#fd7b38",
+        //   "#ff6e3c",
+        //   "#ff5f41",
+        // ]}
+        colors={["#F8FCFA", "#EDF8F3", "#D3EEE1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={
           showCart ? styles.headerGradient : styles.headerGradientAlternative
         }
       >
-        <Pressable
-          onPress={() => navigationRef.goBack()}
-          style={styles.backButton}
-        >
-          <IconAD name="arrowleft" size={30} style={{ color: "#000" }} />
+        <Pressable onPress={() => navigationRef.goBack()}>
+          <IconAD name="arrowleft" size={30} style={{ color: "#214A68" }} />
         </Pressable>
         <Text style={styles.titlePage}>{title}</Text>
         {showCart && returnShopCart()}
@@ -270,7 +267,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titlePage: {
-    color: "#000",
+    color: "#253D4E",
     fontFamily: "OpenSans_600SemiBold",
     fontSize: 19,
   },
@@ -290,10 +287,10 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   noFocus: {
-    color: "#fff",
+    color: "#79AF96",
   },
   buttonFocus: {
-    color: "#f58634",
+    color: "#253D4E",
   },
   headerCart: {
     marginRight: 20,

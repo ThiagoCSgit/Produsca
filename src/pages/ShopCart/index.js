@@ -13,13 +13,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
-import { LinearGradient } from "expo-linear-gradient";
 
 export default function ShopCart({ route, navigation }) {
   const [cartList, setCartList] = useState({
     id: 0,
-    produtos: [],
-    supermercado: "",
+    products: [],
+    supermarket: "",
   });
   const [total, setTotal] = useState(0);
   const { list } = route.params;
@@ -34,20 +33,20 @@ export default function ShopCart({ route, navigation }) {
   }, [cartList]);
 
   function getCartProducts() {
-    let newList = list.produtos.map((item, index) => {
-      (item.check = true), (item.idProd = index);
+    let newList = list.products.map((item, index) => {
+      (item.check = false), (item.idProd = index);
       item.qtd = 1;
       return item;
     });
     setCartList({
       id: list.id,
-      produtos: newList,
-      supermercado: list.supermercado,
+      products: newList,
+      supermarket: list.supermarket.name,
     });
   }
 
   function checkedProduct(value, id) {
-    let newList = cartList.produtos.map((item) => {
+    let newList = cartList.products.map((item) => {
       if (item.idProd == id) {
         item.check = value;
       }
@@ -55,23 +54,23 @@ export default function ShopCart({ route, navigation }) {
     });
     setCartList({
       id: list.id,
-      produtos: newList,
-      supermercado: list.supermercado,
+      products: newList,
+      supermarket: list.supermarket.name,
     });
   }
 
   async function removeItem(index) {
-    let newList = [...cartList.produtos];
+    let newList = [...cartList.products];
     newList.splice(index, 1);
     setCartList({
       id: list.id,
-      produtos: newList,
-      supermercado: list.supermercado,
+      products: newList,
+      supermarket: list.supermarket.name,
     });
   }
 
   function increaseQuantity(id) {
-    let newList = cartList.produtos.map((item) => {
+    let newList = cartList.products.map((item) => {
       if (item.idProd == id) {
         item.qtd = parseInt(item.qtd) + 1;
       }
@@ -79,13 +78,13 @@ export default function ShopCart({ route, navigation }) {
     });
     setCartList({
       id: list.id,
-      produtos: newList,
-      supermercado: list.supermercado,
+      products: newList,
+      supermarket: list.supermarket.name,
     });
   }
 
   function decreaseQuantity(id) {
-    let newList = cartList.produtos.map((item) => {
+    let newList = cartList.products.map((item) => {
       if (item.idProd == id && item.qtd > 0) {
         item.qtd = parseInt(item.qtd) - 1;
       }
@@ -93,8 +92,8 @@ export default function ShopCart({ route, navigation }) {
     });
     setCartList({
       id: list.id,
-      produtos: newList,
-      supermercado: list.supermercado,
+      products: newList,
+      supermarket: list.supermarket.name,
     });
   }
 
@@ -115,9 +114,9 @@ export default function ShopCart({ route, navigation }) {
 
   function totalValue() {
     let sum = 0;
-    if (cartList.produtos.length > 0) {
-      cartList.produtos.forEach((item) => {
-        sum += item.preco * item.qtd;
+    if (cartList.products.length > 0) {
+      cartList.products.forEach((item) => {
+        sum += item.price * item.qtd;
       });
     }
     let valor = itemPrice(`${sum}`);
@@ -126,7 +125,7 @@ export default function ShopCart({ route, navigation }) {
 
   function checkout() {
     let hasUncheckProduct = false;
-    cartList.produtos.forEach((item) => {
+    cartList.products.forEach((item) => {
       if (!item.check) {
         hasUncheckProduct = true;
       }
@@ -135,7 +134,7 @@ export default function ShopCart({ route, navigation }) {
     if (hasUncheckProduct) {
       Alert.alert(
         "Itens não marcados",
-        "Um ou mais produtos da lista não foram marcados",
+        "Um ou mais products da lista não foram marcados",
         [
           {
             text: "Continuar sem marcar todos",
@@ -153,7 +152,7 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function saveToHistory() {
-    let id = `carrinho-${cartList.id}-${cartList.supermercado}`;
+    let id = `carrinho-${cartList.id}-${cartList.supermarket}`;
     console.warn("id:", id);
     try {
       await AsyncStorage.setItem(id, JSON.stringify(cartList));
@@ -175,80 +174,71 @@ export default function ShopCart({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {cartList?.produtos.length > 0 ? (
+      {cartList?.products.length > 0 ? (
         <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
           <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
           <FlatList
-            data={cartList.produtos}
+            data={cartList.products}
             numColumns={1}
             key={"_"}
-            contentContainerStyle={{ gap: 15 }}
+            contentContainerStyle={{ gap: 15, paddingHorizontal: 20 }}
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.itemCart}>
-                  <Text style={[styles.itemName, item.check && styles.bought]}>
-                    {item?.marca
-                      ? `${item.nome}, ${item.marca} \n R$${itemPrice(
-                          `${item.preco}`,
-                          `${item.qtd}`
-                        )} - ${cartList.supermercado}`
-                      : `${item.nome} \n R$${itemPrice(
-                          `${item.preco}`,
-                          `${item.qtd}`
-                        )} - ${cartList.supermercado}`}
-                  </Text>
-                  <View style={styles.actionIcons}>
-                    <Checkbox
-                      value={item.check}
-                      onValueChange={(newValue) =>
-                        checkedProduct(newValue, item.idProd)
-                      }
-                      style={{ width: 28, height: 28 }}
-                    />
-                    <View style={styles.quantItems}>
-                      <Icon
-                        name="minuscircleo"
-                        size={28}
-                        onPress={() => decreaseQuantity(item.idProd)}
-                      />
-                      <Text style={styles.quantityValue}>{item.qtd}</Text>
-                      <Icon
-                        name="pluscircleo"
-                        size={28}
-                        onPress={() => increaseQuantity(item.idProd)}
+                  <View style={{ width: "70%" }}>
+                    <Text
+                      style={[styles.itemName, item.check && styles.bought]}
+                    >
+                      {item?.marca
+                        ? `${item.name}, ${item.marca} ${"\n"} R$${itemPrice(
+                            `${item.price}`,
+                            `${item.qtd}`
+                          )}`
+                        : `${item.name} ${"\n"} R$${itemPrice(
+                            `${item.price}`,
+                            `${item.qtd}`
+                          )}`}
+                    </Text>
+                    <View style={styles.actionIcons}>
+                      <View style={styles.quantItems}>
+                        <Icon
+                          name="minuscircleo"
+                          size={25}
+                          onPress={() => decreaseQuantity(item.idProd)}
+                        />
+                        <Text style={styles.quantityValue}>{item.qtd}</Text>
+                        <Icon
+                          name="pluscircleo"
+                          size={25}
+                          onPress={() => increaseQuantity(item.idProd)}
+                        />
+                      </View>
+                      <Checkbox
+                        value={item.check}
+                        onValueChange={(newValue) =>
+                          checkedProduct(newValue, item.idProd)
+                        }
+                        style={{ width: 25, height: 25 }}
                       />
                     </View>
-                    <IconF
-                      style={styles.iconTrash}
-                      name="trash-2"
-                      size={40}
-                      onPress={() => removeItem(index)}
-                    />
                   </View>
+                  <IconF
+                    style={{ marginBottom: 13 }}
+                    color="#dc3546"
+                    name="trash-2"
+                    size={25}
+                    onPress={() => removeItem(index)}
+                  />
                 </View>
               );
             }}
           />
-          <LinearGradient
-            colors={[
-              "#f09c33",
-              "#f59234",
-              "#f98736",
-              "#fd7b38",
-              "#ff6e3c",
-              "#ff5f41",
-            ]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.buttonGradient}
+          <TouchableOpacity
+            style={styles.buttonCheckout}
+            onPress={() => checkout()}
           >
-            <TouchableOpacity
-              style={styles.buttonCheckout}
-              onPress={() => checkout()}
-            >
-              <Text style={styles.textButton}>Finalizar Compra</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+            <Text style={styles.textButton}>Finalizar Compra</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <View>

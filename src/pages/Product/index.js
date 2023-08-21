@@ -81,8 +81,8 @@ export default function Products({ route, navigation }) {
           }
           setIsLoadingHistory(false);
         });
-    } catch (error) {
-      console.log("error:", error);
+    } catch (e) {
+      console.log("e:", e);
     }
   }
 
@@ -119,8 +119,8 @@ export default function Products({ route, navigation }) {
           }
           setIsLoadingMarkets(false);
         });
-    } catch (error) {
-      console.log("error:", error);
+    } catch (e) {
+      console.log("e:", e);
     }
   }
 

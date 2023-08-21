@@ -13,8 +13,6 @@ import IconF from "react-native-vector-icons/Feather";
 import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
 import IconAD from "react-native-vector-icons/AntDesign";
 
-import { LinearGradient } from "expo-linear-gradient";
-
 export default function ShoppingList({ navigation }) {
   const [cartList, setCartList] = useState([]);
 
@@ -109,87 +107,70 @@ export default function ShoppingList({ navigation }) {
       {cartList.length > 0 ? (
         <View style={styles.screenList}>
           <FlatList
+            contentContainerStyle={{ marginTop: 30 }}
             data={cartList}
             numColumns={1}
             key={"_"}
             renderItem={({ item }) => {
               return (
                 <View style={styles.itemCart}>
-                  <Text style={styles.itemName}>
-                    {item.supermarket
-                      ? `${item.name} \n R$${item.price} - ${item.supermarket}`
-                      : `${item.name}`}
-                  </Text>
-                  <View style={styles.quantItems}>
-                    <IconAD
-                      name="minuscircleo"
-                      size={30}
-                      onPress={() =>
-                        decreaseQuantity(item.id, item.supermarket)
-                      }
-                    />
-                    <Text style={styles.quantityValue}>{item.qtd}</Text>
-                    <IconAD
-                      name="pluscircleo"
-                      size={30}
-                      onPress={() =>
-                        increaseQuantity(item.id, item.supermarket)
-                      }
-                    />
-                    <View
-                      style={{
-                        backgroundColor: "rgba(190, 62, 62, 0.88)",
-                        borderRadius: 100,
-                      }}
-                    >
-                      <IconF
-                        style={styles.iconTrash}
-                        color="#FF0051"
-                        name="trash-2"
-                        size={30}
+                  <View>
+                    <Text style={styles.itemName}>
+                      {item.supermarket
+                        ? `${item.name} \n R$${item.price} - ${item.supermarket}`
+                        : `${item.name}`}
+                    </Text>
+                    <View style={styles.quantItems}>
+                      <IconAD
+                        name="minuscircleo"
+                        color="#253D4E"
+                        size={25}
                         onPress={() =>
-                          removeItem(
-                            item.supermarket
-                              ? `produto-lista-${item.supermarket}-${item.id}`
-                              : `produto-lista-${item.id}`
-                          )
+                          decreaseQuantity(item.id, item.supermarket)
+                        }
+                      />
+                      <Text style={styles.quantityValue}>{item.qtd}</Text>
+                      <IconAD
+                        name="pluscircleo"
+                        color="#253D4E"
+                        size={25}
+                        onPress={() =>
+                          increaseQuantity(item.id, item.supermarket)
                         }
                       />
                     </View>
                   </View>
+                  <IconF
+                    color="#dc3546"
+                    name="trash-2"
+                    size={25}
+                    onPress={() =>
+                      removeItem(
+                        item.supermarket
+                          ? `produto-lista-${item.supermarket}-${item.id}`
+                          : `produto-lista-${item.id}`
+                      )
+                    }
+                  />
                 </View>
               );
             }}
           />
-          <LinearGradient
-            colors={[
-              "#f09c33",
-              "#f59234",
-              "#f98736",
-              "#fd7b38",
-              "#ff6e3c",
-              "#ff5f41",
-            ]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.buttonGradient}
+          <TouchableOpacity
+            style={styles.buttonSimulate}
+            onPress={() =>
+              navigation.navigate("Supermercados disponíveis", {
+                list: cartList,
+              })
+            }
           >
-            <TouchableOpacity
-              style={styles.buttonSimulate}
-              onPress={() =>
-                navigation.navigate("Supermercados disponíveis", {
-                  list: cartList,
-                })
-              }
-            >
-              <IconMCI
-                style={styles.iconCalculator}
-                name="calculator-variant-outline"
-                size={25}
-              />
-              <Text style={styles.textButton}>Simular Compra</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+            <IconMCI
+              style={styles.iconCalculator}
+              name="calculator-variant-outline"
+              size={25}
+            />
+            <Text style={styles.textButton}>Simular Compra</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <View>

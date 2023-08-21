@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Linking,
+} from "react-native";
 import styles from "./styles";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useEffect, useState } from "react";
@@ -17,7 +23,7 @@ export default function SupermaketShoppingList({
         state.map((item) => {
           return {
             id: item.id,
-            open: true,
+            open: false,
           };
         })
       );
@@ -40,6 +46,21 @@ export default function SupermaketShoppingList({
     });
   }
 
+  function callNumber(phoneNumber) {
+    Linking.openURL(`tel:${phoneNumber}`);
+  }
+
+  function openMaps(address) {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      address
+    )}`;
+    try {
+      Linking.openURL(url);
+    } catch (error) {
+      console.warn(error);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -60,35 +81,88 @@ export default function SupermaketShoppingList({
                   !visible[index].open && styles.p15,
                 ]}
               >
-                <TouchableOpacity
-                  style={styles.buttonOpenCollapse}
-                  onPress={() => openCloseCollapse(item.id)}
-                >
-                  <Text
-                    style={{ fontSize: 20, fontFamily: "OpenSans_500Medium" }}
+                <View style={{ gap: 15 }}>
+                  <TouchableOpacity
+                    style={styles.buttonOpenCollapse}
+                    onPress={() => openCloseCollapse(item.id)}
                   >
-                    {item.supermarket}
-                  </Text>
-                  {visible[index].open ? (
-                    <Icon name="down" size={20} />
-                  ) : (
-                    <Icon name="right" size={20} />
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontFamily: "OpenSans_500Medium",
+                        color: "#253D4E",
+                      }}
+                    >
+                      {item.supermarket.name}
+                    </Text>
+                    {visible[index].open ? (
+                      <Icon name="down" color="#253D4E" size={20} />
+                    ) : (
+                      <Icon name="right" color="#253D4E" size={20} />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => callNumber(item.supermarket.phone)}
+                  >
+                    <Text style={styles.supermarketInfos}>
+                      Contanto: {item.supermarket.phone}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      openMaps(
+                        `${item.supermarket.publicPlace} ${item.supermarket.number} ${item.supermarket.city} ${item.supermarket.state}`
+                      )
+                    }
+                  >
+                    <Text style={styles.supermarketInfos}>
+                      {item.supermarket.publicPlace} {item.supermarket.number},{" "}
+                      {item.supermarket.city} - {item.supermarket.state}
+                    </Text>
+                  </TouchableOpacity>
+                  {showButton && !visible[index].open && (
+                    <LinearGradient
+                      // colors={['#69c906', '#84be00']}
+                      // colors={['#e8c525', '#ebd31c']}
+                      colors={["#25e8c8", "#1ca8eb"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={styles.buttonGradient}
+                    >
+                      <TouchableOpacity
+                        style={styles.startShoppingButton}
+                        onPress={() => startShopping(state[index])}
+                      >
+                        <Text style={styles.textButton}>Iniciar Compra</Text>
+                        <Icon
+                          name="shoppingcart"
+                          size={20}
+                          style={{ color: "#fff" }}
+                        />
+                      </TouchableOpacity>
+                    </LinearGradient>
                   )}
-                </TouchableOpacity>
+                </View>
                 {visible[index].open && (
                   <View>
                     <View style={styles.listCollapse}>
                       {item?.products.map((products, indexProd) => (
-                        <Text
+                        <View
                           style={{
-                            fontSize: 18,
-                            marginVertical: 5,
-                            fontFamily: "OpenSans_500Medium",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
                           }}
-                          key={`${index}-${indexProd}`}
                         >
-                          {products.name} {products.price}
-                        </Text>
+                          <Text
+                            style={styles.itemList}
+                            key={`${index}-${indexProd}`}
+                          >
+                            {products.name}
+                          </Text>
+                          <Text style={styles.itemList}>
+                            R$ {products.price}
+                          </Text>
+                        </View>
                       ))}
                     </View>
                     {showButton && (

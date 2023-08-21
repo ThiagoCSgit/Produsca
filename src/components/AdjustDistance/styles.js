@@ -1,27 +1,26 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
-  buttonGradient: {
+  buttonRange: {
     borderRadius: 100,
-    paddingVertical: 12,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     marginBottom: 5,
-  },
-  buttonRange: {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    backgroundColor: "#D4EEE2",
   },
   iconGPS: {
     color: "#fff",
     marginRight: 10,
-    color: "#000",
+    color: "#253D4E",
   },
   textButtonRange: {
     color: "#fff",
     fontSize: 18,
     fontFamily: "OpenSans_500Medium",
-    color: "#000",
+    color: "#253D4E",
   },
   containerModal: {
     justifyContent: "center",

@@ -19,75 +19,75 @@ import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Products({ route, navigation }) {
   const { categoryName, supermarketName } = route.params;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
-  // const [products, setProducts] = useState([
-  //   {
-  //     id: "1",
-  //     name: "Bacon",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "Cofril",
-  //     price: "10,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Sobrecoxa de Frango",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "Perdigão",
-  //     price: "15,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Filé Mingnon",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "Montana",
-  //     price: "22,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Banana Ouro",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "",
-  //     price: "9,75",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "Manga Tommy Atkins",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "",
-  //     price: "4,73",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "6",
-  //     name: "Tomate Orgânico",
-  //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
-  //     mark: "Viver",
-  //     price: "10,80",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  // ])
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([
+    {
+      id: "1",
+      name: "Bacon",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "Cofril",
+      price: "10,90",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+    {
+      id: "2",
+      name: "Sobrecoxa de Frango",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "Perdigão",
+      price: "15,90",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+    {
+      id: "3",
+      name: "Filé Mingnon",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "Montana",
+      price: "22,90",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+    {
+      id: "4",
+      name: "Banana Ouro",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "",
+      price: "9,75",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+    {
+      id: "5",
+      name: "Manga Tommy Atkins",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "",
+      price: "4,73",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+    {
+      id: "6",
+      name: "Tomate Orgânico",
+      image: require("../../images/foodImage.png"),
+      qtd: 0,
+      mark: "Viver",
+      price: "10,80",
+      minPrice: "1,23",
+      maxPrice: "72,23",
+    },
+  ]);
+  // const [products, setProducts] = useState([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCategoryProducts();
+    // getCategoryProducts();
   }, []);
 
   // useEffect(() => {
@@ -97,11 +97,11 @@ export default function Products({ route, navigation }) {
   //   }
   // }, [isFocused, isLoading])
 
-  useMemo(() => {
-    if (isFocused && !isLoading && products.length > 0) {
-      return getCheckProducts();
-    }
-  }, [isFocused, isLoading]);
+  // useMemo(() => {
+  //   if (isFocused && !isLoading && products.length > 0) {
+  //     return getCheckProducts();
+  //   }
+  // }, [isFocused, isLoading]);
 
   async function getCategoryProducts() {
     setIsLoading(true);
@@ -269,7 +269,7 @@ export default function Products({ route, navigation }) {
   //   let newList = [...products]
   //   setProducts(newList.map(item => {
   //     if (item.id == id) {
-  //       item.inCart = value
+  //       item.qtd = value
   //     }
   //     return item
   //   }))
@@ -324,19 +324,17 @@ export default function Products({ route, navigation }) {
                         supermarket: supermarketName,
                         nameProduct: item.name,
                         idProduct: item.id,
-                        // funcAddRemoveCart: addOrRemoveToShopCart
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,
                         idProduct: item.id,
-                        // funcAddRemoveCart: addOrRemoveToShopCart
                       })
                 }
               >
-                <Image
+                {/* <Image
                   style={styles.productIcon}
                   source={{ uri: item.image }}
-                />
+                /> */}
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
                   {supermarketName && (
