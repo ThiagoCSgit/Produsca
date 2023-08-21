@@ -6,6 +6,8 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Pressable,
+  Modal,
 } from "react-native";
 import styles from "./styles";
 import { useState, useEffect } from "react";
@@ -20,9 +22,10 @@ export default function ShopCart({ route, navigation }) {
     products: [],
     supermarket: "",
   });
+  const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
-  console.warn("list:", list);
+  // console.warn("list:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -34,7 +37,7 @@ export default function ShopCart({ route, navigation }) {
 
   function getCartProducts() {
     let newList = list.products.map((item, index) => {
-      (item.check = false), (item.idProd = index);
+      (item.check = true), (item.idProd = index);
       item.qtd = 1;
       return item;
     });
@@ -134,7 +137,7 @@ export default function ShopCart({ route, navigation }) {
     if (hasUncheckProduct) {
       Alert.alert(
         "Itens não marcados",
-        "Um ou mais products da lista não foram marcados",
+        "Um ou mais produtos da lista não foram marcados",
         [
           {
             text: "Continuar sem marcar todos",
@@ -148,6 +151,7 @@ export default function ShopCart({ route, navigation }) {
       );
     } else {
       saveToHistory();
+      setModalVisible(true);
     }
   }
 
@@ -165,7 +169,7 @@ export default function ShopCart({ route, navigation }) {
           // console.warn(`key-${i}:`,key)
           await AsyncStorage.removeItem(key);
         }
-        navigation.navigate("Histórico de Compras");
+        // navigation.navigate("Histórico de Compras");
       }
     } catch (e) {
       console.warn("error:", e);
@@ -218,7 +222,7 @@ export default function ShopCart({ route, navigation }) {
                         onValueChange={(newValue) =>
                           checkedProduct(newValue, item.idProd)
                         }
-                        style={{ width: 25, height: 25 }}
+                        style={{ width: 22, height: 22 }}
                       />
                     </View>
                   </View>
@@ -239,6 +243,66 @@ export default function ShopCart({ route, navigation }) {
           >
             <Text style={styles.textButton}>Finalizar Compra</Text>
           </TouchableOpacity>
+          <Modal
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(false);
+            }}
+            animationType="fade"
+            transparent={true}
+          >
+            <View style={styles.containerModal}>
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Icon name="close" size={27} />
+              </Pressable>
+              <Text style={styles.modalText}>
+                Gostaria de escanear a nota fiscal?
+              </Text>
+              <View style={styles.modalButtons}>
+                <Pressable
+                  onPress={() => {
+                    setModalVisible(false);
+                    setTimeout(() => {
+                      navigation.navigate("Histórico");
+                    }, 100);
+                  }}
+                  style={[
+                    styles.buttonModal,
+                    {
+                      backgroundColor: "#eda7a7",
+                      borderColor: "#eda7a7",
+                    },
+                  ]}
+                >
+                  <Text style={[styles.buttonText, { color: "#000" }]}>
+                    Não
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    setModalVisible(false);
+                    setTimeout(() => {
+                      navigation.navigate("Scanner");
+                    }, 100);
+                  }}
+                  style={[
+                    styles.buttonModal,
+                    {
+                      backgroundColor: "#D4EEE2",
+                      borderColor: "#D4EEE2",
+                    },
+                  ]}
+                >
+                  <Text style={[styles.buttonText, { color: "#253D4E" }]}>
+                    Sim
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
         </View>
       ) : (
         <View>

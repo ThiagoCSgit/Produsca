@@ -107,14 +107,14 @@ export default function ShoppingList({ navigation }) {
       {cartList.length > 0 ? (
         <View style={styles.screenList}>
           <FlatList
-            contentContainerStyle={{ marginTop: 30 }}
+            contentContainerStyle={{ marginTop: 30, gap: 30 }}
             data={cartList}
             numColumns={1}
             key={"_"}
             renderItem={({ item }) => {
               return (
                 <View style={styles.itemCart}>
-                  <View>
+                  <View style={{ width: "70%" }}>
                     <Text style={styles.itemName}>
                       {item.supermarket
                         ? `${item.name} \n R$${item.price} - ${item.supermarket}`
@@ -143,6 +143,7 @@ export default function ShoppingList({ navigation }) {
                   <IconF
                     color="#dc3546"
                     name="trash-2"
+                    style={{ marginBottom: 13 }}
                     size={25}
                     onPress={() =>
                       removeItem(

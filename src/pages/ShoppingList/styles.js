@@ -27,10 +27,14 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans_500Medium",
   },
   itemCart: {
-    alignItems: "flex-start",
-    justifyContent: "space-evenly",
     width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "#D4EEE2",
+    borderRadius: 10,
+    paddingTop: 10,
   },
   itemName: {
     fontSize: 18,
@@ -43,6 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 15,
     alignItems: "center",
+    marginVertical: 10,
   },
   quantityValue: {
     fontSize: 20,
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D4EEE2",
   },
   iconCalculator: {
-    marginRight: 20,
+    marginRight: 15,
     color: "#253D4E",
   },
   textButton: {

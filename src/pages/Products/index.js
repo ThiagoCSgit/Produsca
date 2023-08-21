@@ -90,18 +90,11 @@ export default function Products({ route, navigation }) {
     // getCategoryProducts();
   }, []);
 
-  // useEffect(() => {
-  //   if(isFocused && !isLoading && products.length > 0){
-  //     console.log('foi')
-  //     getCheckProducts()
-  //   }
-  // }, [isFocused, isLoading])
-
-  // useMemo(() => {
-  //   if (isFocused && !isLoading && products.length > 0) {
-  //     return getCheckProducts();
-  //   }
-  // }, [isFocused, isLoading]);
+  useMemo(() => {
+    if (isFocused && !isLoading && products.length > 0) {
+      return getCheckProducts();
+    }
+  }, [isFocused, isLoading]);
 
   async function getCategoryProducts() {
     setIsLoading(true);
@@ -172,9 +165,7 @@ export default function Products({ route, navigation }) {
 
   async function getCheckProducts() {
     try {
-      // await AsyncStorage.clear()
-      // let productKeys = await AsyncStorage.getAllKeys();
-      // console.warn("productKeys:", productKeys);
+      // await AsyncStorage.clear();
       let newList = [...products];
       // console.log('newList recebendo products:',newList)
       newList.forEach((item) => {
@@ -247,9 +238,12 @@ export default function Products({ route, navigation }) {
       ? `produto-lista-${supermarket}-${idProd}`
       : `produto-lista-${idProd}`;
 
+    cleanShoppingList(supermarket);
+
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
+      console.log("id:", id);
       console.log("itemToAdd:", itemToAdd);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
@@ -263,6 +257,21 @@ export default function Products({ route, navigation }) {
         console.warn("error", e);
       }
     }
+  }
+
+  async function cleanShoppingList(supermarket) {
+    let asyncStorage = await AsyncStorage.getAllKeys();
+    console.warn("asyncStorage:", asyncStorage);
+    let productsKeys = asyncStorage.filter((item) =>
+      item.includes("produto-lista")
+    );
+    console.warn("productsKeys:", productsKeys);
+    productsKeys.forEach(async (item) => {
+      if (!item.includes(`produto-lista-${supermarket}-`)) {
+        console.log("item de outro mercado:", item);
+        await AsyncStorage.removeItem(item);
+      }
+    });
   }
 
   // async function addOrRemoveToShopCart(value, id, supermarket = '') {
@@ -310,12 +319,21 @@ export default function Products({ route, navigation }) {
       </Text>
       <FlatList
         style={styles.listProducts}
+        contentContainerStyle={{ gap: 30 }}
         data={products}
         numColumns={1}
         key={"_"}
         renderItem={({ item }) => {
           return (
-            <View>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "#D4EEE2",
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                // alignItems: "center",
+              }}
+            >
               <Pressable
                 style={styles.productItem}
                 onPress={() =>
@@ -331,10 +349,11 @@ export default function Products({ route, navigation }) {
                       })
                 }
               >
-                {/* <Image
+                <Image
                   style={styles.productIcon}
-                  source={{ uri: item.image }}
-                /> */}
+                  // source={{ uri: item.image }}
+                  source={item.image}
+                />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
                   {supermarketName && (
@@ -345,13 +364,15 @@ export default function Products({ route, navigation }) {
               <View style={styles.quantItems}>
                 <Icon
                   name="minuscircleo"
-                  size={28}
+                  color="#253D4E"
+                  size={25}
                   onPress={() => decreaseQuantity(item.id, supermarketName)}
                 />
                 <Text style={styles.quantityValue}>{item.qtd}</Text>
                 <Icon
                   name="pluscircleo"
-                  size={28}
+                  color="#253D4E"
+                  size={25}
                   onPress={() => increaseQuantity(item.id, supermarketName)}
                 />
               </View>

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +78,50 @@ const styles = StyleSheet.create({
   textButton: {
     color: "#253D4E",
     fontSize: 18,
+    fontFamily: "OpenSans_500Medium",
+  },
+  containerModal: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 20,
+    backgroundColor: "#fff",
+    height: 200,
+    position: "relative",
+    top: Dimensions.get("window").height / 3,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 12,
+    right: 10,
+  },
+  modalText: {
+    color: "#253D4E",
+    fontSize: 18,
+    fontFamily: "OpenSans_500Medium",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    position: "relative",
+    top: 40,
+    justifyContent: "space-around",
+    width: "100%",
+  },
+  buttonModal: {
+    borderRadius: 20,
+    borderWidth: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    // backgroundColor: "#D4EEE2",
+    // borderColor: "#D4EEE2",
+  },
+  buttonText: {
+    fontSize: 16,
     fontFamily: "OpenSans_500Medium",
   },
 });

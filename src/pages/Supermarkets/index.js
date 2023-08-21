@@ -126,7 +126,7 @@ export default function Supermarkets({ navigation }) {
 
   return isLoading ? (
     <Loading />
-  ) : noData == null ? (
+  ) : noData != null ? (
     <View style={{ opacity: modalVisible ? 0.4 : 1 }}>
       <NoData
         message="Acho não mano, tenta de novo depois"

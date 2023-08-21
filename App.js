@@ -105,7 +105,7 @@ export default function App() {
                 <LinearGradient
                   // colors={["#bbbbbb", "#d3eee7", "#bcc4c2"]}
                   // colors={["#dddbdb", "#cfddd9", "#b4c1bd"]}
-                  colors={["#d4eee2", "#bcd4cd", "#b4cfc6"]}
+                  colors={["#F8FCFA", "#EDF8F3", "#D3EEE1"]}
                   // colors={["#fff", "#fff"]}
                   // colors={["red", "blue"]}
                   start={{ x: 0, y: 0 }}

@@ -25,7 +25,7 @@ export default function Supermarket({ route, navigation }) {
     number: route.params.number,
   };
   // const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [supermarketProducts, setSupermarketProducts] = useState([
     {
       id: 1,
@@ -125,6 +125,10 @@ export default function Supermarket({ route, navigation }) {
     //   // setCatProducts(response.data)
     //   setIsLoading(false)
     // })
+    // getCategories()
+  }, []);
+
+  async function getCategories() {
     api.get("/consultas/CategoriasProdutos").then((response) => {
       console.warn("response categoria:", response.data);
       let listCategorys = response.data;
@@ -143,7 +147,7 @@ export default function Supermarket({ route, navigation }) {
       }
       setIsLoading(false);
     });
-  }, []);
+  }
 
   function capitalizeWords(text) {
     return text.replace(

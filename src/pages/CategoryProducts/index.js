@@ -118,25 +118,30 @@ export default function CategoryProducts({ navigation }) {
     setIsLoading(true);
     setNoData(null);
     try {
-      api.get("/consultas/CategoriasProdutos").then((response) => {
-        let listCategorys = response.data;
-        // console.log('listCategorys:',listCategorys)
-        if (listCategorys != null && listCategorys.length > 0) {
-          setCatProducts(
-            listCategorys.map((item, index) => {
-              return {
-                name: capitalizeWords(item.nome),
-                id: index + 1,
-                image: require("../../images/foodImage.png"),
-              };
-            })
-          );
-        } else {
-          setCatProducts([]);
-          setNoData(response.data);
-        }
-        setIsLoading(false);
-      });
+      api
+        .get("/consultas/CategoriasProdutos")
+        .then((response) => {
+          let listCategorys = response.data;
+          // console.log('listCategorys:',listCategorys)
+          if (listCategorys != null && listCategorys.length > 0) {
+            setCatProducts(
+              listCategorys.map((item, index) => {
+                return {
+                  name: capitalizeWords(item.nome),
+                  id: index + 1,
+                  image: require("../../images/foodImage.png"),
+                };
+              })
+            );
+          } else {
+            setCatProducts([]);
+            setNoData(response.data);
+          }
+          setIsLoading(false);
+        })
+        .catch((e) => {
+          console.warn("erro:", e);
+        });
     } catch (e) {
       console.log(e);
     }

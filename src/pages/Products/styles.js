@@ -26,27 +26,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   productInfos: {
-    justifyContent: "center",
+    // justifyContent: "center",
+    marginLeft: 15,
   },
   productIcon: {
     width: 70,
-    height: 100,
+    height: 70,
     marginRight: 10,
   },
   nameProduct: {
-    fontSize: 16,
-    fontFamily: "OpenSans_500Medium",
-    width: Dimensions.get("window").width - 140,
+    // fontSize: 16,
+    // fontFamily: "OpenSans_500Medium",
+    // alignItems: "center",
+    // width: Dimensions.get("window").width - 140,
+    fontSize: 18,
+    fontFamily: "OpenSans_400Regular",
+    color: "#253D4E",
+    textAlign: "start",
   },
   quantItems: {
     flexDirection: "row",
     gap: 15,
     alignItems: "center",
-    justifyContent: "center",
+    marginVertical: 10,
   },
   quantityValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: "OpenSans_500Medium",
+    color: "#253D4E",
   },
 });
 

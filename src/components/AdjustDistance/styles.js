@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
   iconGPS: {
     color: "#fff",
-    marginRight: 10,
+    marginRight: 15,
     color: "#253D4E",
   },
   textButtonRange: {
