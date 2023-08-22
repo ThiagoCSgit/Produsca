@@ -1,164 +1,273 @@
-import { SafeAreaView, Text, Image, FlatList, Pressable, View } from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  Image,
+  FlatList,
+  Pressable,
+  View,
+  Modal,
+} from "react-native";
 import React, { useState, useEffect } from "react";
-import styles from './styles';
-import api from '../../service/api';
+import styles from "./styles";
+import api from "../../service/api";
 
-import Loading from '../../components/Loading';
-import NoData from '../../components/NoData';
+import Loading from "../../components/Loading";
+import NoData from "../../components/NoData";
+
+import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
+
+import { useIsFocused } from "@react-navigation/native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CategoryProducts({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [noData, setNoData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [shoppingList, setShoppingList] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [noData, setNoData] = useState(null)
-  
   const [catProducts, setCatProducts] = useState([
     {
       id: 1,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 2,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 3,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 4,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 5,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 6,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 7,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 8,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 9,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 10,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 11,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 12,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 13,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 14,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 15,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 16,
       name: "Alimentação",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 17,
       name: "Limpeza",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
     {
       id: 18,
       name: "Cama e banho",
-      image: require("../../images/foodImage.png")
+      image: require("../../images/foodImage.png"),
     },
-  ])
+  ]);
+
+  const { purchaseInProgress } = usePurchaseStatus();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    hasPurchaseInProgress();
+  }, [isFocused]);
+
+  async function hasPurchaseInProgress() {
+    let shopping = await AsyncStorage.getItem("compra-iniciada");
+    console.warn("shopping:", shopping);
+    if (shopping) {
+      // Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
+      console.log("setar pra true");
+      setShoppingList(JSON.parse(shopping));
+      setModalVisible(true);
+    }
+  }
 
   useEffect(() => {
-    getCategories()
-  }, [])
+    getCategories();
+    console.warn("purchaseInProgress categorias:", purchaseInProgress);
+  }, []);
 
-  async function getCategories(){
-    setIsLoading(true)
-    api.get("/consultas/CategoriasProdutos").then(response => {
-      let listCategorys = response.data
-      console.log('listCategorys:',listCategorys)
-      if(listCategorys != null && listCategorys.length > 0){
-        setCatProducts(listCategorys.map((item, index) => {
-          return {
-            name: capitalizeWords(item.nome),
-            id: index + 1,
-            image: require("../../images/foodImage.png")
+  async function getCategories() {
+    setIsLoading(true);
+    setNoData(null);
+    try {
+      api
+        .get("/consultas/CategoriasProdutos")
+        .then((response) => {
+          let listCategorys = response.data;
+          // console.log('listCategorys:',listCategorys)
+          if (listCategorys != null && listCategorys.length > 0) {
+            setCatProducts(
+              listCategorys.map((item, index) => {
+                return {
+                  name: capitalizeWords(item.nome),
+                  id: index + 1,
+                  image: require("../../images/foodImage.png"),
+                };
+              })
+            );
+          } else {
+            setCatProducts([]);
+            setNoData(response.data);
           }
-        }))
-      }
-      else{
-        setCatProducts([])
-        setNoData(response.data)
-      }
-      setIsLoading(false)
-    })
+          setIsLoading(false);
+        })
+        .catch((e) => {
+          console.warn("erro:", e);
+        });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function capitalizeWords(text) {
-    return text.replace(/\b\w{3,}/g, (match) => match.charAt(0).toUpperCase() + match.slice(1));
+    return text.replace(
+      /\b\w{3,}/g,
+      (match) => match.charAt(0).toUpperCase() + match.slice(1)
+    );
   }
 
-  return ( isLoading ?
-    <Loading/> 
-    :
-    noData != null ?
-    <NoData message={noData.message} executeAction={getCategories}/>
-    :
+  return isLoading ? (
+    <Loading />
+  ) : noData != null ? (
+    <NoData message={noData.message} executeAction={getCategories} />
+  ) : (
     <SafeAreaView style={styles.container}>
       <FlatList
-        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
         style={styles.listCategorys}
         data={catProducts}
         numColumns={3}
-        key={'_'}
+        key={"_"}
         renderItem={({ item }) => {
           return (
-            <Pressable style={styles.categoryItem} onPress={() => navigation.navigate("Produtos", {
-              categoryName: item.name,
-              supermarketName: null
-            })}>
-              <Image style={styles.categoryIcon} source={item.image}/>
-              <Text style={[styles.categoryName, styles.customFonts]}>{item.name}</Text>
+            <Pressable
+              style={styles.categoryItem}
+              onPress={() =>
+                navigation.navigate("Produtos", {
+                  categoryName: item.name,
+                  supermarketName: null,
+                })
+              }
+            >
+              <Image style={styles.categoryIcon} source={item.image} />
+              <Text style={[styles.categoryName, styles.customFonts]}>
+                {item.name}
+              </Text>
             </Pressable>
-          )
+          );
         }}
       />
+      <Modal
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+        animationType="fade"
+        transparent={true}
+      >
+        <View style={styles.containerModal}>
+          <Text style={styles.modalText}>
+            Há uma compra em andamento, gostaria de retornar a ela?
+          </Text>
+          <View style={styles.modalButtons}>
+            <Pressable
+              onPress={() => {
+                setModalVisible(false);
+                // setTimeout(() => {
+                //   navigation.navigate("Histórico");
+                // }, 100);
+              }}
+              style={[
+                styles.buttonModal,
+                {
+                  backgroundColor: "#eda7a7",
+                  borderColor: "#eda7a7",
+                },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#fff" }]}>Não</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setModalVisible(false);
+                setTimeout(() => {
+                  navigation.navigate("Carrinho", {
+                    list: shoppingList,
+                    hasPurchaseInProgress: true,
+                  });
+                }, 100);
+              }}
+              style={[
+                styles.buttonModal,
+                {
+                  backgroundColor: "#D4EEE2",
+                  borderColor: "#D4EEE2",
+                },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#253D4E" }]}>Sim</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
-  )
+  );
 }

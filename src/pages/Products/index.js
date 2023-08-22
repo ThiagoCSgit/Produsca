@@ -19,14 +19,14 @@ import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Products({ route, navigation }) {
   const { categoryName, supermarketName } = route.params;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
   // const [products, setProducts] = useState([
   //   {
   //     id: "1",
-  //     name: "Bacon",
+  //     name: "Laranja",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "Cofril",
   //     price: "10,90",
   //     minPrice: "1,23",
@@ -36,7 +36,7 @@ export default function Products({ route, navigation }) {
   //     id: "2",
   //     name: "Sobrecoxa de Frango",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "Perdigão",
   //     price: "15,90",
   //     minPrice: "1,23",
@@ -46,7 +46,7 @@ export default function Products({ route, navigation }) {
   //     id: "3",
   //     name: "Filé Mingnon",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "Montana",
   //     price: "22,90",
   //     minPrice: "1,23",
@@ -56,7 +56,7 @@ export default function Products({ route, navigation }) {
   //     id: "4",
   //     name: "Banana Ouro",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "",
   //     price: "9,75",
   //     minPrice: "1,23",
@@ -66,7 +66,7 @@ export default function Products({ route, navigation }) {
   //     id: "5",
   //     name: "Manga Tommy Atkins",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "",
   //     price: "4,73",
   //     minPrice: "1,23",
@@ -76,26 +76,19 @@ export default function Products({ route, navigation }) {
   //     id: "6",
   //     name: "Tomate Orgânico",
   //     image: require("../../images/foodImage.png"),
-  //     inCart: false,
+  //     qtd: 0,
   //     mark: "Viver",
   //     price: "10,80",
   //     minPrice: "1,23",
   //     maxPrice: "72,23",
   //   },
-  // ])
+  // ]);
   const [products, setProducts] = useState([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     getCategoryProducts();
   }, []);
-
-  // useEffect(() => {
-  //   if(isFocused && !isLoading && products.length > 0){
-  //     console.log('foi')
-  //     getCheckProducts()
-  //   }
-  // }, [isFocused, isLoading])
 
   useMemo(() => {
     if (isFocused && !isLoading && products.length > 0) {
@@ -105,6 +98,7 @@ export default function Products({ route, navigation }) {
 
   async function getCategoryProducts() {
     setIsLoading(true);
+    setNoData(null);
 
     if (supermarketName) {
       let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
@@ -114,7 +108,7 @@ export default function Products({ route, navigation }) {
           `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`
         )
         .then((response) => {
-          // console.warn('response:',response.data)
+          console.warn("response da api:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
@@ -146,16 +140,17 @@ export default function Products({ route, navigation }) {
       api
         .get(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
         .then((response) => {
-          // console.warn('response sem supermercado:',response.data)
+          console.warn("response sem supermercado:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
               listProd.map((item, index) => {
+                console.log(" o nome:", item.nome);
                 return {
                   id: index + 1,
-                  name: item.nome_produto,
-                  image: require("../../images/foodImage.png"),
-                  price: "10,80",
+                  name: item.nome,
+                  image: `${item.link_imagem}`,
+                  price: item.preco,
                   qtd: 0,
                 };
               })
@@ -171,9 +166,7 @@ export default function Products({ route, navigation }) {
 
   async function getCheckProducts() {
     try {
-      // await AsyncStorage.clear()
-      // let productKeys = await AsyncStorage.getAllKeys();
-      // console.warn("productKeys:", productKeys);
+      // await AsyncStorage.clear();
       let newList = [...products];
       // console.log('newList recebendo products:',newList)
       newList.forEach((item) => {
@@ -246,9 +239,13 @@ export default function Products({ route, navigation }) {
       ? `produto-lista-${supermarket}-${idProd}`
       : `produto-lista-${idProd}`;
 
+    cleanShoppingList(supermarket);
+
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
+      console.log("id:", id);
+      console.log("itemToAdd:", itemToAdd);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -263,11 +260,26 @@ export default function Products({ route, navigation }) {
     }
   }
 
+  async function cleanShoppingList(supermarket) {
+    let asyncStorage = await AsyncStorage.getAllKeys();
+    console.warn("asyncStorage:", asyncStorage);
+    let productsKeys = asyncStorage.filter((item) =>
+      item.includes("produto-lista")
+    );
+    console.warn("productsKeys:", productsKeys);
+    productsKeys.forEach(async (item) => {
+      if (!item.includes(`produto-lista-${supermarket}-`)) {
+        console.log("item de outro mercado:", item);
+        await AsyncStorage.removeItem(item);
+      }
+    });
+  }
+
   // async function addOrRemoveToShopCart(value, id, supermarket = '') {
   //   let newList = [...products]
   //   setProducts(newList.map(item => {
   //     if (item.id == id) {
-  //       item.inCart = value
+  //       item.qtd = value
   //     }
   //     return item
   //   }))
@@ -308,12 +320,21 @@ export default function Products({ route, navigation }) {
       </Text>
       <FlatList
         style={styles.listProducts}
+        contentContainerStyle={{ gap: 30 }}
         data={products}
         numColumns={1}
         key={"_"}
         renderItem={({ item }) => {
           return (
-            <View>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "#D4EEE2",
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                // alignItems: "center",
+              }}
+            >
               <Pressable
                 style={styles.productItem}
                 onPress={() =>
@@ -322,16 +343,18 @@ export default function Products({ route, navigation }) {
                         supermarket: supermarketName,
                         nameProduct: item.name,
                         idProduct: item.id,
-                        // funcAddRemoveCart: addOrRemoveToShopCart
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,
                         idProduct: item.id,
-                        // funcAddRemoveCart: addOrRemoveToShopCart
                       })
                 }
               >
-                <Image style={styles.productIcon} source={item.image} />
+                <Image
+                  style={styles.productIcon}
+                  source={{ uri: item.image }}
+                  // source={item.image}
+                />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
                   {supermarketName && (
@@ -342,13 +365,15 @@ export default function Products({ route, navigation }) {
               <View style={styles.quantItems}>
                 <Icon
                   name="minuscircleo"
-                  size={28}
+                  color="#253D4E"
+                  size={25}
                   onPress={() => decreaseQuantity(item.id, supermarketName)}
                 />
                 <Text style={styles.quantityValue}>{item.qtd}</Text>
                 <Icon
                   name="pluscircleo"
-                  size={28}
+                  color="#253D4E"
+                  size={25}
                   onPress={() => increaseQuantity(item.id, supermarketName)}
                 />
               </View>
