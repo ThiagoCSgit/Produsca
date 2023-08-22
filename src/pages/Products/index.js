@@ -21,73 +21,73 @@ export default function Products({ route, navigation }) {
   const { categoryName, supermarketName } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
-  const [products, setProducts] = useState([
-    {
-      id: "1",
-      name: "Bacon",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "Cofril",
-      price: "10,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "2",
-      name: "Sobrecoxa de Frango",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "Perdigão",
-      price: "15,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "3",
-      name: "Filé Mingnon",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "Montana",
-      price: "22,90",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "4",
-      name: "Banana Ouro",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "",
-      price: "9,75",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "5",
-      name: "Manga Tommy Atkins",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "",
-      price: "4,73",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-    {
-      id: "6",
-      name: "Tomate Orgânico",
-      image: require("../../images/foodImage.png"),
-      qtd: 0,
-      mark: "Viver",
-      price: "10,80",
-      minPrice: "1,23",
-      maxPrice: "72,23",
-    },
-  ]);
-  // const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([
+  //   {
+  //     id: "1",
+  //     name: "Laranja",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "Cofril",
+  //     price: "10,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Sobrecoxa de Frango",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "Perdigão",
+  //     price: "15,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Filé Mingnon",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "Montana",
+  //     price: "22,90",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Banana Ouro",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "",
+  //     price: "9,75",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Manga Tommy Atkins",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "",
+  //     price: "4,73",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  //   {
+  //     id: "6",
+  //     name: "Tomate Orgânico",
+  //     image: require("../../images/foodImage.png"),
+  //     qtd: 0,
+  //     mark: "Viver",
+  //     price: "10,80",
+  //     minPrice: "1,23",
+  //     maxPrice: "72,23",
+  //   },
+  // ]);
+  const [products, setProducts] = useState([]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    // getCategoryProducts();
+    getCategoryProducts();
   }, []);
 
   useMemo(() => {
@@ -145,11 +145,12 @@ export default function Products({ route, navigation }) {
           if (listProd != null && listProd.length > 0) {
             setProducts(
               listProd.map((item, index) => {
+                console.log(" o nome:", item.nome);
                 return {
                   id: index + 1,
-                  name: item.nome_produto,
+                  name: item.nome,
                   image: `${item.link_imagem}`,
-                  // price: "10,80",
+                  price: item.preco,
                   qtd: 0,
                 };
               })
@@ -351,8 +352,8 @@ export default function Products({ route, navigation }) {
               >
                 <Image
                   style={styles.productIcon}
-                  // source={{ uri: item.image }}
-                  source={item.image}
+                  source={{ uri: item.image }}
+                  // source={item.image}
                 />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>

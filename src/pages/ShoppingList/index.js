@@ -114,7 +114,7 @@ export default function ShoppingList({ navigation }) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.itemCart}>
-                  <View style={{ width: "70%" }}>
+                  <View style={{ width: "80%" }}>
                     <Text style={styles.itemName}>
                       {item.supermarket
                         ? `${item.name} \n R$${item.price} - ${item.supermarket}`

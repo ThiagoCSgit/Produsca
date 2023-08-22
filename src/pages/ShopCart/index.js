@@ -26,10 +26,10 @@ export default function ShopCart({ route, navigation }) {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
-  const { list } = route.params;
+  const { list, hasPurchaseInProgress } = route.params;
 
   const { setPurchaseInProgress } = usePurchaseStatus();
-  // console.warn("list:", list);
+  // console.warn("list shop cart:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -40,15 +40,17 @@ export default function ShopCart({ route, navigation }) {
   }, [cartList]);
 
   function getCartProducts() {
+    console.warn("getCartProducts, list:", list);
     let newList = list.products.map((item, index) => {
       (item.check = true), (item.idProd = index);
       item.qtd = 1;
       return item;
     });
+    console.warn("nova lista:", newList);
     setCartList({
       id: list.id,
       products: newList,
-      supermarket: list.supermarket.name,
+      supermarket: list.supermarket,
     });
   }
 
@@ -62,7 +64,7 @@ export default function ShopCart({ route, navigation }) {
     setCartList({
       id: list.id,
       products: newList,
-      supermarket: list.supermarket.name,
+      supermarket: list.supermarket,
     });
   }
 
@@ -72,7 +74,7 @@ export default function ShopCart({ route, navigation }) {
     setCartList({
       id: list.id,
       products: newList,
-      supermarket: list.supermarket.name,
+      supermarket: list.supermarket,
     });
   }
 
@@ -86,7 +88,7 @@ export default function ShopCart({ route, navigation }) {
     setCartList({
       id: list.id,
       products: newList,
-      supermarket: list.supermarket.name,
+      supermarket: list.supermarket,
     });
   }
 
@@ -100,21 +102,24 @@ export default function ShopCart({ route, navigation }) {
     setCartList({
       id: list.id,
       products: newList,
-      supermarket: list.supermarket.name,
+      supermarket: list.supermarket,
     });
   }
 
-  function unformatedParseFloatValue(value) {
-    if (value != "") {
-      return parseFloat(value.replaceAll(".", "").replace(",", "."));
-    }
-    return 0;
-  }
+  // function unformatedParseFloatValue(value) {
+  //   if (value != "") {
+  //     return parseFloat(value.replaceAll(".", "").replace(",", "."));
+  //   }
+  //   return 0;
+  // }
 
   function itemPrice(value, quantity = 1) {
-    let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity);
-    let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
-    return Number.parseFloat(valueFixed).toLocaleString("pt-br", {
+    // console.warn("itemprice value:", value);
+    // let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity);
+    // console.warn("unformatedValue:", unformatedValue);
+    // let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
+    // console.warn("valueFixed:", valueFixed);
+    return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
       minimumFractionDigits: 2,
     });
   }
@@ -160,9 +165,11 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function saveToHistory() {
-    let id = `carrinho-${cartList.id}-${cartList.supermarket}`;
+    // await AsyncStorage.setItem("compra-iniciada", null);
+    let id = `carrinho-${cartList.id}-${cartList.supermarket.name}`;
     console.warn("id:", id);
     try {
+      console.warn("salvando cartList:", cartList);
       await AsyncStorage.setItem(id, JSON.stringify(cartList));
       let productKeys = await AsyncStorage.getAllKeys();
       productKeys.filter((key) => {});
@@ -208,7 +215,7 @@ export default function ShopCart({ route, navigation }) {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.itemCart}>
-                  <View style={{ width: "70%" }}>
+                  <View style={{ width: "80%" }}>
                     <Text
                       style={[styles.itemName, item.check && styles.bought]}
                     >

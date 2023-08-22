@@ -50,8 +50,8 @@ export default function SupermaketShoppingList({
     });
     try {
       let id = "compra-iniciada";
-      let statusPurchase = true;
-      await AsyncStorage.setItem(id, JSON.stringify(statusPurchase));
+      let shoppingList = list;
+      await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
     } catch (e) {
       console.warn(e);
     }
@@ -92,7 +92,9 @@ export default function SupermaketShoppingList({
                   !visible[index].open && styles.p15,
                 ]}
               >
-                <View style={{ gap: 15 }}>
+                <View
+                  style={[{ gap: 15 }, !showButton && { paddingBottom: 15 }]}
+                >
                   <TouchableOpacity
                     style={styles.buttonOpenCollapse}
                     onPress={() => openCloseCollapse(item.id)}

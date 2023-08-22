@@ -5,7 +5,7 @@ import {
   FlatList,
   Pressable,
   View,
-  Alert,
+  Modal,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styles from "./styles";
@@ -23,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function CategoryProducts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [shoppingList, setShoppingList] = useState(null);
 
   const [catProducts, setCatProducts] = useState([
     {
@@ -127,7 +129,10 @@ export default function CategoryProducts({ navigation }) {
     let shopping = await AsyncStorage.getItem("compra-iniciada");
     console.warn("shopping:", shopping);
     if (shopping) {
-      Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
+      // Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
+      console.log("setar pra true");
+      setShoppingList(JSON.parse(shopping));
+      setModalVisible(true);
     }
   }
 
@@ -210,6 +215,59 @@ export default function CategoryProducts({ navigation }) {
           );
         }}
       />
+      <Modal
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+        animationType="fade"
+        transparent={true}
+      >
+        <View style={styles.containerModal}>
+          <Text style={styles.modalText}>
+            Há uma compra em andamento, gostaria de retornar a ela?
+          </Text>
+          <View style={styles.modalButtons}>
+            <Pressable
+              onPress={() => {
+                setModalVisible(false);
+                // setTimeout(() => {
+                //   navigation.navigate("Histórico");
+                // }, 100);
+              }}
+              style={[
+                styles.buttonModal,
+                {
+                  backgroundColor: "#eda7a7",
+                  borderColor: "#eda7a7",
+                },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#fff" }]}>Não</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setModalVisible(false);
+                setTimeout(() => {
+                  navigation.navigate("Carrinho", {
+                    list: shoppingList,
+                    hasPurchaseInProgress: true,
+                  });
+                }, 100);
+              }}
+              style={[
+                styles.buttonModal,
+                {
+                  backgroundColor: "#D4EEE2",
+                  borderColor: "#D4EEE2",
+                },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#253D4E" }]}>Sim</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

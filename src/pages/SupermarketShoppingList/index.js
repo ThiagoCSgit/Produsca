@@ -12,56 +12,57 @@ import { useLocation } from "../../context/LocationProvider";
 import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
 
 export default function SupermaketShoppingList({ route, navigation }) {
-  const [state, setState] = useState([
-    {
-      supermarket: {
-        name: "EPA",
-        city: "Vitória",
-        state: "ES",
-        publicPlace: "Rua da Fantasia",
-        number: 123,
-        phone: "27 33439846",
-        district: "Natal Amigo",
-      },
-      products: [
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-        { name: "batata", price: 10 },
-      ],
-      id: 1,
-    },
-    {
-      supermarket: {
-        name: "Extrabom",
-        city: "Vitória",
-        state: "ES",
-        publicPlace: "Rua da Fantasia",
-        number: 123,
-        phone: "27 33439846",
-        district: "Natal Amigo",
-      },
-      products: [{ name: "batata", price: 10 }],
-      id: 2,
-    },
-  ]);
+  // const [state, setState] = useState([
+  //   {
+  //     supermarket: {
+  //       name: "EPA",
+  //       city: "Vitória",
+  //       state: "ES",
+  //       publicPlace: "Rua da Fantasia",
+  //       number: 123,
+  //       phone: "27 33439846",
+  //       district: "Natal Amigo",
+  //     },
+  //     products: [
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //       { name: "batata", price: 10 },
+  //     ],
+  //     id: 1,
+  //   },
+  //   {
+  //     supermarket: {
+  //       name: "Extrabom",
+  //       city: "Vitória",
+  //       state: "ES",
+  //       publicPlace: "Rua da Fantasia",
+  //       number: 123,
+  //       phone: "27 33439846",
+  //       district: "Natal Amigo",
+  //     },
+  //     products: [{ name: "batata", price: 10 }],
+  //     id: 2,
+  //   },
+  // ]);
+  const [state, setState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
@@ -74,7 +75,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
-      // postShopList();
+      postShopList();
     }
   }, [myLocation, range, modalVisible]);
 
@@ -122,10 +123,28 @@ export default function SupermaketShoppingList({ route, navigation }) {
         // ];
         if (listResponse != null && listResponse.length > 0) {
           let data = listResponse.map((item) => {
+            let supermercado = {
+              name: item.nomeSupermercado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              city: item.nomeCidade,
+              state: item.nomeEstado,
+              district: item.nomeBairro,
+              phone: item.telefone,
+              cpnj: item.cnpj,
+            };
+            let produtos = item.produtos.map((prod) => {
+              return {
+                name: prod.nome,
+                price: prod.preco,
+                describe: prod.descricao,
+                image: prod.link_image,
+              };
+            });
             return {
-              supermarket: item.supermercado,
-              products: item.produtos,
-              id: item.id,
+              supermarket: supermercado,
+              products: produtos,
+              id: randomIdGeneretor(3),
             };
           });
           console.warn("data retornada:", data);
@@ -136,6 +155,19 @@ export default function SupermaketShoppingList({ route, navigation }) {
         }
         setIsLoading(false);
       });
+  }
+
+  function randomIdGeneretor(length) {
+    const caracteres =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let id = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * caracteres.length);
+      id += caracteres.charAt(randomIndex);
+    }
+
+    return id;
   }
 
   return isLoading ? (

@@ -128,10 +128,7 @@ export default function Supermarkets({ navigation }) {
     <Loading />
   ) : noData != null ? (
     <View style={{ opacity: modalVisible ? 0.4 : 1 }}>
-      <NoData
-        message="Acho não mano, tenta de novo depois"
-        executeAction={getNearbySupermarkets}
-      />
+      <NoData message={noData.message} executeAction={getNearbySupermarkets} />
       <View style={{ alignItems: "center", marginTop: -45 }}>
         <AdjustDistance
           range={range}
