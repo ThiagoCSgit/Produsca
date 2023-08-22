@@ -9,6 +9,7 @@ import AdjustDistance from "../../components/AdjustDistance";
 import NoData from "../../components/NoData";
 
 import { useLocation } from "../../context/LocationProvider";
+import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
 
 export default function SupermaketShoppingList({ route, navigation }) {
   const [state, setState] = useState([
@@ -68,6 +69,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   const [noData, setNoData] = useState(null);
 
   const myLocation = useLocation();
+  const { setPurchaseInProgress } = usePurchaseStatus();
 
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
@@ -163,6 +165,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
             state={state}
             showButton={true}
             navigation={navigation}
+            setPurchaseInProgress={setPurchaseInProgress}
           />
         )}
       </ScrollView>

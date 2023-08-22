@@ -10,10 +10,13 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function SupermaketShoppingList({
   state,
   showButton = false,
   navigation = null,
+  setPurchaseInProgress,
 }) {
   const [visible, setVisible] = useState(null);
 
@@ -40,10 +43,18 @@ export default function SupermaketShoppingList({
     setVisible(updatedVisible);
   }
 
-  function startShopping(list) {
+  async function startShopping(list) {
+    // setPurchaseInProgress(true);
     navigation.navigate("Carrinho", {
       list: list,
     });
+    try {
+      let id = "compra-iniciada";
+      let statusPurchase = true;
+      await AsyncStorage.setItem(id, JSON.stringify(statusPurchase));
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   function callNumber(phoneNumber) {

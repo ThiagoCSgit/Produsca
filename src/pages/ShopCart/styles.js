@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
-    textAlign: "start",
+    textAlign: "left",
   },
   actionIcons: {
     gap: 30,
@@ -65,10 +65,9 @@ const styles = StyleSheet.create({
   },
   buttonCheckout: {
     borderRadius: 100,
-    width: "60%",
     marginBottom: 20,
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
@@ -79,6 +78,8 @@ const styles = StyleSheet.create({
     color: "#253D4E",
     fontSize: 18,
     fontFamily: "OpenSans_500Medium",
+    marginLeft: 10,
+    marginBottom: 1,
   },
   containerModal: {
     justifyContent: "center",
@@ -117,8 +118,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    // backgroundColor: "#D4EEE2",
-    // borderColor: "#D4EEE2",
   },
   buttonText: {
     fontSize: 16,

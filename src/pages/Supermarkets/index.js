@@ -82,7 +82,7 @@ export default function Supermarkets({ navigation }) {
         "rota:",
         `/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`
       );
-      // getNearbySupermarkets();
+      getNearbySupermarkets();
     }
   }, [myLocation, range, modalVisible]);
 

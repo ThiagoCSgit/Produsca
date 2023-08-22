@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
-    textAlign: "start",
+    textAlign: "left",
     marginBottom: 10,
   },
   quantItems: {

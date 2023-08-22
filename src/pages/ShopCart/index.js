@@ -16,6 +16,8 @@ import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
+import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
+
 export default function ShopCart({ route, navigation }) {
   const [cartList, setCartList] = useState({
     id: 0,
@@ -25,6 +27,8 @@ export default function ShopCart({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
+
+  const { setPurchaseInProgress } = usePurchaseStatus();
   // console.warn("list:", list);
 
   useEffect(() => {
@@ -174,18 +178,33 @@ export default function ShopCart({ route, navigation }) {
     } catch (e) {
       console.warn("error:", e);
     }
+    setPurchaseInProgress(false);
+  }
+
+  async function cancelPurchase() {
+    await AsyncStorage.removeItem("compra-iniciada");
+    // console.warn("asyncStorage:", asyncStorage);
   }
 
   return (
     <SafeAreaView style={styles.container}>
       {cartList?.products.length > 0 ? (
-        <View style={{ width: "100%", height: "100%", alignItems: "center" }}>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+          }}
+        >
           <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
           <FlatList
             data={cartList.products}
             numColumns={1}
             key={"_"}
-            contentContainerStyle={{ gap: 15, paddingHorizontal: 20 }}
+            contentContainerStyle={{
+              gap: 15,
+              paddingHorizontal: 20,
+            }}
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.itemCart}>
@@ -237,12 +256,33 @@ export default function ShopCart({ route, navigation }) {
               );
             }}
           />
-          <TouchableOpacity
-            style={styles.buttonCheckout}
-            onPress={() => checkout()}
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-around",
+              position: "relative",
+              top: 10,
+            }}
           >
-            <Text style={styles.textButton}>Finalizar Compra</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonCheckout, { backgroundColor: "#eda7a7" }]}
+              onPress={() => cancelPurchase()}
+            >
+              <Icon name="close" size={22} color="#fff" />
+              <Text style={[styles.textButton, { color: "#fff" }]}>
+                Cancelar
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonCheckout}
+              onPress={() => checkout()}
+            >
+              <Icon name="check" size={22} color="#253D4E" />
+              <Text style={styles.textButton}>Finalizar</Text>
+            </TouchableOpacity>
+          </View>
           <Modal
             visible={modalVisible}
             onRequestClose={() => {
@@ -277,7 +317,7 @@ export default function ShopCart({ route, navigation }) {
                     },
                   ]}
                 >
-                  <Text style={[styles.buttonText, { color: "#000" }]}>
+                  <Text style={[styles.buttonText, { color: "#fff" }]}>
                     Não
                   </Text>
                 </Pressable>

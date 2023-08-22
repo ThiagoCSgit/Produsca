@@ -5,6 +5,7 @@ import {
   FlatList,
   Pressable,
   View,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import styles from "./styles";
@@ -12,6 +13,12 @@ import api from "../../service/api";
 
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
+
+import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
+
+import { useIsFocused } from "@react-navigation/native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CategoryProducts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -110,8 +117,23 @@ export default function CategoryProducts({ navigation }) {
     },
   ]);
 
+  const { purchaseInProgress } = usePurchaseStatus();
+  const isFocused = useIsFocused();
   useEffect(() => {
-    // getCategories();
+    hasPurchaseInProgress();
+  }, [isFocused]);
+
+  async function hasPurchaseInProgress() {
+    let shopping = await AsyncStorage.getItem("compra-iniciada");
+    console.warn("shopping:", shopping);
+    if (shopping) {
+      Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
+    }
+  }
+
+  useEffect(() => {
+    getCategories();
+    console.warn("purchaseInProgress categorias:", purchaseInProgress);
   }, []);
 
   async function getCategories() {
