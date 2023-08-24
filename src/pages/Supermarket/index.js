@@ -120,12 +120,12 @@ export default function Supermarket({ route, navigation }) {
   ]);
 
   useEffect(() => {
-    // api.get(`//consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
+    // api.get(`/consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
     //   console.warn('response:',response.data)
     //   // setCatProducts(response.data)
     //   setIsLoading(false)
     // })
-    // getCategories()
+    getCategories();
   }, []);
 
   async function getCategories() {

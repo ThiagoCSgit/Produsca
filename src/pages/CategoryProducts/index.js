@@ -126,6 +126,7 @@ export default function CategoryProducts({ navigation }) {
   }, [isFocused]);
 
   async function hasPurchaseInProgress() {
+    // await AsyncStorage.clear();
     let shopping = await AsyncStorage.getItem("compra-iniciada");
     console.warn("shopping:", shopping);
     if (shopping) {

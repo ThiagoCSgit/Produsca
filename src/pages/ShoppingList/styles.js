@@ -35,9 +35,10 @@ const styles = StyleSheet.create({
     borderColor: "#D4EEE2",
     borderRadius: 10,
     paddingTop: 10,
+    minHeight: 130,
   },
   itemName: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
     textAlign: "left",

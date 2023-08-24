@@ -183,7 +183,7 @@ export default function Products({ route, navigation }) {
           );
         } else {
           productChecked = await AsyncStorage.getItem(
-            `produto-lista-${item.id}`
+            `produto-lista-noMarket-${item.id}`
           );
         }
 
@@ -237,9 +237,9 @@ export default function Products({ route, navigation }) {
   async function addOrRemoveToShopCart(idProd, qtd, supermarket) {
     let id = supermarket
       ? `produto-lista-${supermarket}-${idProd}`
-      : `produto-lista-${idProd}`;
+      : `produto-lista-noMarket-${idProd}`;
 
-    cleanShoppingList(supermarket);
+    cleanShoppingList(supermarket, id);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
@@ -260,20 +260,56 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  async function cleanShoppingList(supermarket) {
+  async function cleanShoppingList(supermarket, id) {
     let asyncStorage = await AsyncStorage.getAllKeys();
     console.warn("asyncStorage:", asyncStorage);
-    let productsKeys = asyncStorage.filter((item) =>
+    let productsOnList = asyncStorage.filter((item) =>
       item.includes("produto-lista")
     );
-    console.warn("productsKeys:", productsKeys);
-    productsKeys.forEach(async (item) => {
-      if (!item.includes(`produto-lista-${supermarket}-`)) {
-        console.log("item de outro mercado:", item);
-        await AsyncStorage.removeItem(item);
-      }
-    });
+    console.log("clear id:", id, "supermarket:", supermarket);
+    if (!supermarket) {
+      productsOnList.forEach(async (item) => {
+        if (item.includes(`produto-lista-${supermarket}-`)) {
+          console.log("item de outro mercado:", item);
+          await AsyncStorage.removeItem(item);
+        }
+      });
+    } else {
+      productsOnList.forEach(async (item) => {
+        if (item.includes(`produto-lista-noMarket-`)) {
+          console.log("item sem mercado:", item);
+          await AsyncStorage.removeItem(item);
+        }
+      });
+    }
   }
+  // async function cleanShoppingList(supermarket, id) {
+  //   let asyncStorage = await AsyncStorage.getAllKeys();
+  //   console.warn("asyncStorage:", asyncStorage);
+  //   let productsKeys = asyncStorage.filter((item) =>
+  //     item.includes("produto-lista")
+  //   );
+  //   console.warn("productsKeys:", productsKeys);
+  //   let hasProductSupermarket = false
+  //   productsKeys.forEach(async (item) => {
+  //     if (item.includes(`produto-lista-${supermarket}-`)) {
+  //       console.log("item de outro mercado:", item);
+  //       hasProductSupermarket = true
+  //       // await AsyncStorage.removeItem(item);
+  //     }
+  //   });
+  //   if(hasProductSupermarket){
+  //     productsKeys.forEach(async (item) => {
+  //       if (!item.includes(`produto-lista-${supermarket}-`)) {
+  //         console.log("item de outro mercado:", item);
+  //         await AsyncStorage.removeItem(item);
+  //       }
+  //     });
+  //   }
+  //   else{
+
+  //   }
+  // }
 
   // async function addOrRemoveToShopCart(value, id, supermarket = '') {
   //   let newList = [...products]

@@ -42,8 +42,9 @@ export default function ShopCart({ route, navigation }) {
   function getCartProducts() {
     console.warn("getCartProducts, list:", list);
     let newList = list.products.map((item, index) => {
-      (item.check = true), (item.idProd = index);
-      item.qtd = 1;
+      // (item.check = false),
+      item.idProd = index;
+      // item.qtd = 1;
       return item;
     });
     console.warn("nova lista:", newList);
@@ -66,6 +67,7 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
+    saveToHistory();
   }
 
   async function removeItem(index) {
@@ -76,6 +78,7 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
+    saveToHistory();
   }
 
   function increaseQuantity(id) {
@@ -90,6 +93,8 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
+    console.warn("salvando histórico no increase, lista:", newList);
+    saveToHistory();
   }
 
   function decreaseQuantity(id) {
@@ -104,6 +109,8 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
+    console.warn("salvando histórico no decrease, lista:", newList);
+    saveToHistory();
   }
 
   // function unformatedParseFloatValue(value) {
@@ -171,8 +178,12 @@ export default function ShopCart({ route, navigation }) {
     try {
       console.warn("salvando cartList:", cartList);
       await AsyncStorage.setItem(id, JSON.stringify(cartList));
+      await AsyncStorage.setItem(
+        `compra-iniciada-${cartList.supermarket.name}`,
+        JSON.stringify(cartList)
+      );
       let productKeys = await AsyncStorage.getAllKeys();
-      productKeys.filter((key) => {});
+      // productKeys.filter((key) => {});
       // console.warn('productKeys:',productKeys)
       for (let i = 0; i < productKeys.length; i++) {
         let key = productKeys[i];

@@ -23,6 +23,7 @@ export default function ShoppingList({ navigation }) {
   async function getCartProducts() {
     try {
       let productKeys = await AsyncStorage.getAllKeys();
+      console.log("productKeys getCart:", productKeys);
 
       let filteredKeys = productKeys.filter((key) => {
         if (key.includes("produto-lista-")) {
@@ -31,10 +32,8 @@ export default function ShoppingList({ navigation }) {
       });
 
       let products = await AsyncStorage.multiGet(filteredKeys);
-
       let newList = products.map((product) => {
-        const newProduct = JSON.parse(product[1]);
-        return newProduct;
+        return JSON.parse(product[1]);
       });
       console.warn("preenchendo cartList:", newList);
       setCartList(newList);
@@ -70,7 +69,7 @@ export default function ShoppingList({ navigation }) {
     itemToAdd.supermarket = supermarket;
     id = supermarket
       ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-${id}`;
+      : `produto-lista-noMarket-${id}`;
     try {
       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
     } catch (e) {
@@ -94,7 +93,7 @@ export default function ShoppingList({ navigation }) {
     itemToAdd.supermarket = supermarket;
     id = supermarket
       ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-${id}`;
+      : `produto-lista-noMarket-${id}`;
     try {
       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
     } catch (e) {
@@ -149,7 +148,7 @@ export default function ShoppingList({ navigation }) {
                       removeItem(
                         item.supermarket
                           ? `produto-lista-${item.supermarket}-${item.id}`
-                          : `produto-lista-${item.id}`
+                          : `produto-lista-noMarket-${item.id}`
                       )
                     }
                   />

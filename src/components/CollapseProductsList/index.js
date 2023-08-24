@@ -43,15 +43,15 @@ export default function SupermaketShoppingList({
     setVisible(updatedVisible);
   }
 
-  async function startShopping(list) {
+  async function startShopping(list, supermarketName) {
     // setPurchaseInProgress(true);
     navigation.navigate("Carrinho", {
       list: list,
     });
     try {
-      let id = "compra-iniciada";
+      let id = `compra-iniciada-${supermarketName}`;
       let shoppingList = list;
-      await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      // await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
     } catch (e) {
       console.warn(e);
     }
@@ -144,7 +144,9 @@ export default function SupermaketShoppingList({
                     >
                       <TouchableOpacity
                         style={styles.startShoppingButton}
-                        onPress={() => startShopping(state[index])}
+                        onPress={() =>
+                          startShopping(state[index], item.supermarket.name)
+                        }
                       >
                         <Text style={styles.textButton}>Iniciar Compra</Text>
                         <Icon
@@ -189,7 +191,9 @@ export default function SupermaketShoppingList({
                       >
                         <TouchableOpacity
                           style={styles.startShoppingButton}
-                          onPress={() => startShopping(state[index])}
+                          onPress={() =>
+                            startShopping(state[index], item.supermarket.name)
+                          }
                         >
                           <Text style={styles.textButton}>Iniciar Compra</Text>
                           <Icon
