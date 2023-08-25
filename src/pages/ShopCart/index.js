@@ -29,7 +29,7 @@ export default function ShopCart({ route, navigation }) {
   const { list } = route.params;
 
   const { setPurchaseInProgress } = usePurchaseStatus();
-  console.warn("list shop cart:", list);
+  // console.warn("list shop cart:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -37,18 +37,19 @@ export default function ShopCart({ route, navigation }) {
 
   useEffect(() => {
     totalValue();
+    console.warn("useEffect salvar historico, cartList:", cartList);
     saveToHistory();
   }, [cartList]);
 
   function getCartProducts() {
-    console.warn("getCartProducts, list:", list);
+    // console.warn("getCartProducts, list:", list);
     let newList = list.products.map((item, index) => {
       // (item.check = false),
       item.idProd = index;
       // item.qtd = 1;
       return item;
     });
-    console.warn("nova lista:", newList);
+    // console.warn("nova lista:", newList);
     setCartList({
       id: list.id,
       products: newList,
@@ -80,14 +81,11 @@ export default function ShopCart({ route, navigation }) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
     // newList = newList.filter((indexList) => index != indexList);
-    console.warn("teste do splice:", newList);
     setCartList({
       id: list.id,
       products: newList,
       supermarket: list.supermarket,
     });
-
-    console.warn("removendo, newList:", newList);
     // saveToHistory(newList);
   }
 
@@ -103,7 +101,6 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
-    console.warn("salvando histórico no increase, lista:", newList);
   }
 
   function decreaseQuantity(id) {
@@ -118,7 +115,6 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
-    console.warn("salvando histórico no decrease, lista:", newList);
     // saveToHistory();
   }
 
@@ -191,9 +187,8 @@ export default function ShopCart({ route, navigation }) {
   async function saveToHistory() {
     // await AsyncStorage.setItem("compra-iniciada", null);
     let id = `carrinho-${cartList.id}-${cartList.supermarket.name}`;
-    console.warn("id:", id);
+    console.warn("id de salvamento na tela do shopCaat:", id);
     try {
-      console.warn("salvando cartList:", cartList);
       console.warn("salvando cartList.products:", cartList.products);
       if (cartList.products.length > 0) {
         await AsyncStorage.setItem(

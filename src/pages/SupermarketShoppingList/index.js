@@ -9,7 +9,6 @@ import AdjustDistance from "../../components/AdjustDistance";
 import NoData from "../../components/NoData";
 
 import { useLocation } from "../../context/LocationProvider";
-import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -82,7 +81,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
       setPreviousRange(range);
       postShopList();
     }
-  }, [myLocation, range, modalVisible, isFocused]);
+  }, [myLocation, range, modalVisible]);
 
   function postShopList() {
     setIsLoading(true);

@@ -122,7 +122,9 @@ export default function CategoryProducts({ navigation }) {
   const { purchaseInProgress } = usePurchaseStatus();
   const isFocused = useIsFocused();
   useEffect(() => {
-    hasPurchaseInProgress();
+    if (isFocused) {
+      hasPurchaseInProgress();
+    }
   }, [isFocused]);
 
   async function hasPurchaseInProgress() {

@@ -11,14 +11,24 @@ import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function SupermaketShoppingList({
+export default function CollapseProductsList({
   state,
   showButton = false,
   navigation = null,
 }) {
   const [visible, setVisible] = useState([]);
+  const [purchaseInProgress, setPurchaseInProgress] = useState(null);
+  const isFocused = useIsFocused();
+
   console.warn("state collapse:", state);
+
+  useEffect(() => {
+    if (isFocused) {
+      getPurchaseInProgress();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     console.warn("useEffect pro visible");
@@ -50,18 +60,62 @@ export default function SupermaketShoppingList({
     navigation.navigate("Carrinho", {
       list: list,
     });
-    try {
-      let id = `compra-iniciada-${supermarketName}`;
-      let shoppingList = list;
-      console.warn(
-        "iniciando a compra de id:",
-        id,
-        "shoppingList:",
-        shoppingList
-      );
-      await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-    } catch (e) {
-      console.warn(e);
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let historyKey = savedKeys.find((key) => {
+      if (key.includes("compra-historico")) {
+        return key;
+      }
+    });
+    let purchaseKey = savedKeys.find((key) => {
+      if (key.includes("compra-iniciada")) {
+        return key;
+      }
+    });
+    let id = `compra-iniciada-${supermarketName}`;
+    if (purchaseKey) {
+      if (purchaseKey != `compra-iniciada-${supermarketName}`) {
+        console.warn("comprando em outro supermercado");
+        console.warn("comprando em outro supermercado historyKey:", historyKey);
+        await AsyncStorage.removeItem(purchaseKey);
+        await AsyncStorage.removeItem(historyKey);
+
+        let shoppingList = list;
+        console.warn(
+          "iniciando uma nova compra em outro supermercado de id:",
+          id,
+          "shoppingList:",
+          shoppingList
+        );
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      } else {
+        console.warn("id para continuar uma compra:", id);
+        let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
+        console.warn("shoppingList para continuar uma compra:", shoppingList);
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      }
+      // console.warn("uma compra em andamento, teste:", purchaseKey);
+      // console.warn(
+      //   "uma compra em andamento, purchaseInProgress:",
+      //   purchaseInProgress
+      // );
+      // console.warn(
+      //   "uma compra em andamento, supermarketName:",
+      //   supermarketName
+      // );
+    } else {
+      try {
+        id = `compra-iniciada-${supermarketName}`;
+        let shoppingList = list;
+        console.warn(
+          "iniciando uma compra do zero de id:",
+          id,
+          "shoppingList:",
+          shoppingList
+        );
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      } catch (e) {
+        console.warn(e);
+      }
     }
   }
 
@@ -77,6 +131,32 @@ export default function SupermaketShoppingList({
       Linking.openURL(url);
     } catch (error) {
       console.warn(error);
+    }
+  }
+
+  // async function hasPurchaseInProgress() {
+  //   let savedKeys = await AsyncStorage.getAllKeys();
+  //   let filteredKey = savedKeys.find((key) => {
+  //     if (key.includes("compra-iniciada")) {
+  //       return key;
+  //     }
+  //   });
+  //   console.warn("has filteredKey:", filteredKey);
+  //   return filteredKey;
+  // }
+
+  async function getPurchaseInProgress() {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let purchaseKey = savedKeys.find((key) => {
+      if (key.includes("compra-iniciada")) {
+        return key;
+      }
+    });
+    console.warn("sub string antes:", purchaseKey);
+    console.log("sub string antes:", purchaseKey);
+    if (purchaseKey) {
+      console.warn("sub string:", purchaseKey);
+      setPurchaseInProgress(purchaseKey.substring(16));
     }
   }
 
@@ -156,7 +236,11 @@ export default function SupermaketShoppingList({
                           startShopping(state[index], item.supermarket.name)
                         }
                       >
-                        <Text style={styles.textButton}>Iniciar Compra</Text>
+                        <Text style={styles.textButton}>
+                          {purchaseInProgress == item.supermarket.name
+                            ? "Continuar Compra"
+                            : "Iniciar Compra"}
+                        </Text>
                         <Icon
                           name="shoppingcart"
                           size={20}
@@ -203,7 +287,11 @@ export default function SupermaketShoppingList({
                             startShopping(state[index], item.supermarket.name)
                           }
                         >
-                          <Text style={styles.textButton}>Iniciar Compra</Text>
+                          <Text style={styles.textButton}>
+                            {purchaseInProgress == item.supermarket.name
+                              ? "Continuar Compra"
+                              : "Iniciar Compra"}
+                          </Text>
                           <Icon
                             name="shoppingcart"
                             size={20}
