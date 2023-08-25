@@ -91,6 +91,7 @@ export default function ShoppingList({ navigation }) {
 
     let itemToAdd = cartList.find((item) => item.id == id);
     itemToAdd.supermarket = supermarket;
+    console.log("item adicionado:", itemToAdd);
     id = supermarket
       ? `produto-lista-${supermarket}-${id}`
       : `produto-lista-noMarket-${id}`;
@@ -158,11 +159,12 @@ export default function ShoppingList({ navigation }) {
           />
           <TouchableOpacity
             style={styles.buttonSimulate}
-            onPress={() =>
+            onPress={() => {
+              console.warn("tem produto pra simular:", cartList);
               navigation.navigate("Supermercados disponíveis", {
                 list: cartList,
-              })
-            }
+              });
+            }}
           >
             <IconMCI
               style={styles.iconCalculator}

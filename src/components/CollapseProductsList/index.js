@@ -16,20 +16,22 @@ export default function SupermaketShoppingList({
   state,
   showButton = false,
   navigation = null,
-  setPurchaseInProgress,
 }) {
-  const [visible, setVisible] = useState(null);
+  const [visible, setVisible] = useState([]);
+  console.warn("state collapse:", state);
 
   useEffect(() => {
-    if (state) {
-      setVisible(
-        state.map((item) => {
-          return {
-            id: item.id,
-            open: false,
-          };
-        })
-      );
+    console.warn("useEffect pro visible");
+    if (state.length > 0) {
+      console.warn("map do visible");
+      let visibleList = state.map((item) => {
+        return {
+          id: item.id,
+          open: false,
+        };
+      });
+      console.warn("visibleList:", visibleList);
+      setVisible(visibleList);
     }
   }, [state]);
 
@@ -51,7 +53,13 @@ export default function SupermaketShoppingList({
     try {
       let id = `compra-iniciada-${supermarketName}`;
       let shoppingList = list;
-      // await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      console.warn(
+        "iniciando a compra de id:",
+        id,
+        "shoppingList:",
+        shoppingList
+      );
+      await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
     } catch (e) {
       console.warn(e);
     }
@@ -81,7 +89,7 @@ export default function SupermaketShoppingList({
         }}
       >
         {state &&
-          visible &&
+          visible.length > 0 &&
           state.map((item, index) => {
             return (
               <View
@@ -89,7 +97,7 @@ export default function SupermaketShoppingList({
                 style={[
                   styles.card,
                   styles.shadow,
-                  !visible[index].open && styles.p15,
+                  !visible[index]?.open && styles.p15,
                 ]}
               >
                 <View
@@ -108,7 +116,7 @@ export default function SupermaketShoppingList({
                     >
                       {item.supermarket.name}
                     </Text>
-                    {visible[index].open ? (
+                    {visible[index]?.open ? (
                       <Icon name="down" color="#253D4E" size={20} />
                     ) : (
                       <Icon name="right" color="#253D4E" size={20} />
@@ -133,7 +141,7 @@ export default function SupermaketShoppingList({
                       {item.supermarket.city} - {item.supermarket.state}
                     </Text>
                   </TouchableOpacity>
-                  {showButton && !visible[index].open && (
+                  {showButton && !visible[index]?.open && (
                     <LinearGradient
                       // colors={['#69c906', '#84be00']}
                       // colors={['#e8c525', '#ebd31c']}
@@ -158,7 +166,7 @@ export default function SupermaketShoppingList({
                     </LinearGradient>
                   )}
                 </View>
-                {visible[index].open && (
+                {visible[index]?.open && (
                   <View>
                     <View style={styles.listCollapse}>
                       {item?.products.map((products, indexProd) => (

@@ -127,13 +127,25 @@ export default function CategoryProducts({ navigation }) {
 
   async function hasPurchaseInProgress() {
     // await AsyncStorage.clear();
-    let shopping = await AsyncStorage.getItem("compra-iniciada");
-    console.warn("shopping:", shopping);
-    if (shopping) {
-      // Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
-      console.log("setar pra true");
-      setShoppingList(JSON.parse(shopping));
-      setModalVisible(true);
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let filteredKey = savedKeys.find((key) => {
+      if (key.includes("compra-iniciada")) {
+        return key;
+      }
+    });
+    console.warn("cate filteredKey:", filteredKey);
+    if (filteredKey) {
+      let shopping = await AsyncStorage.getItem(filteredKey);
+      console.warn("shopping:", shopping);
+      if (shopping) {
+        // Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
+        console.log("setar pra true");
+        setShoppingList(JSON.parse(shopping));
+        setModalVisible(true);
+      }
+    } else {
+      console.log("sem modal");
+      setModalVisible(false);
     }
   }
 
@@ -180,6 +192,23 @@ export default function CategoryProducts({ navigation }) {
       /\b\w{3,}/g,
       (match) => match.charAt(0).toUpperCase() + match.slice(1)
     );
+  }
+
+  async function finishAndSave() {
+    setModalVisible(false);
+    // setTimeout(() => {
+    //   navigation.navigate("Histórico");
+    // }, 100);
+    let savedKeys = await AsyncStorage.getAllKeys();
+    console.log("savedKeys:", savedKeys);
+    let purchaseKey = savedKeys.find((key) => {
+      if (key.includes("compra-iniciada")) {
+        return key;
+      }
+    });
+    console.log("purchaseKey:", purchaseKey);
+    await AsyncStorage.removeItem(purchaseKey);
+    // await AsyncStorage.removeItem(purchaseKey);
   }
 
   return isLoading ? (
@@ -231,10 +260,7 @@ export default function CategoryProducts({ navigation }) {
           <View style={styles.modalButtons}>
             <Pressable
               onPress={() => {
-                setModalVisible(false);
-                // setTimeout(() => {
-                //   navigation.navigate("Histórico");
-                // }, 100);
+                finishAndSave();
               }}
               style={[
                 styles.buttonModal,

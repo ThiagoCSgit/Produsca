@@ -11,6 +11,8 @@ import NoData from "../../components/NoData";
 import { useLocation } from "../../context/LocationProvider";
 import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
 
+import { useIsFocused } from "@react-navigation/native";
+
 export default function SupermaketShoppingList({ route, navigation }) {
   // const [state, setState] = useState([
   //   {
@@ -69,15 +71,18 @@ export default function SupermaketShoppingList({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [noData, setNoData] = useState(null);
 
+  const isFocused = useIsFocused();
+
   const myLocation = useLocation();
-  const { setPurchaseInProgress } = usePurchaseStatus();
+  console.warn("paremtros:", route.params.list);
 
   useEffect(() => {
+    console.warn("useEffetc", myLocation, modalVisible, range != previousRange);
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
       postShopList();
     }
-  }, [myLocation, range, modalVisible]);
+  }, [myLocation, range, modalVisible, isFocused]);
 
   function postShopList() {
     setIsLoading(true);
@@ -88,8 +93,10 @@ export default function SupermaketShoppingList({ route, navigation }) {
       return {
         nome: item.name,
         codigo: "",
+        qtd: item.qtd,
       };
     });
+    console.warn("listNomeProd:", listNomeProd);
 
     console.warn("parametros da rota:", {
       latitudeUsuario: myLocation?.coords.latitude,
@@ -99,62 +106,97 @@ export default function SupermaketShoppingList({ route, navigation }) {
     });
 
     console.warn("listNomeProd:", listNomeProd);
-    api
-      .post("/envios/ProdutosEscolhidosCarrinho", {
-        latitudeUsuario: myLocation?.coords.latitude,
-        longitudeUsuario: myLocation?.coords.longitude,
-        raioDistanciaMetros: range,
-        listaNomeProduto: listNomeProd,
-      })
-      .then((response) => {
-        console.warn("Supermercados disponíveis:", response.data);
-        let listResponse = response.data;
-        // let data = [
-        //   {
-        //     supermercado: "EPA",
-        //     produtos: listResponse,
-        //     id: 1,
-        //   },
-        //   {
-        //     supermercado: "Extrabom",
-        //     produtos: listResponse,
-        //     id: 2,
-        //   },
-        // ];
-        if (listResponse != null && listResponse.length > 0) {
-          let data = listResponse.map((item) => {
-            let supermercado = {
-              name: item.nomeSupermercado,
-              publicPlace: item.logradouro,
-              number: item.numero,
-              city: item.nomeCidade,
-              state: item.nomeEstado,
-              district: item.nomeBairro,
-              phone: item.telefone,
-              cpnj: item.cnpj,
-            };
-            let produtos = item.produtos.map((prod) => {
-              return {
-                name: prod.nome,
-                price: prod.preco,
-                describe: prod.descricao,
-                image: prod.link_image,
-              };
-            });
-            return {
-              supermarket: supermercado,
-              products: produtos,
-              id: randomIdGeneretor(3),
-            };
-          });
-          console.warn("data retornada:", data);
-          setState(data);
-        } else {
-          setState([]);
-          setNoData(listResponse);
-        }
-        setIsLoading(false);
-      });
+    // api
+    //   .post("/envios/ProdutosEscolhidosCarrinho", {
+    //     latitudeUsuario: myLocation?.coords.latitude,
+    //     longitudeUsuario: myLocation?.coords.longitude,
+    //     raioDistanciaMetros: range,
+    //     listaNomeProduto: listNomeProd,
+    //   })
+    //   .then((response) => {
+    //     console.warn("Supermercados disponíveis:", response.data);
+    //     let listResponse = response.data;
+
+    // if (listResponse != null && listResponse.length > 0) {
+    // let data = listResponse.map((item) => {
+    //   let supermercado = {
+    //     name: item.nomeSupermercado,
+    //     publicPlace: item.logradouro,
+    //     number: item.numero,
+    //     city: item.nomeCidade,
+    //     state: item.nomeEstado,
+    //     district: item.nomeBairro,
+    //     phone: item.telefone,
+    //     cpnj: item.cnpj,
+    //   };
+    //   let produtos = item.produtos.map((prod) => {
+    //     return {
+    //       name: prod.nome,
+    //       price: prod.preco,
+    //       describe: prod.descricao,
+    //       image: prod.link_image,
+    //     };
+    //   });
+    //   return {
+    //     supermarket: supermercado,
+    //     products: produtos,
+    //     id: randomIdGeneretor(3),
+    //   };
+    // });
+    let data = [
+      {
+        supermarket: {
+          name: "EPA",
+          publicPlace: "Rua da Fantasia",
+          number: 52,
+          city: "VILA VELHA",
+          state: "ES",
+          district: "PRAIA DO SUÁ",
+          phone: "2733439846",
+          cpnj: 12223333,
+        },
+        products: listNomeProd.map((prod) => {
+          return {
+            name: prod.nome,
+            price: 10,
+            describe: "descrição",
+            image: "oapopa",
+            qtd: prod.qtd,
+          };
+        }),
+        id: randomIdGeneretor(3),
+      },
+      {
+        supermarket: {
+          name: "Extrabom",
+          publicPlace: "Rua da Fantasia",
+          number: 52,
+          city: "VILA VELHA",
+          state: "ES",
+          district: "PRAIA DO SUÁ",
+          phone: "2733439846",
+          cpnj: 12223333,
+        },
+        products: listNomeProd.map((prod) => {
+          return {
+            name: prod.nome,
+            price: 10,
+            describe: "descrição",
+            image: "oapopa",
+            qtd: prod.qtd,
+          };
+        }),
+        id: randomIdGeneretor(3),
+      },
+    ];
+    console.warn("data retornada:", data);
+    setState(data);
+    // } else {
+    //   setState([]);
+    //   setNoData(listResponse);
+    // }
+    setIsLoading(false);
+    // });
   }
 
   function randomIdGeneretor(length) {
@@ -197,7 +239,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
             state={state}
             showButton={true}
             navigation={navigation}
-            setPurchaseInProgress={setPurchaseInProgress}
           />
         )}
       </ScrollView>

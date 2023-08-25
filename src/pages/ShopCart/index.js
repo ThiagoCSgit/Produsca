@@ -26,10 +26,10 @@ export default function ShopCart({ route, navigation }) {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
-  const { list, hasPurchaseInProgress } = route.params;
+  const { list } = route.params;
 
   const { setPurchaseInProgress } = usePurchaseStatus();
-  // console.warn("list shop cart:", list);
+  console.warn("list shop cart:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -37,6 +37,7 @@ export default function ShopCart({ route, navigation }) {
 
   useEffect(() => {
     totalValue();
+    saveToHistory();
   }, [cartList]);
 
   function getCartProducts() {
@@ -67,18 +68,27 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
-    saveToHistory();
   }
 
-  async function removeItem(index) {
+  async function removePurchaseStorage() {
+    await AsyncStorage.removeItem(
+      `compra-iniciada-${cartList.supermarket.name}`
+    );
+  }
+
+  function removeItem(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
+    // newList = newList.filter((indexList) => index != indexList);
+    console.warn("teste do splice:", newList);
     setCartList({
       id: list.id,
       products: newList,
       supermarket: list.supermarket,
     });
-    saveToHistory();
+
+    console.warn("removendo, newList:", newList);
+    // saveToHistory(newList);
   }
 
   function increaseQuantity(id) {
@@ -94,7 +104,6 @@ export default function ShopCart({ route, navigation }) {
       supermarket: list.supermarket,
     });
     console.warn("salvando histórico no increase, lista:", newList);
-    saveToHistory();
   }
 
   function decreaseQuantity(id) {
@@ -110,7 +119,7 @@ export default function ShopCart({ route, navigation }) {
       supermarket: list.supermarket,
     });
     console.warn("salvando histórico no decrease, lista:", newList);
-    saveToHistory();
+    // saveToHistory();
   }
 
   // function unformatedParseFloatValue(value) {
@@ -142,7 +151,7 @@ export default function ShopCart({ route, navigation }) {
     setTotal(valor);
   }
 
-  function checkout() {
+  async function checkout() {
     let hasUncheckProduct = false;
     cartList.products.forEach((item) => {
       if (!item.check) {
@@ -157,7 +166,13 @@ export default function ShopCart({ route, navigation }) {
         [
           {
             text: "Continuar sem marcar todos",
-            onPress: () => saveToHistory(),
+            onPress: async () => {
+              saveToHistory();
+              removePurchaseStorage();
+              setTimeout(() => {
+                navigation.navigate("Histórico");
+              }, 100);
+            },
           },
           {
             text: "Voltar para marcar",
@@ -169,6 +184,8 @@ export default function ShopCart({ route, navigation }) {
       saveToHistory();
       setModalVisible(true);
     }
+    removePurchaseStorage();
+    // navigation.navigate("Histórico");
   }
 
   async function saveToHistory() {
@@ -177,11 +194,20 @@ export default function ShopCart({ route, navigation }) {
     console.warn("id:", id);
     try {
       console.warn("salvando cartList:", cartList);
-      await AsyncStorage.setItem(id, JSON.stringify(cartList));
-      await AsyncStorage.setItem(
-        `compra-iniciada-${cartList.supermarket.name}`,
-        JSON.stringify(cartList)
-      );
+      console.warn("salvando cartList.products:", cartList.products);
+      if (cartList.products.length > 0) {
+        await AsyncStorage.setItem(
+          `compra-iniciada-${cartList.supermarket.name}`,
+          JSON.stringify(cartList)
+        );
+        await AsyncStorage.setItem(
+          `compra-historico-${cartList.id}-${cartList.supermarket.name}`,
+          JSON.stringify(cartList)
+        );
+      } else {
+        removePurchaseStorage();
+      }
+
       let productKeys = await AsyncStorage.getAllKeys();
       // productKeys.filter((key) => {});
       // console.warn('productKeys:',productKeys)
@@ -200,7 +226,26 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function cancelPurchase() {
-    await AsyncStorage.removeItem("compra-iniciada");
+    console.warn(
+      "cancelando, chave:",
+      `compra-historico-${cartList.id}-${cartList.supermarket.name}`
+    );
+    console.warn(
+      "cancelando, chave:",
+      `compra-iniciada-${cartList.supermarket.name}`
+    );
+    let savedKeys = await AsyncStorage.getAllKeys();
+    console.warn("antes savedKeys:", savedKeys);
+    removePurchaseStorage();
+
+    await AsyncStorage.removeItem(
+      `compra-historico-${cartList.id}-${cartList.supermarket.name}`
+    );
+    savedKeys = await AsyncStorage.getAllKeys();
+    console.warn("depois savedKeys:", savedKeys);
+    setTimeout(() => {
+      navigation.navigate("Histórico");
+    }, 100);
     // console.warn("asyncStorage:", asyncStorage);
   }
 
