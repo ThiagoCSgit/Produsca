@@ -29,7 +29,6 @@ export default function ShopCart({ route, navigation }) {
   const { list } = route.params;
 
   const { setPurchaseInProgress } = usePurchaseStatus();
-  // console.warn("list shop cart:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -37,19 +36,14 @@ export default function ShopCart({ route, navigation }) {
 
   useEffect(() => {
     totalValue();
-    // console.warn("useEffect salvar historico, cartList:", cartList);
     saveToHistory();
   }, [cartList]);
 
   function getCartProducts() {
-    // console.warn("getCartProducts, list:", list);
     let newList = list.products.map((item, index) => {
-      // (item.check = false),
       item.idProd = index;
-      // item.qtd = 1;
       return item;
     });
-    // console.warn("nova lista:", newList);
     setCartList({
       id: list.id,
       products: newList,
@@ -80,13 +74,11 @@ export default function ShopCart({ route, navigation }) {
   function removeItem(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
-    // newList = newList.filter((indexList) => index != indexList);
     setCartList({
       id: list.id,
       products: newList,
       supermarket: list.supermarket,
     });
-    // saveToHistory(newList);
   }
 
   function increaseQuantity(id) {
@@ -115,22 +107,9 @@ export default function ShopCart({ route, navigation }) {
       products: newList,
       supermarket: list.supermarket,
     });
-    // saveToHistory();
   }
 
-  // function unformatedParseFloatValue(value) {
-  //   if (value != "") {
-  //     return parseFloat(value.replaceAll(".", "").replace(",", "."));
-  //   }
-  //   return 0;
-  // }
-
   function itemPrice(value, quantity = 1) {
-    // console.warn("itemprice value:", value);
-    // let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity);
-    // console.warn("unformatedValue:", unformatedValue);
-    // let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
-    // console.warn("valueFixed:", valueFixed);
     return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
       minimumFractionDigits: 2,
     });
@@ -181,15 +160,10 @@ export default function ShopCart({ route, navigation }) {
       setModalVisible(true);
     }
     removePurchaseStorage();
-    // navigation.navigate("Histórico");
   }
 
   async function saveToHistory() {
-    // await AsyncStorage.setItem("compra-iniciada", null);
-    let id = `carrinho-${cartList.id}-${cartList.supermarket.name}`;
-    // console.warn("id de salvamento na tela do shopCaat:", id);
     try {
-      console.warn("salvando cartList.products:", cartList.products);
       if (cartList.products.length > 0) {
         await AsyncStorage.setItem(
           `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
@@ -199,26 +173,16 @@ export default function ShopCart({ route, navigation }) {
           `compra-historico-${cartList.id}-${cartList.supermarket.name}`,
           JSON.stringify(cartList)
         );
-        console.warn(
-          "tela shopcart, id da compra:",
-          `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
-          "id no histórico:",
-          `compra-historico-${cartList.id}-${cartList.supermarket.name}`
-        );
       } else {
         removePurchaseStorage();
       }
 
       let productKeys = await AsyncStorage.getAllKeys();
-      // productKeys.filter((key) => {});
-      // console.warn('productKeys:',productKeys)
       for (let i = 0; i < productKeys.length; i++) {
         let key = productKeys[i];
         if (key.includes("produto-lista-")) {
-          // console.warn(`key-${i}:`,key)
           await AsyncStorage.removeItem(key);
         }
-        // navigation.navigate("Histórico de Compras");
       }
     } catch (e) {
       console.warn("error:", e);
@@ -227,27 +191,15 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function cancelPurchase() {
-    console.warn(
-      "cancelando, chave:",
-      `compra-historico-${cartList.id}-${cartList.supermarket.name}`
-    );
-    console.warn(
-      "cancelando, chave:",
-      `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`
-    );
-    let savedKeys = await AsyncStorage.getAllKeys();
-    console.warn("antes savedKeys:", savedKeys);
     removePurchaseStorage();
 
     await AsyncStorage.removeItem(
       `compra-historico-${cartList.id}-${cartList.supermarket.name}`
     );
-    savedKeys = await AsyncStorage.getAllKeys();
-    console.warn("depois savedKeys:", savedKeys);
+
     setTimeout(() => {
       navigation.navigate("Histórico");
     }, 100);
-    // console.warn("asyncStorage:", asyncStorage);
   }
 
   return (
