@@ -26,10 +26,9 @@ export default function ShopCart({ route, navigation }) {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
-  const { list, hasPurchaseInProgress } = route.params;
+  const { list } = route.params;
 
   const { setPurchaseInProgress } = usePurchaseStatus();
-  // console.warn("list shop cart:", list);
 
   useEffect(() => {
     getCartProducts();
@@ -37,16 +36,14 @@ export default function ShopCart({ route, navigation }) {
 
   useEffect(() => {
     totalValue();
+    saveToHistory();
   }, [cartList]);
 
   function getCartProducts() {
-    console.warn("getCartProducts, list:", list);
     let newList = list.products.map((item, index) => {
-      (item.check = true), (item.idProd = index);
-      item.qtd = 1;
+      item.idProd = index;
       return item;
     });
-    console.warn("nova lista:", newList);
     setCartList({
       id: list.id,
       products: newList,
@@ -68,7 +65,13 @@ export default function ShopCart({ route, navigation }) {
     });
   }
 
-  async function removeItem(index) {
+  async function removePurchaseStorage() {
+    await AsyncStorage.removeItem(
+      `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`
+    );
+  }
+
+  function removeItem(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
     setCartList({
@@ -106,19 +109,7 @@ export default function ShopCart({ route, navigation }) {
     });
   }
 
-  // function unformatedParseFloatValue(value) {
-  //   if (value != "") {
-  //     return parseFloat(value.replaceAll(".", "").replace(",", "."));
-  //   }
-  //   return 0;
-  // }
-
   function itemPrice(value, quantity = 1) {
-    // console.warn("itemprice value:", value);
-    // let unformatedValue = unformatedParseFloatValue(value) * parseInt(quantity);
-    // console.warn("unformatedValue:", unformatedValue);
-    // let valueFixed = Number.parseFloat(unformatedValue).toFixed(2);
-    // console.warn("valueFixed:", valueFixed);
     return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
       minimumFractionDigits: 2,
     });
@@ -135,7 +126,7 @@ export default function ShopCart({ route, navigation }) {
     setTotal(valor);
   }
 
-  function checkout() {
+  async function checkout() {
     let hasUncheckProduct = false;
     cartList.products.forEach((item) => {
       if (!item.check) {
@@ -150,7 +141,13 @@ export default function ShopCart({ route, navigation }) {
         [
           {
             text: "Continuar sem marcar todos",
-            onPress: () => saveToHistory(),
+            onPress: async () => {
+              saveToHistory();
+              removePurchaseStorage();
+              setTimeout(() => {
+                navigation.navigate("Histórico");
+              }, 100);
+            },
           },
           {
             text: "Voltar para marcar",
@@ -162,25 +159,30 @@ export default function ShopCart({ route, navigation }) {
       saveToHistory();
       setModalVisible(true);
     }
+    removePurchaseStorage();
   }
 
   async function saveToHistory() {
-    // await AsyncStorage.setItem("compra-iniciada", null);
-    let id = `carrinho-${cartList.id}-${cartList.supermarket.name}`;
-    console.warn("id:", id);
     try {
-      console.warn("salvando cartList:", cartList);
-      await AsyncStorage.setItem(id, JSON.stringify(cartList));
+      if (cartList.products.length > 0) {
+        await AsyncStorage.setItem(
+          `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
+          JSON.stringify(cartList)
+        );
+        await AsyncStorage.setItem(
+          `compra-historico-${cartList.id}-${cartList.supermarket.name}`,
+          JSON.stringify(cartList)
+        );
+      } else {
+        removePurchaseStorage();
+      }
+
       let productKeys = await AsyncStorage.getAllKeys();
-      productKeys.filter((key) => {});
-      // console.warn('productKeys:',productKeys)
       for (let i = 0; i < productKeys.length; i++) {
         let key = productKeys[i];
         if (key.includes("produto-lista-")) {
-          // console.warn(`key-${i}:`,key)
           await AsyncStorage.removeItem(key);
         }
-        // navigation.navigate("Histórico de Compras");
       }
     } catch (e) {
       console.warn("error:", e);
@@ -189,8 +191,15 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function cancelPurchase() {
-    await AsyncStorage.removeItem("compra-iniciada");
-    // console.warn("asyncStorage:", asyncStorage);
+    removePurchaseStorage();
+
+    await AsyncStorage.removeItem(
+      `compra-historico-${cartList.id}-${cartList.supermarket.name}`
+    );
+
+    setTimeout(() => {
+      navigation.navigate("Histórico");
+    }, 100);
   }
 
   return (

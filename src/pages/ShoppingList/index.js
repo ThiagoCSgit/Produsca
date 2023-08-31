@@ -23,6 +23,7 @@ export default function ShoppingList({ navigation }) {
   async function getCartProducts() {
     try {
       let productKeys = await AsyncStorage.getAllKeys();
+      console.log("productKeys getCart:", productKeys);
 
       let filteredKeys = productKeys.filter((key) => {
         if (key.includes("produto-lista-")) {
@@ -31,10 +32,8 @@ export default function ShoppingList({ navigation }) {
       });
 
       let products = await AsyncStorage.multiGet(filteredKeys);
-
       let newList = products.map((product) => {
-        const newProduct = JSON.parse(product[1]);
-        return newProduct;
+        return JSON.parse(product[1]);
       });
       console.warn("preenchendo cartList:", newList);
       setCartList(newList);
@@ -70,7 +69,7 @@ export default function ShoppingList({ navigation }) {
     itemToAdd.supermarket = supermarket;
     id = supermarket
       ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-${id}`;
+      : `produto-lista-noMarket-${id}`;
     try {
       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
     } catch (e) {
@@ -92,9 +91,10 @@ export default function ShoppingList({ navigation }) {
 
     let itemToAdd = cartList.find((item) => item.id == id);
     itemToAdd.supermarket = supermarket;
+    console.log("item adicionado:", itemToAdd);
     id = supermarket
       ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-${id}`;
+      : `produto-lista-noMarket-${id}`;
     try {
       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
     } catch (e) {
@@ -105,9 +105,10 @@ export default function ShoppingList({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {cartList.length > 0 ? (
-        <View style={styles.screenList}>
+        <>
           <FlatList
-            contentContainerStyle={{ marginTop: 30, gap: 30 }}
+            style={styles.listProducts}
+            contentContainerStyle={{ gap: 30, paddingTop: 30 }}
             data={cartList}
             numColumns={1}
             key={"_"}
@@ -149,7 +150,7 @@ export default function ShoppingList({ navigation }) {
                       removeItem(
                         item.supermarket
                           ? `produto-lista-${item.supermarket}-${item.id}`
-                          : `produto-lista-${item.id}`
+                          : `produto-lista-noMarket-${item.id}`
                       )
                     }
                   />
@@ -159,11 +160,12 @@ export default function ShoppingList({ navigation }) {
           />
           <TouchableOpacity
             style={styles.buttonSimulate}
-            onPress={() =>
+            onPress={() => {
+              console.warn("tem produto pra simular:", cartList);
               navigation.navigate("Supermercados disponíveis", {
                 list: cartList,
-              })
-            }
+              });
+            }}
           >
             <IconMCI
               style={styles.iconCalculator}
@@ -172,7 +174,7 @@ export default function ShoppingList({ navigation }) {
             />
             <Text style={styles.textButton}>Simular Compra</Text>
           </TouchableOpacity>
-        </View>
+        </>
       ) : (
         <View>
           <Image

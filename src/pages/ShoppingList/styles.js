@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
   },
+  listProducts: {
+    flex: 1,
+    // width: "100%",
+    // backgroundColor: "red",
+  },
   labelEmptyCart: {
     textAlign: "center",
     marginTop: 20,
@@ -35,9 +40,10 @@ const styles = StyleSheet.create({
     borderColor: "#D4EEE2",
     borderRadius: 10,
     paddingTop: 10,
+    minHeight: 130,
   },
   itemName: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
     textAlign: "left",

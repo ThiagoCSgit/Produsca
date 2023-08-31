@@ -16,7 +16,7 @@ export function LocationProvider({ children }) {
     console.log("pegando localização");
 
     let location = await Location.getCurrentPositionAsync({});
-    console.log("localização:", location);
+    console.warn("localização:", location);
     setUserLocation(location);
   }
 

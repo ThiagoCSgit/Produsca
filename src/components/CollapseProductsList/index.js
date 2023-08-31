@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
+  Dimensions,
 } from "react-native";
 import styles from "./styles";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -12,26 +13,37 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function SupermaketShoppingList({
+export default function CollapseProductsList({
   state,
   showButton = false,
   navigation = null,
-  setPurchaseInProgress,
+  isFocused,
 }) {
-  const [visible, setVisible] = useState(null);
+  const [visible, setVisible] = useState([]);
+  const [purchaseInProgress, setPurchaseInProgress] = useState(null);
+  const [internalState, setInternalState] = useState(state);
 
   useEffect(() => {
-    if (state) {
-      setVisible(
-        state.map((item) => {
-          return {
-            id: item.id,
-            open: false,
-          };
-        })
-      );
-    }
+    setInternalState(state);
   }, [state]);
+
+  useEffect(() => {
+    if (isFocused) {
+      getPurchaseInProgress();
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (internalState.length > 0) {
+      let visibleList = internalState.map((item) => {
+        return {
+          id: item.id,
+          open: true,
+        };
+      });
+      setVisible(visibleList);
+    }
+  }, [internalState]);
 
   function openCloseCollapse(id) {
     const updatedVisible = visible.map((item) => {
@@ -43,18 +55,11 @@ export default function SupermaketShoppingList({
     setVisible(updatedVisible);
   }
 
-  async function startShopping(list) {
-    // setPurchaseInProgress(true);
+  async function startShopping(list, supermarketName) {
+    await getPurchaseInProgress(list, supermarketName);
     navigation.navigate("Carrinho", {
       list: list,
     });
-    try {
-      let id = "compra-iniciada";
-      let shoppingList = list;
-      await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-    } catch (e) {
-      console.warn(e);
-    }
   }
 
   function callNumber(phoneNumber) {
@@ -72,6 +77,62 @@ export default function SupermaketShoppingList({
     }
   }
 
+  async function getPurchaseInProgress(list = null, choosedMarket = null) {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let purchaseKey = savedKeys.find((key) => {
+      if (key.includes("compra-iniciada")) {
+        return key;
+      }
+    });
+    if (purchaseKey) {
+      const tempPurchaseKey = purchaseKey.replace("-iniciada", "");
+      let historyKey = savedKeys.find((key) => {
+        if (key.includes("compra-historico")) {
+          let tempHistoryKey = key.replace("-historico", "");
+          return tempHistoryKey == tempPurchaseKey;
+        }
+      });
+      let supermarketNameKey = purchaseKey.substring(20);
+      let codeHistory = historyKey.substring(17, 20);
+
+      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketNameKey);
+
+      if (
+        choosedMarket &&
+        purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
+      ) {
+        await AsyncStorage.removeItem(purchaseKey);
+        await AsyncStorage.removeItem(historyKey);
+
+        let shoppingList = list;
+        let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      } else {
+        let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
+        let id = `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
+
+        let updatedState = internalState.map((item) => {
+          return item.id == shoppingList.id
+            ? { ...item, products: shoppingList.products }
+            : item;
+        });
+        setInternalState(updatedState);
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      }
+    } else {
+      if (list && list?.products.length > 0) {
+        try {
+          let shoppingList = list;
+          let idNew = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
+
+          await AsyncStorage.setItem(idNew, JSON.stringify(shoppingList));
+        } catch (e) {
+          console.warn(e);
+        }
+      }
+    }
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -80,16 +141,16 @@ export default function SupermaketShoppingList({
           paddingHorizontal: 15,
         }}
       >
-        {state &&
-          visible &&
-          state.map((item, index) => {
+        {internalState &&
+          visible.length > 0 &&
+          internalState.map((item, index) => {
             return (
               <View
                 key={index}
                 style={[
                   styles.card,
                   styles.shadow,
-                  !visible[index].open && styles.p15,
+                  !visible[index]?.open && styles.p15,
                 ]}
               >
                 <View
@@ -108,7 +169,7 @@ export default function SupermaketShoppingList({
                     >
                       {item.supermarket.name}
                     </Text>
-                    {visible[index].open ? (
+                    {visible[index]?.open ? (
                       <Icon name="down" color="#253D4E" size={20} />
                     ) : (
                       <Icon name="right" color="#253D4E" size={20} />
@@ -133,7 +194,7 @@ export default function SupermaketShoppingList({
                       {item.supermarket.city} - {item.supermarket.state}
                     </Text>
                   </TouchableOpacity>
-                  {showButton && !visible[index].open && (
+                  {showButton && !visible[index]?.open && (
                     <LinearGradient
                       // colors={['#69c906', '#84be00']}
                       // colors={['#e8c525', '#ebd31c']}
@@ -144,9 +205,18 @@ export default function SupermaketShoppingList({
                     >
                       <TouchableOpacity
                         style={styles.startShoppingButton}
-                        onPress={() => startShopping(state[index])}
+                        onPress={() =>
+                          startShopping(
+                            internalState[index],
+                            item.supermarket.name
+                          )
+                        }
                       >
-                        <Text style={styles.textButton}>Iniciar Compra</Text>
+                        <Text style={styles.textButton}>
+                          {purchaseInProgress == item.supermarket.name
+                            ? "Continuar Compra"
+                            : "Iniciar Compra"}
+                        </Text>
                         <Icon
                           name="shoppingcart"
                           size={20}
@@ -156,7 +226,7 @@ export default function SupermaketShoppingList({
                     </LinearGradient>
                   )}
                 </View>
-                {visible[index].open && (
+                {visible[index]?.open && (
                   <View>
                     <View style={styles.listCollapse}>
                       {item?.products.map((products, indexProd) => (
@@ -164,16 +234,25 @@ export default function SupermaketShoppingList({
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
+                            // width: Dimensions.get("window").width - 100,
                           }}
                         >
                           <Text
-                            style={styles.itemList}
+                            style={[
+                              styles.itemList,
+                              { width: Dimensions.get("window").width - 160 },
+                            ]}
                             key={`${index}-${indexProd}`}
                           >
                             {products.name}
                           </Text>
-                          <Text style={styles.itemList}>
-                            R$ {products.price}
+                          <Text
+                            style={[
+                              styles.itemList,
+                              { marginLeft: 10, fontStyle: "italic" },
+                            ]}
+                          >
+                            {products.qtd}x R$ {products.price}
                           </Text>
                         </View>
                       ))}
@@ -189,9 +268,18 @@ export default function SupermaketShoppingList({
                       >
                         <TouchableOpacity
                           style={styles.startShoppingButton}
-                          onPress={() => startShopping(state[index])}
+                          onPress={() =>
+                            startShopping(
+                              internalState[index],
+                              item.supermarket.name
+                            )
+                          }
                         >
-                          <Text style={styles.textButton}>Iniciar Compra</Text>
+                          <Text style={styles.textButton}>
+                            {purchaseInProgress == item.supermarket.name
+                              ? "Continuar Compra"
+                              : "Iniciar Compra"}
+                          </Text>
                           <Icon
                             name="shoppingcart"
                             size={20}
