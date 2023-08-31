@@ -37,7 +37,7 @@ export default function ShopCart({ route, navigation }) {
 
   useEffect(() => {
     totalValue();
-    console.warn("useEffect salvar historico, cartList:", cartList);
+    // console.warn("useEffect salvar historico, cartList:", cartList);
     saveToHistory();
   }, [cartList]);
 
@@ -73,7 +73,7 @@ export default function ShopCart({ route, navigation }) {
 
   async function removePurchaseStorage() {
     await AsyncStorage.removeItem(
-      `compra-iniciada-${cartList.supermarket.name}`
+      `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`
     );
   }
 
@@ -187,17 +187,23 @@ export default function ShopCart({ route, navigation }) {
   async function saveToHistory() {
     // await AsyncStorage.setItem("compra-iniciada", null);
     let id = `carrinho-${cartList.id}-${cartList.supermarket.name}`;
-    console.warn("id de salvamento na tela do shopCaat:", id);
+    // console.warn("id de salvamento na tela do shopCaat:", id);
     try {
       console.warn("salvando cartList.products:", cartList.products);
       if (cartList.products.length > 0) {
         await AsyncStorage.setItem(
-          `compra-iniciada-${cartList.supermarket.name}`,
+          `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
           JSON.stringify(cartList)
         );
         await AsyncStorage.setItem(
           `compra-historico-${cartList.id}-${cartList.supermarket.name}`,
           JSON.stringify(cartList)
+        );
+        console.warn(
+          "tela shopcart, id da compra:",
+          `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
+          "id no histórico:",
+          `compra-historico-${cartList.id}-${cartList.supermarket.name}`
         );
       } else {
         removePurchaseStorage();
@@ -227,7 +233,7 @@ export default function ShopCart({ route, navigation }) {
     );
     console.warn(
       "cancelando, chave:",
-      `compra-iniciada-${cartList.supermarket.name}`
+      `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`
     );
     let savedKeys = await AsyncStorage.getAllKeys();
     console.warn("antes savedKeys:", savedKeys);

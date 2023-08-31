@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Linking,
+  Dimensions,
 } from "react-native";
 import styles from "./styles";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -11,39 +12,53 @@ import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useIsFocused } from "@react-navigation/native";
 
 export default function CollapseProductsList({
   state,
   showButton = false,
   navigation = null,
+  isFocused,
 }) {
   const [visible, setVisible] = useState([]);
   const [purchaseInProgress, setPurchaseInProgress] = useState(null);
-  const isFocused = useIsFocused();
+  const [internalState, setInternalState] = useState(state);
+  // let internalState = state;
+  useEffect(() => {
+    console.warn("purchaseInProgress effect:", purchaseInProgress);
+  }, [purchaseInProgress]);
 
   console.warn("state collapse:", state);
+  // console.warn("internalState collapse:", internalState);
+
+  useEffect(() => {
+    console.warn("state effect vazio:", state);
+    setInternalState(state);
+  }, [state]);
+
+  useEffect(() => {
+    console.warn("mudança no internalState:", internalState);
+  }, [internalState]);
 
   useEffect(() => {
     if (isFocused) {
+      // console.warn("está em foco");
       getPurchaseInProgress();
     }
   }, [isFocused]);
 
   useEffect(() => {
-    console.warn("useEffect pro visible");
-    if (state.length > 0) {
-      console.warn("map do visible");
-      let visibleList = state.map((item) => {
+    // console.warn("useEffect visivle:", internalState);
+    if (internalState.length > 0) {
+      // console.warn("map do visible");
+      let visibleList = internalState.map((item) => {
         return {
           id: item.id,
-          open: false,
+          open: true,
         };
       });
-      console.warn("visibleList:", visibleList);
       setVisible(visibleList);
     }
-  }, [state]);
+  }, [internalState]);
 
   function openCloseCollapse(id) {
     const updatedVisible = visible.map((item) => {
@@ -56,67 +71,10 @@ export default function CollapseProductsList({
   }
 
   async function startShopping(list, supermarketName) {
-    // setPurchaseInProgress(true);
+    await getPurchaseInProgress(list, supermarketName);
     navigation.navigate("Carrinho", {
       list: list,
     });
-    let savedKeys = await AsyncStorage.getAllKeys();
-    let historyKey = savedKeys.find((key) => {
-      if (key.includes("compra-historico")) {
-        return key;
-      }
-    });
-    let purchaseKey = savedKeys.find((key) => {
-      if (key.includes("compra-iniciada")) {
-        return key;
-      }
-    });
-    let id = `compra-iniciada-${supermarketName}`;
-    if (purchaseKey) {
-      if (purchaseKey != `compra-iniciada-${supermarketName}`) {
-        console.warn("comprando em outro supermercado");
-        console.warn("comprando em outro supermercado historyKey:", historyKey);
-        await AsyncStorage.removeItem(purchaseKey);
-        await AsyncStorage.removeItem(historyKey);
-
-        let shoppingList = list;
-        console.warn(
-          "iniciando uma nova compra em outro supermercado de id:",
-          id,
-          "shoppingList:",
-          shoppingList
-        );
-        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-      } else {
-        console.warn("id para continuar uma compra:", id);
-        let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
-        console.warn("shoppingList para continuar uma compra:", shoppingList);
-        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-      }
-      // console.warn("uma compra em andamento, teste:", purchaseKey);
-      // console.warn(
-      //   "uma compra em andamento, purchaseInProgress:",
-      //   purchaseInProgress
-      // );
-      // console.warn(
-      //   "uma compra em andamento, supermarketName:",
-      //   supermarketName
-      // );
-    } else {
-      try {
-        id = `compra-iniciada-${supermarketName}`;
-        let shoppingList = list;
-        console.warn(
-          "iniciando uma compra do zero de id:",
-          id,
-          "shoppingList:",
-          shoppingList
-        );
-        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-      } catch (e) {
-        console.warn(e);
-      }
-    }
   }
 
   function callNumber(phoneNumber) {
@@ -145,20 +103,197 @@ export default function CollapseProductsList({
   //   return filteredKey;
   // }
 
-  async function getPurchaseInProgress() {
+  async function getPurchaseInProgress(list = null, choosedMarket = null) {
+    console.warn(
+      "getPurchaseInProgress params choosedMarket:",
+      choosedMarket,
+      "list:",
+      list
+    );
     let savedKeys = await AsyncStorage.getAllKeys();
+    console.warn("savedKeys:", savedKeys);
     let purchaseKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
         return key;
       }
     });
-    console.warn("sub string antes:", purchaseKey);
-    console.log("sub string antes:", purchaseKey);
     if (purchaseKey) {
-      console.warn("sub string:", purchaseKey);
-      setPurchaseInProgress(purchaseKey.substring(16));
+      const tempPurchaseKey = purchaseKey.replace("-iniciada", "");
+      console.warn("tempPurchaseKey:", tempPurchaseKey);
+      let historyKey = savedKeys.find((key) => {
+        if (key.includes("compra-historico")) {
+          let tempHistoryKey = key.replace("-historico", "");
+          console.warn("tempHistoryKey:", tempHistoryKey);
+          return tempHistoryKey == tempPurchaseKey;
+        }
+      });
+      console.warn("historyKey:", historyKey);
+      let supermarketNameKey = purchaseKey.substring(20);
+      let codeHistory = historyKey.substring(17, 20);
+      // let id = choosedMarket
+      //   ? `compra-iniciada-${codeHistory}-${choosedMarket}`
+      //   : `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
+      console.warn(
+        "purchase:",
+        purchaseKey,
+        "teste:",
+        `compra-iniciada-${codeHistory}-${supermarketNameKey}`
+      );
+      console.warn(
+        "nome do supermercado supermarketNameKey:",
+        supermarketNameKey,
+        "codeHistory:",
+        codeHistory
+      );
+      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketNameKey);
+      console.warn("valor de choosedMarket:", choosedMarket);
+
+      if (
+        choosedMarket &&
+        purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
+      ) {
+        console.warn("escolhido supermercado diferente do antes");
+        //   console.warn("comprando em outro supermercado");
+        console.warn("comprando em outro supermercado historyKey:", historyKey);
+        console.warn(
+          "comprando em outro supermercado purchaseKey:",
+          purchaseKey
+        );
+        await AsyncStorage.removeItem(purchaseKey);
+        await AsyncStorage.removeItem(historyKey);
+        // let otherPurchaseKey = savedKeys.find((key) => {
+        //   if (key.includes("compra-iniciada")) {
+        //     return key;
+        //   }
+        // });
+
+        let shoppingList = list;
+        let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
+        console.warn(
+          "iniciando uma nova compra em outro supermercado de id:",
+          id,
+          "shoppingList:",
+          shoppingList
+        );
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      } else {
+        let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
+        // console.warn("shoppingList para continuar uma compra:", shoppingList);
+        // console.warn("internalState:", internalState);
+        let id = `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
+
+        console.warn("id para continuar uma compra:", id);
+        let updatedState = internalState.map((item) => {
+          return item.id == shoppingList.id
+            ? { ...item, products: shoppingList.products }
+            : item;
+        });
+        // console.warn("teste updatedState:", updatedState);
+        console.warn("teste updatedState[0]:", updatedState[0]);
+        console.warn("teste updatedState[1]:", updatedState[1]);
+        setInternalState(updatedState);
+        // // internalState = updatedState;
+        await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+      }
+    } else {
+      console.warn("primeira vez que inicia uma compra, list:", list);
+      if (list && list?.products.length > 0) {
+        try {
+          let shoppingList = list;
+          let idNew = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
+          console.warn(
+            "iniciando uma compra do zero de id:",
+            idNew,
+            "shoppingList:",
+            shoppingList
+          );
+          await AsyncStorage.setItem(idNew, JSON.stringify(shoppingList));
+        } catch (e) {
+          console.warn(e);
+        }
+      }
     }
   }
+
+  // async function getPurchaseInProgress(list = [], choosedMarket) {
+  //   console.warn(
+  //     "getPurchaseInProgress params choosedMarket:",
+  //     choosedMarket,
+  //     "list:",
+  //     list
+  //   );
+  //   let savedKeys = await AsyncStorage.getAllKeys();
+  //   console.warn("savedKeys:", savedKeys);
+  //   let purchaseKey = savedKeys.find((key) => {
+  //     if (key.includes("compra-iniciada")) {
+  //       return key;
+  //     }
+  //   });
+  //   let historyKey = savedKeys.find((key) => {
+  //     if (key.includes("compra-historico")) {
+  //       return key;
+  //     }
+  //   });
+  //   if (purchaseKey) {
+  //     let supermarketNameKey = historyKey.substring(21);
+  //     let id = `compra-iniciada-${supermarketNameKey}`;
+  //     console.warn(
+  //       "nome do supermercado supermarketNameKey:",
+  //       supermarketNameKey
+  //     );
+  //     setPurchaseInProgress(supermarketNameKey);
+  //     console.warn("purchase:", purchaseKey);
+  //     console.warn("valor de choosedMarket:", choosedMarket);
+
+  //     // if (purchaseKey == `compra-iniciada-${choosedMarket}`) {
+  //     //   console.warn("comprando em outro supermercado");
+  //     //   console.warn("comprando em outro supermercado historyKey:", historyKey);
+  //     //   await AsyncStorage.removeItem(purchaseKey);
+  //     //   // await AsyncStorage.removeItem(historyKey);
+
+  //     //   let shoppingList = list;
+  //     //   console.warn(
+  //     //     "iniciando uma nova compra em outro supermercado de id:",
+  //     //     id,
+  //     //     "shoppingList:",
+  //     //     shoppingList
+  //     //   );
+  //     //   await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+  //     // } else {
+  //     //   console.warn("id para continuar uma compra:", id);
+  //     //   let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
+  //     //   console.warn("shoppingList para continuar uma compra:", shoppingList);
+  //     //   console.warn("internalState:", internalState);
+
+  //     //   let updatedState = internalState.map((item) => {
+  //     //     return item.id == shoppingList.id
+  //     //       ? { ...item, products: shoppingList.products }
+  //     //       : item;
+  //     //   });
+  //     //   console.warn("teste updatedState:", updatedState);
+  //     //   // setInternalState(updatedState);
+  //     //   internalState = updatedState;
+  //     //   await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+  //     // }
+  //   } else {
+  //     console.warn("primeira vez que inicia uma compra");
+  //     if (list.length > 0) {
+  //       try {
+  //         id = `compra-iniciada-${choosedMarket}`;
+  //         let shoppingList = list;
+  //         console.warn(
+  //           "iniciando uma compra do zero de id:",
+  //           id,
+  //           "shoppingList:",
+  //           shoppingList
+  //         );
+  //         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
+  //       } catch (e) {
+  //         console.warn(e);
+  //       }
+  //     }
+  //   }
+  // }
 
   return (
     <View style={styles.container}>
@@ -168,9 +303,9 @@ export default function CollapseProductsList({
           paddingHorizontal: 15,
         }}
       >
-        {state &&
+        {internalState &&
           visible.length > 0 &&
-          state.map((item, index) => {
+          internalState.map((item, index) => {
             return (
               <View
                 key={index}
@@ -233,7 +368,10 @@ export default function CollapseProductsList({
                       <TouchableOpacity
                         style={styles.startShoppingButton}
                         onPress={() =>
-                          startShopping(state[index], item.supermarket.name)
+                          startShopping(
+                            internalState[index],
+                            item.supermarket.name
+                          )
                         }
                       >
                         <Text style={styles.textButton}>
@@ -258,16 +396,25 @@ export default function CollapseProductsList({
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
+                            // width: Dimensions.get("window").width - 100,
                           }}
                         >
                           <Text
-                            style={styles.itemList}
+                            style={[
+                              styles.itemList,
+                              { width: Dimensions.get("window").width - 160 },
+                            ]}
                             key={`${index}-${indexProd}`}
                           >
                             {products.name}
                           </Text>
-                          <Text style={styles.itemList}>
-                            R$ {products.price}
+                          <Text
+                            style={[
+                              styles.itemList,
+                              { marginLeft: 10, fontStyle: "italic" },
+                            ]}
+                          >
+                            {products.qtd}x R$ {products.price}
                           </Text>
                         </View>
                       ))}
@@ -284,7 +431,10 @@ export default function CollapseProductsList({
                         <TouchableOpacity
                           style={styles.startShoppingButton}
                           onPress={() =>
-                            startShopping(state[index], item.supermarket.name)
+                            startShopping(
+                              internalState[index],
+                              item.supermarket.name
+                            )
                           }
                         >
                           <Text style={styles.textButton}>

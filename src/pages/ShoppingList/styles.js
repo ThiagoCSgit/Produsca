@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
   },
+  listProducts: {
+    flex: 1,
+    // width: "100%",
+    // backgroundColor: "red",
+  },
   labelEmptyCart: {
     textAlign: "center",
     marginTop: 20,

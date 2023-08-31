@@ -14,8 +14,6 @@ import api from "../../service/api";
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
 
-import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
-
 import { useIsFocused } from "@react-navigation/native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -119,7 +117,6 @@ export default function CategoryProducts({ navigation }) {
     },
   ]);
 
-  const { purchaseInProgress } = usePurchaseStatus();
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
@@ -135,25 +132,19 @@ export default function CategoryProducts({ navigation }) {
         return key;
       }
     });
-    console.warn("cate filteredKey:", filteredKey);
     if (filteredKey) {
       let shopping = await AsyncStorage.getItem(filteredKey);
-      console.warn("shopping:", shopping);
       if (shopping) {
-        // Alert.alert("Havia uma compra em andamento, deseja retornar a ela?");
-        console.log("setar pra true");
         setShoppingList(JSON.parse(shopping));
         setModalVisible(true);
       }
     } else {
-      console.log("sem modal");
       setModalVisible(false);
     }
   }
 
   useEffect(() => {
     getCategories();
-    console.warn("purchaseInProgress categorias:", purchaseInProgress);
   }, []);
 
   async function getCategories() {
@@ -164,7 +155,6 @@ export default function CategoryProducts({ navigation }) {
         .get("/consultas/CategoriasProdutos")
         .then((response) => {
           let listCategorys = response.data;
-          // console.log('listCategorys:',listCategorys)
           if (listCategorys != null && listCategorys.length > 0) {
             setCatProducts(
               listCategorys.map((item, index) => {
@@ -198,19 +188,21 @@ export default function CategoryProducts({ navigation }) {
 
   async function finishAndSave() {
     setModalVisible(false);
-    // setTimeout(() => {
-    //   navigation.navigate("Histórico");
-    // }, 100);
     let savedKeys = await AsyncStorage.getAllKeys();
-    console.log("savedKeys:", savedKeys);
     let purchaseKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
         return key;
       }
     });
-    console.log("purchaseKey:", purchaseKey);
+    const tempPurchaseKey = purchaseKey.replace("-iniciada", "");
+    let historyKey = savedKeys.find((key) => {
+      if (key.includes("compra-historico")) {
+        let tempHistoryKey = key.replace("-historico", "");
+        return tempHistoryKey == tempPurchaseKey;
+      }
+    });
     await AsyncStorage.removeItem(purchaseKey);
-    // await AsyncStorage.removeItem(purchaseKey);
+    await AsyncStorage.removeItem(historyKey);
   }
 
   return isLoading ? (

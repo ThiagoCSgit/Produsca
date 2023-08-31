@@ -77,6 +77,11 @@ export default function SupermaketShoppingList({ route, navigation }) {
 
   useEffect(() => {
     console.warn("useEffetc", myLocation, modalVisible, range != previousRange);
+    console.warn("previousRange:", previousRange, "range:", range);
+    console.warn(
+      "expressão do if:",
+      myLocation && !modalVisible && range != previousRange
+    );
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
       postShopList();
@@ -238,6 +243,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
             state={state}
             showButton={true}
             navigation={navigation}
+            isFocused={isFocused}
           />
         )}
       </ScrollView>

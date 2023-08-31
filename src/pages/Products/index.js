@@ -101,11 +101,11 @@ export default function Products({ route, navigation }) {
     setNoData(null);
 
     if (supermarketName) {
-      let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
+      // let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
       // console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
       api
         .get(
-          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`
+          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${supermarketName}`
         )
         .then((response) => {
           console.warn("response da api:", response.data);

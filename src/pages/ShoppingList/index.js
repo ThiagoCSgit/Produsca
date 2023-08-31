@@ -105,9 +105,10 @@ export default function ShoppingList({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {cartList.length > 0 ? (
-        <View style={styles.screenList}>
+        <>
           <FlatList
-            contentContainerStyle={{ marginTop: 30, gap: 30 }}
+            style={styles.listProducts}
+            contentContainerStyle={{ gap: 30, paddingTop: 30 }}
             data={cartList}
             numColumns={1}
             key={"_"}
@@ -173,7 +174,7 @@ export default function ShoppingList({ navigation }) {
             />
             <Text style={styles.textButton}>Simular Compra</Text>
           </TouchableOpacity>
-        </View>
+        </>
       ) : (
         <View>
           <Image
