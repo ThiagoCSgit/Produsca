@@ -22,34 +22,19 @@ export default function CollapseProductsList({
   const [visible, setVisible] = useState([]);
   const [purchaseInProgress, setPurchaseInProgress] = useState(null);
   const [internalState, setInternalState] = useState(state);
-  // let internalState = state;
-  useEffect(() => {
-    console.warn("purchaseInProgress effect:", purchaseInProgress);
-  }, [purchaseInProgress]);
-
-  console.warn("state collapse:", state);
-  // console.warn("internalState collapse:", internalState);
 
   useEffect(() => {
-    console.warn("state effect vazio:", state);
     setInternalState(state);
   }, [state]);
 
   useEffect(() => {
-    console.warn("mudança no internalState:", internalState);
-  }, [internalState]);
-
-  useEffect(() => {
     if (isFocused) {
-      // console.warn("está em foco");
       getPurchaseInProgress();
     }
   }, [isFocused]);
 
   useEffect(() => {
-    // console.warn("useEffect visivle:", internalState);
     if (internalState.length > 0) {
-      // console.warn("map do visible");
       let visibleList = internalState.map((item) => {
         return {
           id: item.id,
@@ -92,26 +77,8 @@ export default function CollapseProductsList({
     }
   }
 
-  // async function hasPurchaseInProgress() {
-  //   let savedKeys = await AsyncStorage.getAllKeys();
-  //   let filteredKey = savedKeys.find((key) => {
-  //     if (key.includes("compra-iniciada")) {
-  //       return key;
-  //     }
-  //   });
-  //   console.warn("has filteredKey:", filteredKey);
-  //   return filteredKey;
-  // }
-
   async function getPurchaseInProgress(list = null, choosedMarket = null) {
-    console.warn(
-      "getPurchaseInProgress params choosedMarket:",
-      choosedMarket,
-      "list:",
-      list
-    );
     let savedKeys = await AsyncStorage.getAllKeys();
-    console.warn("savedKeys:", savedKeys);
     let purchaseKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
         return key;
@@ -119,94 +86,45 @@ export default function CollapseProductsList({
     });
     if (purchaseKey) {
       const tempPurchaseKey = purchaseKey.replace("-iniciada", "");
-      console.warn("tempPurchaseKey:", tempPurchaseKey);
       let historyKey = savedKeys.find((key) => {
         if (key.includes("compra-historico")) {
           let tempHistoryKey = key.replace("-historico", "");
-          console.warn("tempHistoryKey:", tempHistoryKey);
           return tempHistoryKey == tempPurchaseKey;
         }
       });
-      console.warn("historyKey:", historyKey);
       let supermarketNameKey = purchaseKey.substring(20);
       let codeHistory = historyKey.substring(17, 20);
-      // let id = choosedMarket
-      //   ? `compra-iniciada-${codeHistory}-${choosedMarket}`
-      //   : `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
-      console.warn(
-        "purchase:",
-        purchaseKey,
-        "teste:",
-        `compra-iniciada-${codeHistory}-${supermarketNameKey}`
-      );
-      console.warn(
-        "nome do supermercado supermarketNameKey:",
-        supermarketNameKey,
-        "codeHistory:",
-        codeHistory
-      );
+
       setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketNameKey);
-      console.warn("valor de choosedMarket:", choosedMarket);
 
       if (
         choosedMarket &&
         purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
       ) {
-        console.warn("escolhido supermercado diferente do antes");
-        //   console.warn("comprando em outro supermercado");
-        console.warn("comprando em outro supermercado historyKey:", historyKey);
-        console.warn(
-          "comprando em outro supermercado purchaseKey:",
-          purchaseKey
-        );
         await AsyncStorage.removeItem(purchaseKey);
         await AsyncStorage.removeItem(historyKey);
-        // let otherPurchaseKey = savedKeys.find((key) => {
-        //   if (key.includes("compra-iniciada")) {
-        //     return key;
-        //   }
-        // });
 
         let shoppingList = list;
         let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
-        console.warn(
-          "iniciando uma nova compra em outro supermercado de id:",
-          id,
-          "shoppingList:",
-          shoppingList
-        );
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
       } else {
         let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
-        // console.warn("shoppingList para continuar uma compra:", shoppingList);
-        // console.warn("internalState:", internalState);
         let id = `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
 
-        console.warn("id para continuar uma compra:", id);
         let updatedState = internalState.map((item) => {
           return item.id == shoppingList.id
             ? { ...item, products: shoppingList.products }
             : item;
         });
-        // console.warn("teste updatedState:", updatedState);
-        console.warn("teste updatedState[0]:", updatedState[0]);
-        console.warn("teste updatedState[1]:", updatedState[1]);
         setInternalState(updatedState);
-        // // internalState = updatedState;
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
       }
     } else {
-      console.warn("primeira vez que inicia uma compra, list:", list);
       if (list && list?.products.length > 0) {
         try {
           let shoppingList = list;
           let idNew = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
-          console.warn(
-            "iniciando uma compra do zero de id:",
-            idNew,
-            "shoppingList:",
-            shoppingList
-          );
+
           await AsyncStorage.setItem(idNew, JSON.stringify(shoppingList));
         } catch (e) {
           console.warn(e);
@@ -214,86 +132,6 @@ export default function CollapseProductsList({
       }
     }
   }
-
-  // async function getPurchaseInProgress(list = [], choosedMarket) {
-  //   console.warn(
-  //     "getPurchaseInProgress params choosedMarket:",
-  //     choosedMarket,
-  //     "list:",
-  //     list
-  //   );
-  //   let savedKeys = await AsyncStorage.getAllKeys();
-  //   console.warn("savedKeys:", savedKeys);
-  //   let purchaseKey = savedKeys.find((key) => {
-  //     if (key.includes("compra-iniciada")) {
-  //       return key;
-  //     }
-  //   });
-  //   let historyKey = savedKeys.find((key) => {
-  //     if (key.includes("compra-historico")) {
-  //       return key;
-  //     }
-  //   });
-  //   if (purchaseKey) {
-  //     let supermarketNameKey = historyKey.substring(21);
-  //     let id = `compra-iniciada-${supermarketNameKey}`;
-  //     console.warn(
-  //       "nome do supermercado supermarketNameKey:",
-  //       supermarketNameKey
-  //     );
-  //     setPurchaseInProgress(supermarketNameKey);
-  //     console.warn("purchase:", purchaseKey);
-  //     console.warn("valor de choosedMarket:", choosedMarket);
-
-  //     // if (purchaseKey == `compra-iniciada-${choosedMarket}`) {
-  //     //   console.warn("comprando em outro supermercado");
-  //     //   console.warn("comprando em outro supermercado historyKey:", historyKey);
-  //     //   await AsyncStorage.removeItem(purchaseKey);
-  //     //   // await AsyncStorage.removeItem(historyKey);
-
-  //     //   let shoppingList = list;
-  //     //   console.warn(
-  //     //     "iniciando uma nova compra em outro supermercado de id:",
-  //     //     id,
-  //     //     "shoppingList:",
-  //     //     shoppingList
-  //     //   );
-  //     //   await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-  //     // } else {
-  //     //   console.warn("id para continuar uma compra:", id);
-  //     //   let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
-  //     //   console.warn("shoppingList para continuar uma compra:", shoppingList);
-  //     //   console.warn("internalState:", internalState);
-
-  //     //   let updatedState = internalState.map((item) => {
-  //     //     return item.id == shoppingList.id
-  //     //       ? { ...item, products: shoppingList.products }
-  //     //       : item;
-  //     //   });
-  //     //   console.warn("teste updatedState:", updatedState);
-  //     //   // setInternalState(updatedState);
-  //     //   internalState = updatedState;
-  //     //   await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-  //     // }
-  //   } else {
-  //     console.warn("primeira vez que inicia uma compra");
-  //     if (list.length > 0) {
-  //       try {
-  //         id = `compra-iniciada-${choosedMarket}`;
-  //         let shoppingList = list;
-  //         console.warn(
-  //           "iniciando uma compra do zero de id:",
-  //           id,
-  //           "shoppingList:",
-  //           shoppingList
-  //         );
-  //         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
-  //       } catch (e) {
-  //         console.warn(e);
-  //       }
-  //     }
-  //   }
-  // }
 
   return (
     <View style={styles.container}>
