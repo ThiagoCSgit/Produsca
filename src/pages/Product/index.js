@@ -60,17 +60,19 @@ export default function Products({ route, navigation }) {
 
   function getPriceHistory() {
     try {
-      let nameNoSpace = nameProduct.split(/\s+/).join("").toLowerCase();
       let dataInicial = format(new Date(), "yyyy-MM-dd");
       let dataFinal = new Date();
       dataFinal.setDate(dataFinal.getDate() - quantDays);
       dataFinal = format(dataFinal, "yyyy-MM-dd");
-      console.log(
-        `/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+      console.warn(
+        `/consultas/HistoricoPrecoGeral?nomeproduto=${nameProduct}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
       );
       // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
       api
-        .get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`)
+        // .get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`)
+        .get(
+          `/consultas/HistoricoPrecoGeral?nomeproduto=${nameProduct}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+        )
         .then((response) => {
           let historic = response.data;
           console.log("historico response:", response.data);
@@ -87,11 +89,10 @@ export default function Products({ route, navigation }) {
   }
 
   function getSupermarketsProduct() {
-    let nameNoSpace = nameProduct.split(/\s+/).join("").toLowerCase();
-    console.log(`/consultas/SupermercadosProduto?nomeproduto=${nameNoSpace}`);
+    console.log(`/consultas/SupermercadosProduto?nomeproduto=${nameProduct}`);
     try {
       api
-        .get(`/consultas/SupermercadosProduto?nomeProduto=${nameNoSpace}`)
+        .get(`/consultas/SupermercadosProduto?nomeProduto=${nameProduct}`)
         .then((response) => {
           console.log("response supermercados produtos:", response.data);
           // setSupermarktesAvailables(response.data)

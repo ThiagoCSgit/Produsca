@@ -11,10 +11,11 @@ const styles = StyleSheet.create({
   },
   titlePage: {
     marginBottom: 15,
-    fontSize: 25,
+    fontSize: 22,
     position: "relative",
     left: 10,
     fontFamily: "OpenSans_500Medium",
+    textAlign: "center",
   },
   listProducts: {
     flex: 1,

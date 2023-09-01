@@ -234,7 +234,8 @@ export default function CategoryProducts({ navigation }) {
               }
             >
               <Image style={styles.categoryIcon} source={item.image} />
-              {/* {item.image != null && (
+              {/* <Text>{item.image}</Text>
+              {item.image != null && (
                 <Image
                   style={styles.categoryIcon}
                   source={{ uri: item.image }}

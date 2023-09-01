@@ -117,7 +117,8 @@ export default function Products({ route, navigation }) {
                   id: `${index + 1}-${item.nome}`,
                   name: item.nome,
                   image: `${item.link_imagem}`,
-                  price: "10,80",
+                  price: item.preco,
+                  bar_code: item.codigo_barra,
                   qtd: 0,
                 };
               })
@@ -202,19 +203,6 @@ export default function Products({ route, navigation }) {
     } catch (e) {
       console.warn("error", e);
     }
-  }
-
-  function randomIdGeneretor(length) {
-    const caracteres =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "";
-
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * caracteres.length);
-      id += caracteres.charAt(randomIndex);
-    }
-
-    return id;
   }
 
   function increaseQuantity(id, supermarket = null) {
@@ -316,9 +304,7 @@ export default function Products({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <Text style={styles.titlePage}>
         {`${
-          supermarketName
-            ? categoryName + " - " + supermarketName
-            : categoryName
+          supermarketName ? categoryName + "\n" + supermarketName : categoryName
         }`}
       </Text>
       <FlatList
@@ -346,6 +332,7 @@ export default function Products({ route, navigation }) {
                         supermarket: supermarketName,
                         nameProduct: item.name,
                         idProduct: item.id,
+                        barCode: item.bar_code,
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,
