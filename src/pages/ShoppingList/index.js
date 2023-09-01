@@ -101,7 +101,6 @@ export default function ShoppingList({ navigation }) {
 
     if (qtd > 0) {
       let itemToAdd = cartList.find((item) => item.id == idProd);
-      let savedKeys = await AsyncStorage.getAllKeys();
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -119,10 +118,18 @@ export default function ShoppingList({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {cartList.length > 0 ? (
-        <>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+          }}
+        >
           <FlatList
-            style={styles.listProducts}
-            contentContainerStyle={{ gap: 30, paddingTop: 30 }}
+            contentContainerStyle={{
+              gap: 15,
+              paddingHorizontal: 20,
+            }}
             data={cartList}
             numColumns={1}
             key={"_"}
@@ -172,22 +179,34 @@ export default function ShoppingList({ navigation }) {
               );
             }}
           />
-          <TouchableOpacity
-            style={styles.buttonSimulate}
-            onPress={() => {
-              navigation.navigate("Supermercados disponíveis", {
-                list: cartList,
-              });
+          <View
+            style={{
+              // backgroundColor: "red",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              // padding: 10,
+              position: "relative",
+              top: 10,
             }}
           >
-            <IconMCI
-              style={styles.iconCalculator}
-              name="calculator-variant-outline"
-              size={25}
-            />
-            <Text style={styles.textButton}>Simular Compra</Text>
-          </TouchableOpacity>
-        </>
+            <TouchableOpacity
+              style={styles.buttonSimulate}
+              onPress={() => {
+                navigation.navigate("Supermercados disponíveis", {
+                  list: cartList,
+                });
+              }}
+            >
+              <IconMCI
+                style={styles.iconCalculator}
+                name="calculator-variant-outline"
+                size={25}
+              />
+              <Text style={styles.textButton}>Simular Compra</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
         <View>
           <Image

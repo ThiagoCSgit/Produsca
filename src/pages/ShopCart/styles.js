@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     fontSize: 20,
+    color: "#253D4E",
     fontFamily: "OpenSans_500Medium",
   },
   itemCart: {

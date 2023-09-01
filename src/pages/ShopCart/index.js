@@ -177,13 +177,13 @@ export default function ShopCart({ route, navigation }) {
         removePurchaseStorage();
       }
 
-      let productKeys = await AsyncStorage.getAllKeys();
-      for (let i = 0; i < productKeys.length; i++) {
-        let key = productKeys[i];
-        if (key.includes("produto-lista-")) {
-          await AsyncStorage.removeItem(key);
-        }
-      }
+      // let productKeys = await AsyncStorage.getAllKeys();
+      // for (let i = 0; i < productKeys.length; i++) {
+      //   let key = productKeys[i];
+      //   if (key.includes("produto-lista-")) {
+      //     await AsyncStorage.removeItem(key);
+      //   }
+      // }
     } catch (e) {
       console.warn("error:", e);
     }
