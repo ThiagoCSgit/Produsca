@@ -154,14 +154,15 @@ export default function CategoryProducts({ navigation }) {
       api
         .get("/consultas/CategoriasProdutos")
         .then((response) => {
-          let listCategorys = response.data;
-          if (listCategorys != null && listCategorys.length > 0) {
+          let listCategories = response.data;
+          if (listCategories != null && listCategories.length > 0) {
+            console.warn("listCategories:", listCategories);
             setCatProducts(
-              listCategorys.map((item, index) => {
+              listCategories.map((item, index) => {
                 return {
                   name: capitalizeWords(item.nome),
                   id: index + 1,
-                  image: require("../../images/foodImage.png"),
+                  image: `${item.link_imagem}`,
                 };
               })
             );
@@ -216,7 +217,7 @@ export default function CategoryProducts({ navigation }) {
           alignItems: "center",
           justifyContent: "center",
         }}
-        style={styles.listCategorys}
+        style={styles.listCategories}
         data={catProducts}
         numColumns={3}
         key={"_"}
@@ -231,7 +232,8 @@ export default function CategoryProducts({ navigation }) {
                 })
               }
             >
-              <Image style={styles.categoryIcon} source={item.image} />
+              {/* <Image style={styles.categoryIcon} source={item.image} /> */}
+              <Image style={styles.categoryIcon} source={{ uri: item.image }} />
               <Text style={[styles.categoryName, styles.customFonts]}>
                 {item.name}
               </Text>

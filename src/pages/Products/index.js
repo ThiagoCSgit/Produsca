@@ -87,6 +87,7 @@ export default function Products({ route, navigation }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
+    console.warn("executorando getCategorys");
     getCategoryProducts();
   }, []);
 
@@ -95,6 +96,10 @@ export default function Products({ route, navigation }) {
       return getCheckProducts();
     }
   }, [isFocused, isLoading]);
+
+  useEffect(() => {
+    console.warn("modificação em products:", products);
+  }, [products]);
 
   async function getCategoryProducts() {
     setIsLoading(true);
@@ -114,9 +119,9 @@ export default function Products({ route, navigation }) {
             setProducts(
               listProd.map((item, index) => {
                 return {
-                  id: index + 1,
+                  id: `${index + 1}-${item.nome}`,
                   name: item.nome,
-                  image: require("../../images/foodImage.png"),
+                  image: `${item.link_imagem}`,
                   price: "10,80",
                   qtd: 0,
                 };
@@ -147,7 +152,7 @@ export default function Products({ route, navigation }) {
               listProd.map((item, index) => {
                 console.log(" o nome:", item.nome);
                 return {
-                  id: index + 1,
+                  id: `${index + 1}-${item.nome}`,
                   name: item.nome,
                   image: `${item.link_imagem}`,
                   price: item.preco,
@@ -174,30 +179,51 @@ export default function Products({ route, navigation }) {
       });
 
       let productChecked = null;
-
+      console.warn("newList antes:", newList);
       for (let i = 0; i < newList.length; i++) {
         item = newList[i];
         if (supermarketName) {
-          productChecked = await AsyncStorage.getItem(
-            `produto-lista-${supermarketName}-${item.id}`
+          productChecked = JSON.parse(
+            await AsyncStorage.getItem(
+              `produto-lista-${supermarketName}-${item.id}-${item.name}`
+            )
           );
         } else {
-          productChecked = await AsyncStorage.getItem(
-            `produto-lista-noMarket-${item.id}`
+          productChecked = JSON.parse(
+            await AsyncStorage.getItem(
+              `produto-lista-noMarket-${item.id}-${item.name}`
+            )
           );
         }
-
+        console.warn("productChecked dentro do for:", productChecked);
         if (productChecked != null) {
-          productChecked = JSON.parse(productChecked);
-          if (item.id == productChecked.id) {
+          // productChecked = JSON.parse(productChecked);
+          if (
+            item.id == productChecked.id &&
+            categoryName == productChecked.category
+          ) {
             newList[i] = productChecked;
           }
         }
       }
+      console.warn("newList depois:", newList);
       setProducts(newList);
     } catch (e) {
       console.warn("error", e);
     }
+  }
+
+  function randomIdGeneretor(length) {
+    const caracteres =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let id = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * caracteres.length);
+      id += caracteres.charAt(randomIndex);
+    }
+
+    return id;
   }
 
   function increaseQuantity(id, supermarket = null) {
@@ -214,7 +240,12 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd, supermarket);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
   }
 
   function decreaseQuantity(id, supermarket = null) {
@@ -231,19 +262,25 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd, supermarket);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket) {
+  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
     let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}`
-      : `produto-lista-noMarket-${idProd}`;
+      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+      : `produto-lista-noMarket-${idProd}-${productName}`;
 
     cleanShoppingList(supermarket, id);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
+      itemToAdd.category = categoryName;
       console.log("id:", id);
       console.log("itemToAdd:", itemToAdd);
       try {
@@ -283,63 +320,6 @@ export default function Products({ route, navigation }) {
       });
     }
   }
-  // async function cleanShoppingList(supermarket, id) {
-  //   let asyncStorage = await AsyncStorage.getAllKeys();
-  //   console.warn("asyncStorage:", asyncStorage);
-  //   let productsKeys = asyncStorage.filter((item) =>
-  //     item.includes("produto-lista")
-  //   );
-  //   console.warn("productsKeys:", productsKeys);
-  //   let hasProductSupermarket = false
-  //   productsKeys.forEach(async (item) => {
-  //     if (item.includes(`produto-lista-${supermarket}-`)) {
-  //       console.log("item de outro mercado:", item);
-  //       hasProductSupermarket = true
-  //       // await AsyncStorage.removeItem(item);
-  //     }
-  //   });
-  //   if(hasProductSupermarket){
-  //     productsKeys.forEach(async (item) => {
-  //       if (!item.includes(`produto-lista-${supermarket}-`)) {
-  //         console.log("item de outro mercado:", item);
-  //         await AsyncStorage.removeItem(item);
-  //       }
-  //     });
-  //   }
-  //   else{
-
-  //   }
-  // }
-
-  // async function addOrRemoveToShopCart(value, id, supermarket = '') {
-  //   let newList = [...products]
-  //   setProducts(newList.map(item => {
-  //     if (item.id == id) {
-  //       item.qtd = value
-  //     }
-  //     return item
-  //   }))
-
-  //   if (value) {
-  //     let itemToAdd = products.find(item => item.id == id)
-  //     itemToAdd.quantityItems = 1
-  //     itemToAdd.supermarket = supermarket
-  //     id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-  //     try {
-  //       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
-  //     } catch (e) {
-  //       console.warn('error:', e)
-  //     }
-  //   }
-  //   else {
-  //     try {
-  //       id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-  //       await AsyncStorage.removeItem(id)
-  //     } catch (e) {
-  //       console.warn('error:', e)
-  //     }
-  //   }
-  // }
 
   return isLoading ? (
     <Loading />

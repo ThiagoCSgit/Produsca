@@ -23,15 +23,16 @@ export default function ShoppingList({ navigation }) {
   async function getCartProducts() {
     try {
       let productKeys = await AsyncStorage.getAllKeys();
-      console.log("productKeys getCart:", productKeys);
+      console.warn("productKeys getCart:", productKeys);
 
       let filteredKeys = productKeys.filter((key) => {
         if (key.includes("produto-lista-")) {
           return key;
         }
       });
-
+      console.warn("filteredKeys:", filteredKeys);
       let products = await AsyncStorage.multiGet(filteredKeys);
+      console.warn("products:", products);
       let newList = products.map((product) => {
         return JSON.parse(product[1]);
       });
@@ -55,50 +56,93 @@ export default function ShoppingList({ navigation }) {
 
   async function increaseQuantity(id, supermarket = null) {
     let newList = [...cartList];
+    let currentProduct = "";
 
     setCartList(
       newList.map((item) => {
         if (item.id == id) {
           item.qtd++;
+          currentProduct = item;
         }
         return item;
       })
     );
 
-    let itemToAdd = cartList.find((item) => item.id == id);
-    itemToAdd.supermarket = supermarket;
-    id = supermarket
-      ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-noMarket-${id}`;
-    try {
-      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    } catch (e) {
-      console.warn("error:", e);
-    }
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
+
+    // let itemToAdd = cartList.find((item) => item.id == id);
+    // itemToAdd.supermarket = supermarket;
+    // id = supermarket
+    //   ? `produto-lista-${supermarket}-${id}`
+    //   : `produto-lista-noMarket-${id}`;
+    // try {
+    //   await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
+    // } catch (e) {
+    //   console.warn("error:", e);
+    // }
   }
 
   async function decreaseQuantity(id, supermarket = null) {
     let newList = [...cartList];
+    let currentProduct = "";
 
     setCartList(
       newList.map((item) => {
         if (item.id == id && item.qtd > 1) {
           item.qtd--;
+          currentProduct = item;
         }
         return item;
       })
     );
 
-    let itemToAdd = cartList.find((item) => item.id == id);
-    itemToAdd.supermarket = supermarket;
-    console.log("item adicionado:", itemToAdd);
-    id = supermarket
-      ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-noMarket-${id}`;
-    try {
-      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    } catch (e) {
-      console.warn("error:", e);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
+
+    // let itemToAdd = cartList.find((item) => item.id == id);
+    // itemToAdd.supermarket = supermarket;
+    // console.warn("item adicionado na tela da lista:", itemToAdd);
+    // id = supermarket
+    //   ? `produto-lista-${supermarket}-${id}`
+    //   : `produto-lista-noMarket-${id}`;
+    // try {
+    //   await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
+    // } catch (e) {
+    //   console.warn("error:", e);
+    // }
+  }
+
+  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
+    let id = supermarket
+      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+      : `produto-lista-noMarket-${idProd}-${productName}`;
+
+    if (qtd > 0) {
+      let itemToAdd = cartList.find((item) => item.id == idProd);
+      let savedKeys = await AsyncStorage.getAllKeys();
+      console.warn("savedKeys:", savedKeys);
+      console.warn("itemToAdd:", itemToAdd);
+      console.warn("id:", id);
+      try {
+        await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
+      } catch (e) {
+        console.warn("error:", e);
+      }
+    } else {
+      try {
+        await AsyncStorage.removeItem(id);
+      } catch (e) {
+        console.warn("error", e);
+      }
     }
   }
 
@@ -149,8 +193,8 @@ export default function ShoppingList({ navigation }) {
                     onPress={() =>
                       removeItem(
                         item.supermarket
-                          ? `produto-lista-${item.supermarket}-${item.id}`
-                          : `produto-lista-noMarket-${item.id}`
+                          ? `produto-lista-${item.supermarket}-${item.id}-${item.name}`
+                          : `produto-lista-noMarket-${item.id}-${item.name}`
                       )
                     }
                   />
