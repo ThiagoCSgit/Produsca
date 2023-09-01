@@ -162,7 +162,8 @@ export default function CategoryProducts({ navigation }) {
                 return {
                   name: capitalizeWords(item.nome),
                   id: index + 1,
-                  image: `${item.link_imagem}`,
+                  // image: `${item.link_imagem}` || "",
+                  image: require("../../images/foodImage.png"),
                 };
               })
             );
@@ -232,8 +233,13 @@ export default function CategoryProducts({ navigation }) {
                 })
               }
             >
-              {/* <Image style={styles.categoryIcon} source={item.image} /> */}
-              <Image style={styles.categoryIcon} source={{ uri: item.image }} />
+              <Image style={styles.categoryIcon} source={item.image} />
+              {/* {item.image != null && (
+                <Image
+                  style={styles.categoryIcon}
+                  source={{ uri: item.image }}
+                />
+              )} */}
               <Text style={[styles.categoryName, styles.customFonts]}>
                 {item.name}
               </Text>

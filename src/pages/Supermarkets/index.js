@@ -140,10 +140,7 @@ export default function Supermarkets({ navigation }) {
     </View>
   ) : (
     <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: modalVisible ? "rgba(122, 118, 114, 0.4)" : "#fff" },
-      ]}
+      style={[styles.container, { opacity: modalVisible ? 0.4 : 1 }]}
     >
       <FlatList
         style={styles.listSupermarkets}

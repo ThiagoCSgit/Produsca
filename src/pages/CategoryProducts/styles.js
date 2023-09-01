@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  listCategorys: {
+  listCategories: {
     flex: 1,
   },
   categoryItem: {

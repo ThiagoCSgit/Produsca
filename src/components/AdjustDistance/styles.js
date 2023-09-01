@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D4EEE2",
   },
   iconGPS: {
-    color: "#fff",
     marginRight: 15,
     color: "#253D4E",
   },
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 20,
     backgroundColor: "#fff",
-    height: 200,
+    padding: 45,
     position: "relative",
     top: Dimensions.get("window").height / 3,
     borderRadius: 12,
@@ -36,6 +35,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5,
     elevation: 20,
+    zIndex: 10,
   },
   rangeLabel: {
     fontSize: 20,

@@ -16,8 +16,6 @@ import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
-import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
-
 export default function ShopCart({ route, navigation }) {
   const [cartList, setCartList] = useState({
     id: 0,
@@ -27,8 +25,6 @@ export default function ShopCart({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
-
-  const { setPurchaseInProgress } = usePurchaseStatus();
 
   useEffect(() => {
     getCartProducts();
@@ -187,7 +183,6 @@ export default function ShopCart({ route, navigation }) {
     } catch (e) {
       console.warn("error:", e);
     }
-    setPurchaseInProgress(false);
   }
 
   async function cancelPurchase() {
