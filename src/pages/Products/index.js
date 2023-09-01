@@ -87,7 +87,6 @@ export default function Products({ route, navigation }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.warn("executorando getCategorys");
     getCategoryProducts();
   }, []);
 
@@ -96,10 +95,6 @@ export default function Products({ route, navigation }) {
       return getCheckProducts();
     }
   }, [isFocused, isLoading]);
-
-  useEffect(() => {
-    console.warn("modificação em products:", products);
-  }, [products]);
 
   async function getCategoryProducts() {
     setIsLoading(true);
@@ -179,7 +174,6 @@ export default function Products({ route, navigation }) {
       });
 
       let productChecked = null;
-      console.warn("newList antes:", newList);
       for (let i = 0; i < newList.length; i++) {
         item = newList[i];
         if (supermarketName) {
@@ -195,9 +189,7 @@ export default function Products({ route, navigation }) {
             )
           );
         }
-        console.warn("productChecked dentro do for:", productChecked);
         if (productChecked != null) {
-          // productChecked = JSON.parse(productChecked);
           if (
             item.id == productChecked.id &&
             categoryName == productChecked.category
@@ -206,7 +198,6 @@ export default function Products({ route, navigation }) {
           }
         }
       }
-      console.warn("newList depois:", newList);
       setProducts(newList);
     } catch (e) {
       console.warn("error", e);
@@ -281,8 +272,6 @@ export default function Products({ route, navigation }) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
       itemToAdd.category = categoryName;
-      console.log("id:", id);
-      console.log("itemToAdd:", itemToAdd);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -299,11 +288,9 @@ export default function Products({ route, navigation }) {
 
   async function cleanShoppingList(supermarket, id) {
     let asyncStorage = await AsyncStorage.getAllKeys();
-    console.warn("asyncStorage:", asyncStorage);
     let productsOnList = asyncStorage.filter((item) =>
       item.includes("produto-lista")
     );
-    console.log("clear id:", id, "supermarket:", supermarket);
     if (!supermarket) {
       productsOnList.forEach(async (item) => {
         if (item.includes(`produto-lista-${supermarket}-`)) {

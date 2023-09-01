@@ -23,20 +23,16 @@ export default function ShoppingList({ navigation }) {
   async function getCartProducts() {
     try {
       let productKeys = await AsyncStorage.getAllKeys();
-      console.warn("productKeys getCart:", productKeys);
 
       let filteredKeys = productKeys.filter((key) => {
         if (key.includes("produto-lista-")) {
           return key;
         }
       });
-      console.warn("filteredKeys:", filteredKeys);
       let products = await AsyncStorage.multiGet(filteredKeys);
-      console.warn("products:", products);
       let newList = products.map((product) => {
         return JSON.parse(product[1]);
       });
-      console.warn("preenchendo cartList:", newList);
       setCartList(newList);
     } catch (e) {
       console.warn("error", e);
@@ -74,17 +70,6 @@ export default function ShoppingList({ navigation }) {
       supermarket,
       currentProduct.name
     );
-
-    // let itemToAdd = cartList.find((item) => item.id == id);
-    // itemToAdd.supermarket = supermarket;
-    // id = supermarket
-    //   ? `produto-lista-${supermarket}-${id}`
-    //   : `produto-lista-noMarket-${id}`;
-    // try {
-    //   await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    // } catch (e) {
-    //   console.warn("error:", e);
-    // }
   }
 
   async function decreaseQuantity(id, supermarket = null) {
@@ -107,18 +92,6 @@ export default function ShoppingList({ navigation }) {
       supermarket,
       currentProduct.name
     );
-
-    // let itemToAdd = cartList.find((item) => item.id == id);
-    // itemToAdd.supermarket = supermarket;
-    // console.warn("item adicionado na tela da lista:", itemToAdd);
-    // id = supermarket
-    //   ? `produto-lista-${supermarket}-${id}`
-    //   : `produto-lista-noMarket-${id}`;
-    // try {
-    //   await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    // } catch (e) {
-    //   console.warn("error:", e);
-    // }
   }
 
   async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
@@ -129,9 +102,6 @@ export default function ShoppingList({ navigation }) {
     if (qtd > 0) {
       let itemToAdd = cartList.find((item) => item.id == idProd);
       let savedKeys = await AsyncStorage.getAllKeys();
-      console.warn("savedKeys:", savedKeys);
-      console.warn("itemToAdd:", itemToAdd);
-      console.warn("id:", id);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -205,7 +175,6 @@ export default function ShoppingList({ navigation }) {
           <TouchableOpacity
             style={styles.buttonSimulate}
             onPress={() => {
-              console.warn("tem produto pra simular:", cartList);
               navigation.navigate("Supermercados disponíveis", {
                 list: cartList,
               });
