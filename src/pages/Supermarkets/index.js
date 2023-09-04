@@ -17,51 +17,52 @@ import { useLocation } from "../../context/LocationProvider";
 import api from "../../service/api";
 
 export default function Supermarkets({ navigation }) {
-  const [supermarkets, setSupermarkets] = useState([
-    {
-      id: 1,
-      name: "Extrabom",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia",
-      city: "Vila Velha",
-    },
-    {
-      id: 2,
-      name: "Perim",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 2",
-      city: "Vitória",
-    },
-    {
-      id: 3,
-      name: "Carone",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 3",
-      city: "Vitória",
-    },
-    {
-      id: 4,
-      name: "Epa",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 4",
-      city: "Serra",
-    },
-    {
-      id: 5,
-      name: "Mineirão",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 5",
-      city: "Vila Velha",
-    },
-    {
-      id: 6,
-      name: "Atacadão",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 6",
-      city: "Vila Velha",
-    },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [supermarkets, setSupermarkets] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Extrabom",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia",
+  //     city: "Vila Velha",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Perim",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 2",
+  //     city: "Vitória",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Carone",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 3",
+  //     city: "Vitória",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Epa",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 4",
+  //     city: "Serra",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Mineirão",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 5",
+  //     city: "Vila Velha",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Atacadão",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 6",
+  //     city: "Vila Velha",
+  //   },
+  // ]);
+  const [supermarkets, setSupermarkets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);

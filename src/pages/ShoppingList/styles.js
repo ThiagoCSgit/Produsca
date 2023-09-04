@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   buttonSimulate: {
     borderRadius: 100,
-    marginBottom: 20,
+    marginBottom: 40,
     paddingVertical: 15,
     paddingHorizontal: 20,
     justifyContent: "center",
