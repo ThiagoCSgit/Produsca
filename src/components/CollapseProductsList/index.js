@@ -19,6 +19,7 @@ export default function CollapseProductsList({
   navigation = null,
   isFocused,
   deleteButton = false,
+  getHistoric,
 }) {
   const [visible, setVisible] = useState([]);
   const [purchaseInProgress, setPurchaseInProgress] = useState(null);
@@ -61,6 +62,12 @@ export default function CollapseProductsList({
     navigation.navigate("Carrinho", {
       list: list,
     });
+  }
+
+  async function deleteShopping(id) {
+    // let savedKeys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.removeItem(id);
+    getHistoric();
   }
 
   function callNumber(phoneNumber) {
@@ -231,19 +238,13 @@ export default function CollapseProductsList({
                         styles.startShoppingButton,
                         { backgroundColor: "#ff8080" },
                       ]}
-                      onPress={() =>
-                        startShopping(
-                          internalState[index],
-                          item.supermarket.name
-                        )
-                      }
+                      onPress={() => deleteShopping(internalState[index].id)}
                     >
                       <IconF
                         style={{ marginRight: 13 }}
                         color="#fff"
                         name="trash-2"
                         size={25}
-                        onPress={() => removeItem(index)}
                       />
                       <Text style={styles.textButton}>Excluir</Text>
                     </TouchableOpacity>
@@ -320,19 +321,13 @@ export default function CollapseProductsList({
                           styles.startShoppingButton,
                           { backgroundColor: "#ff8080" },
                         ]}
-                        onPress={() =>
-                          startShopping(
-                            internalState[index],
-                            item.supermarket.name
-                          )
-                        }
+                        onPress={() => deleteShopping(internalState[index].id)}
                       >
                         <IconF
                           style={{ marginRight: 13 }}
                           color="#fff"
                           name="trash-2"
                           size={25}
-                          onPress={() => removeItem(index)}
                         />
                         <Text style={styles.textButton}>Excluir</Text>
                       </TouchableOpacity>

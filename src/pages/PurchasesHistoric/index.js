@@ -22,7 +22,7 @@ export default function PurchasesHistoric() {
         return key;
       }
     });
-    // console.warn("key:", filteredKeys);
+    console.warn("key gethistoric:", filteredKeys);
     let shopping = await AsyncStorage.multiGet(filteredKeys);
     // console.warn("shopping:", shopping);
     let newList = shopping.map((item) => {
@@ -45,7 +45,11 @@ export default function PurchasesHistoric() {
             paddingHorizontal: 10,
           }}
         >
-          <CollapseProductsList state={historic} deleteButton={true} />
+          <CollapseProductsList
+            state={historic}
+            deleteButton={true}
+            getHistoric={getHistoric}
+          />
         </ScrollView>
       ) : (
         <View style={styles.emptyHistoric}>
