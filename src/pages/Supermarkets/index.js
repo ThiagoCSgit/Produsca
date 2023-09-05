@@ -113,6 +113,7 @@ export default function Supermarkets({ navigation }) {
                 phone: item.telefone,
                 district: item.nomeBairro,
                 image: require("../../images/icone_mercado.png"),
+                cnpj: item.cnpj,
               };
             })
           );
@@ -161,6 +162,7 @@ export default function Supermarkets({ navigation }) {
                   city: item.city,
                   state: item.state,
                   number: item.number,
+                  cnpj: item.cnpj,
                 })
               }
             >

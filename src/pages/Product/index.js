@@ -59,13 +59,13 @@ export default function Products({ route, navigation }) {
       dataFinal.setDate(dataFinal.getDate() - quantDays);
       dataFinal = format(dataFinal, "yyyy-MM-dd");
       console.warn(
-        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
       );
       // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
       api
         // .get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`)
         .get(
-          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
           let historic = response.data;

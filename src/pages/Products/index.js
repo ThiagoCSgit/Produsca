@@ -18,7 +18,7 @@ import NoData from "../../components/NoData";
 import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Products({ route, navigation }) {
-  const { categoryName, supermarketName } = route.params;
+  const { categoryName, supermarketName, cnpj } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
   // const [products, setProducts] = useState([
@@ -333,6 +333,7 @@ export default function Products({ route, navigation }) {
                         nameProduct: item.name,
                         idProduct: item.id,
                         barCode: item.bar_code,
+                        cnpj: cnpj,
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,

@@ -110,97 +110,99 @@ export default function SupermaketShoppingList({ route, navigation }) {
     });
 
     console.warn("listNomeProd:", listNomeProd);
-    // api
-    //   .post("/envios/ProdutosEscolhidosCarrinho", {
-    //     latitudeUsuario: myLocation?.coords.latitude,
-    //     longitudeUsuario: myLocation?.coords.longitude,
-    //     raioDistanciaMetros: range,
-    //     listaNomeProduto: listNomeProd,
-    //   })
-    //   .then((response) => {
-    //     console.warn("Supermercados disponíveis:", response.data);
-    //     let listResponse = response.data;
+    api
+      .post("/envios/ProdutosEscolhidosCarrinho", {
+        latitudeUsuario: myLocation?.coords.latitude,
+        longitudeUsuario: myLocation?.coords.longitude,
+        raioDistanciaMetros: range,
+        listaNomeProduto: listNomeProd,
+      })
+      .then((response) => {
+        console.warn("Supermercados disponíveis:", response.data);
+        let listResponse = response.data;
 
-    // if (listResponse != null && listResponse.length > 0) {
-    // let data = listResponse.map((item) => {
-    //   let supermercado = {
-    //     name: item.nomeSupermercado,
-    //     publicPlace: item.logradouro,
-    //     number: item.numero,
-    //     city: item.nomeCidade,
-    //     state: item.nomeEstado,
-    //     district: item.nomeBairro,
-    //     phone: item.telefone,
-    //     cpnj: item.cnpj,
-    //   };
-    //   let produtos = item.produtos.map((prod) => {
-    //     return {
-    //       name: prod.nome,
-    //       price: prod.preco,
-    //       describe: prod.descricao,
-    //       image: prod.link_image,
-    //     };
-    //   });
-    //   return {
-    //     supermarket: supermercado,
-    //     products: produtos,
+        if (listResponse != null && listResponse.length > 0) {
+          let data = listResponse.map((item) => {
+            let supermercado = {
+              name: item.nomeSupermercado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              city: item.nomeCidade,
+              state: item.nomeEstado,
+              district: item.nomeBairro,
+              phone: item.telefone,
+              cpnj: item.cnpj,
+            };
+            let produtos = item.produtos.map((prod, index) => {
+              if (prod.nome == listNomeProd[index].nome)
+                return {
+                  name: prod.nome,
+                  price: prod.preco,
+                  describe: prod.descricao,
+                  image: prod.link_image,
+                  qtd: listNomeProd[index].qtd,
+                };
+            });
+            return {
+              supermarket: supermercado,
+              products: produtos,
+              id: randomIdGeneretor(3),
+            };
+          });
+          console.warn("data retornada:", data);
+          setState(data);
+        } else {
+          setState([]);
+          setNoData(listResponse);
+        }
+        setIsLoading(false);
+      });
+    // let data = [
+    //   {
+    //     supermarket: {
+    //       name: "EPA",
+    //       publicPlace: "Rua da Fantasia",
+    //       number: 52,
+    //       city: "VILA VELHA",
+    //       state: "ES",
+    //       district: "PRAIA DO SUÁ",
+    //       phone: "2733439846",
+    //       cpnj: 12223333,
+    //     },
+    //     products: listNomeProd.map((prod) => {
+    //       return {
+    //         name: prod.nome,
+    //         price: 10,
+    //         describe: "descrição",
+    //         image: "oapopa",
+    //         qtd: prod.qtd,
+    //       };
+    //     }),
     //     id: randomIdGeneretor(3),
-    //   };
-    // });
-    let data = [
-      {
-        supermarket: {
-          name: "EPA",
-          publicPlace: "Rua da Fantasia",
-          number: 52,
-          city: "VILA VELHA",
-          state: "ES",
-          district: "PRAIA DO SUÁ",
-          phone: "2733439846",
-          cpnj: 12223333,
-        },
-        products: listNomeProd.map((prod) => {
-          return {
-            name: prod.nome,
-            price: 10,
-            describe: "descrição",
-            image: "oapopa",
-            qtd: prod.qtd,
-          };
-        }),
-        id: randomIdGeneretor(3),
-      },
-      {
-        supermarket: {
-          name: "Extrabom",
-          publicPlace: "Rua da Fantasia",
-          number: 52,
-          city: "VILA VELHA",
-          state: "ES",
-          district: "PRAIA DO SUÁ",
-          phone: "2733439846",
-          cpnj: 12223333,
-        },
-        products: listNomeProd.map((prod) => {
-          return {
-            name: prod.nome,
-            price: 10,
-            describe: "descrição",
-            image: "oapopa",
-            qtd: prod.qtd,
-          };
-        }),
-        id: randomIdGeneretor(3),
-      },
-    ];
-    console.warn("data retornada:", data);
-    setState(data);
-    // } else {
-    //   setState([]);
-    //   setNoData(listResponse);
-    // }
-    setIsLoading(false);
-    // });
+    //   },
+    //   {
+    //     supermarket: {
+    //       name: "Extrabom",
+    //       publicPlace: "Rua da Fantasia",
+    //       number: 52,
+    //       city: "VILA VELHA",
+    //       state: "ES",
+    //       district: "PRAIA DO SUÁ",
+    //       phone: "2733439846",
+    //       cpnj: 12223333,
+    //     },
+    //     products: listNomeProd.map((prod) => {
+    //       return {
+    //         name: prod.nome,
+    //         price: 10,
+    //         describe: "descrição",
+    //         image: "oapopa",
+    //         qtd: prod.qtd,
+    //       };
+    //     }),
+    //     id: randomIdGeneretor(3),
+    //   },
+    // ];
   }
 
   function randomIdGeneretor(length) {

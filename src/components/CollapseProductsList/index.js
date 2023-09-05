@@ -249,7 +249,12 @@ export default function CollapseProductsList({
                           <Text
                             style={[
                               styles.itemList,
-                              { marginLeft: 10, fontStyle: "italic" },
+                              {
+                                marginLeft: 10,
+                                fontStyle: "italic",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              },
                             ]}
                           >
                             {products.qtd}x R$ {products.price}

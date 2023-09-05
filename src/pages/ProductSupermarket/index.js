@@ -24,7 +24,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function ProductSupermarket({ route, navigation }) {
-  const { nameProduct, idProduct, supermarket, barCode } = route.params;
+  const { nameProduct, idProduct, supermarket, barCode, cnpj } = route.params;
   console.log(route.params);
   const [priceHistory, setPriceHistory] = useState([]);
   const [inCart, setInCart] = useState(false);
@@ -52,12 +52,12 @@ export default function ProductSupermarket({ route, navigation }) {
     dataFinal.setDate(dataFinal.getDate() - quantDays);
     dataFinal = format(dataFinal, "yyyy-MM-dd");
     console.log(
-      `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&supermercado=${supermarket}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+      `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
     );
     try {
       api
         .get(
-          `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&supermercado=${supermarket}?dataInicial=${dataInicial}?dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
         )
         // api
         //   .get(
