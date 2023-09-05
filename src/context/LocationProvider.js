@@ -5,6 +5,7 @@ const LocationContext = createContext();
 
 export function LocationProvider({ children }) {
   const [userLocation, setUserLocation] = useState(null);
+  let location = null;
 
   async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -15,14 +16,16 @@ export function LocationProvider({ children }) {
 
     console.log("pegando localização");
 
-    let location = await Location.getCurrentPositionAsync({});
+    location = await Location.getCurrentPositionAsync({});
     console.warn("localização:", location);
     setUserLocation(location);
   }
 
   useEffect(() => {
-    getLocation();
-  }, []);
+    if (userLocation == null) {
+      getLocation();
+    }
+  }, [userLocation]);
 
   return (
     <LocationContext.Provider value={userLocation}>

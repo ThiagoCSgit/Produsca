@@ -1,4 +1,4 @@
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import styles from "./styles";
 import { useEffect, useState } from "react";
 import api from "../../service/api";
@@ -88,6 +88,12 @@ export default function SupermaketShoppingList({ route, navigation }) {
     }
   }, [myLocation, range, modalVisible]);
 
+  useEffect(() => {
+    if (state.length > 0) {
+      alertNoPrice();
+    }
+  }, [state]);
+
   function postShopList() {
     setIsLoading(true);
     setNoData(null);
@@ -134,7 +140,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
               cpnj: item.cnpj,
             };
             let produtos = item.produtos.map((prod, index) => {
-              if (prod.nome == listNomeProd[index].nome)
+              if (prod.nome.trim() == listNomeProd[index].nome.trim())
                 return {
                   name: prod.nome,
                   price: prod.preco,
@@ -203,6 +209,25 @@ export default function SupermaketShoppingList({ route, navigation }) {
     //     id: randomIdGeneretor(3),
     //   },
     // ];
+  }
+
+  function alertNoPrice() {
+    if (state.length > 0) {
+      console.warn("len de state maior que 0:", state);
+      let noPrice = null;
+      for (let i = 0; i < state.length; i++) {
+        noPrice = state[i].products.find((item) => {
+          return item.price == -1;
+        });
+      }
+      console.warn("noPrice:", noPrice);
+      if (noPrice) {
+        Alert.alert(
+          "Produtos não cadastrados",
+          "Existem alguns produtos que ainda não tem preços cadastrados, então o valor da sua comprar será diferente do informado. Nos ajude a crescer contribuindo com os dados da sua compra!"
+        );
+      }
+    }
   }
 
   function randomIdGeneretor(length) {

@@ -38,7 +38,7 @@ export default function CollapseProductsList({
       let visibleList = internalState.map((item) => {
         return {
           id: item.id,
-          open: true,
+          open: false,
         };
       });
       setVisible(visibleList);
@@ -179,7 +179,7 @@ export default function CollapseProductsList({
                     onPress={() => callNumber(item.supermarket.phone)}
                   >
                     <Text style={styles.supermarketInfos}>
-                      Contanto: {item.supermarket.phone}
+                      Contato: {item.supermarket.phone}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -257,7 +257,9 @@ export default function CollapseProductsList({
                               },
                             ]}
                           >
-                            {products.qtd}x R$ {products.price}
+                            {products.price == -1
+                              ? `${products.qtd}x R$ - -`
+                              : `${products.qtd}x R$ ${products.price}`}
                           </Text>
                         </View>
                       ))}

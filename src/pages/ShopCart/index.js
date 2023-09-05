@@ -106,16 +106,23 @@ export default function ShopCart({ route, navigation }) {
   }
 
   function itemPrice(value, quantity = 1) {
-    return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
-      minimumFractionDigits: 2,
-    });
+    console.warn("itemPrice, value:", value);
+    if (value != -1) {
+      return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
+        minimumFractionDigits: 2,
+      });
+    } else {
+      return "- -";
+    }
   }
 
   function totalValue() {
     let sum = 0;
     if (cartList.products.length > 0) {
       cartList.products.forEach((item) => {
-        sum += item.price * item.qtd;
+        if (item.price != -1) {
+          sum += item.price * item.qtd;
+        }
       });
     }
     let valor = itemPrice(`${sum}`);
@@ -173,13 +180,13 @@ export default function ShopCart({ route, navigation }) {
         removePurchaseStorage();
       }
 
-      // let productKeys = await AsyncStorage.getAllKeys();
-      // for (let i = 0; i < productKeys.length; i++) {
-      //   let key = productKeys[i];
-      //   if (key.includes("produto-lista-")) {
-      //     await AsyncStorage.removeItem(key);
-      //   }
-      // }
+      let productKeys = await AsyncStorage.getAllKeys();
+      for (let i = 0; i < productKeys.length; i++) {
+        let key = productKeys[i];
+        if (key.includes("produto-lista-")) {
+          await AsyncStorage.removeItem(key);
+        }
+      }
     } catch (e) {
       console.warn("error:", e);
     }
@@ -224,11 +231,11 @@ export default function ShopCart({ route, navigation }) {
                       style={[styles.itemName, item.check && styles.bought]}
                     >
                       {item?.marca
-                        ? `${item.name}, ${item.marca} ${"\n"} R$${itemPrice(
+                        ? `${item.name}, ${item.marca} ${"\n"} R$ ${itemPrice(
                             `${item.price}`,
                             `${item.qtd}`
                           )}`
-                        : `${item.name} ${"\n"} R$${itemPrice(
+                        : `${item.name} ${"\n"} R$ ${itemPrice(
                             `${item.price}`,
                             `${item.qtd}`
                           )}`}

@@ -157,7 +157,7 @@ export default function CategoryProducts({ navigation }) {
         .then((response) => {
           let listCategories = response.data;
           if (listCategories != null && listCategories.length > 0) {
-            console.warn("listCategories:", listCategories);
+            // console.warn("listCategories:", listCategories);
             setCatProducts(
               listCategories.map((item, index) => {
                 return {
