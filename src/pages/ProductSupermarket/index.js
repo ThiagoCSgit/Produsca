@@ -2,12 +2,10 @@ import {
   SafeAreaView,
   Dimensions,
   Text,
-  Image,
-  Pressable,
   View,
   Share,
+  TouchableOpacity,
 } from "react-native";
-import Checkbox from "expo-checkbox";
 import React, { useEffect, useState } from "react";
 import styles from "./styles";
 import { useIsFocused } from "@react-navigation/native";
@@ -27,43 +25,44 @@ export default function ProductSupermarket({ route, navigation }) {
   const { nameProduct, idProduct, supermarket, barCode, cnpj } = route.params;
   console.log(route.params);
   const [priceHistory, setPriceHistory] = useState([]);
-  const [inCart, setInCart] = useState(false);
+  // const [inCart, setInCart] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [quantDays, setQuantDays] = useState(7);
 
   const isFocused = useIsFocused();
 
-  useEffect(() => {
-    getCheckProducts();
-  }, [isFocused]);
+  // useEffect(() => {
+  //   getCheckProducts();
+  // }, [isFocused]);
 
   useEffect(() => {
     getHistoricoPreco();
-    getCheckProducts();
+    // getCheckProducts();
   }, []);
 
-  useEffect(() => {
-    console.log("quantDays detalhes:", quantDays);
-  }, [quantDays]);
+  // useEffect(() => {
+  //   console.log("quantDays detalhes:", quantDays);
+  // }, [quantDays]);
 
   function getHistoricoPreco() {
-    let dataInicial = format(new Date(), "yyyy-MM-dd");
-    let dataFinal = new Date();
-    dataFinal.setDate(dataFinal.getDate() - quantDays);
-    dataFinal = format(dataFinal, "yyyy-MM-dd");
-    console.log(
-      `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
+    let dataFinal = format(new Date(), "yyyy-MM-dd");
+    let dataInicial = new Date();
+    dataInicial.setDate(dataInicial.getDate() - quantDays);
+    dataInicial = format(dataInicial, "yyyy-MM-dd");
+    console.warn(
+      `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
     );
     try {
       api
         .get(
-          `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
         )
         // api
         //   .get(
         //     `/consultas/HistoricoPrecoSupermercado?nomeProduto=batata&supermercado=EPA`
         //   )
         .then((response) => {
+          console.warn("response.data:", response.data);
           setPriceHistory(response.data);
           setIsLoading(false);
         });
@@ -72,21 +71,21 @@ export default function ProductSupermarket({ route, navigation }) {
     }
   }
 
-  async function getCheckProducts() {
-    try {
-      const jsonValue = await AsyncStorage.getItem(
-        `produto-lista-${supermarket}-${idProduct}-${nameProduct}`
-      );
-      const value = jsonValue != null ? JSON.parse(jsonValue) : {};
-      setInCart(value.inCart);
-    } catch (e) {
-      console.warn("error", e);
-    }
-  }
+  // async function getCheckProducts() {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem(
+  //       `produto-lista-${supermarket}-${idProduct}-${nameProduct}`
+  //     );
+  //     const value = jsonValue != null ? JSON.parse(jsonValue) : {};
+  //     setInCart(value.inCart);
+  //   } catch (e) {
+  //     console.warn("error", e);
+  //   }
+  // }
 
   const onShare = async () => {
     const result = await Share.share({
-      message: `O(A) ${nameProduct} no supermercado ${supermarket} está no precinho aqui no Produsca, o seu app de busca`,
+      message: `O(A) ${nameProduct} no ${supermarket} está no precinho aqui no Produsca, o seu app de busca`,
     });
   };
 
@@ -146,7 +145,15 @@ export default function ProductSupermarket({ route, navigation }) {
             />
           }
         </View>
-        <View style={styles.buttonsArea}>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
+            <Text style={styles.shareText}>Compartilhar oferta</Text>
+            <View style={styles.shareIcon}>
+              <Icon style={{ color: "#fff" }} name="share-2" size={27} />
+            </View>
+          </TouchableOpacity>
+        </View>
+        {/* <View style={styles.buttonsArea}>
           <Pressable
             onPress={() => executeAction(inCart, idProduct, supermarket)}
           >
@@ -162,7 +169,7 @@ export default function ProductSupermarket({ route, navigation }) {
               size={27}
             />
           </Pressable>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );

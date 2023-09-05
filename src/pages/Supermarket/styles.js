@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   supermarketName: {
-    fontSize: 24,
+    fontSize: 20,
     textAlign: "center",
     fontFamily: "OpenSans_500Medium",
   },

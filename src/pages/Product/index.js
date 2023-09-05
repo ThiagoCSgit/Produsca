@@ -54,18 +54,18 @@ export default function Products({ route, navigation }) {
 
   function getPriceHistory() {
     try {
-      let dataInicial = format(new Date(), "yyyy-MM-dd");
-      let dataFinal = new Date();
-      dataFinal.setDate(dataFinal.getDate() - quantDays);
-      dataFinal = format(dataFinal, "yyyy-MM-dd");
+      let dataFinal = format(new Date(), "yyyy-MM-dd");
+      let dataInicial = new Date();
+      dataInicial.setDate(dataInicial.getDate() - quantDays);
+      dataInicial = format(dataInicial, "yyyy-MM-dd");
       console.warn(
-        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
+        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
       );
       // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
       api
         // .get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`)
         .get(
-          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
           let historic = response.data;
@@ -253,7 +253,6 @@ export default function Products({ route, navigation }) {
                         supermarket: item.name,
                         nameProduct: nameProduct,
                         idProduct: idProduct,
-                        // funcAddRemoveCart: funcAddRemoveCart
                       })
                     }
                   >

@@ -26,7 +26,7 @@ export default function Supermarket({ route, navigation }) {
     cnpj: route.params.cnpj,
   };
   // const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // const [supermarketProducts, setSupermarketProducts] = useState([
   //   {
   //     id: 1,
@@ -131,6 +131,7 @@ export default function Supermarket({ route, navigation }) {
   }, []);
 
   async function getCategories() {
+    setIsLoading(true);
     api.get("/consultas/CategoriasProdutos").then((response) => {
       console.warn("response categoria:", response.data);
       let listCategorys = response.data;

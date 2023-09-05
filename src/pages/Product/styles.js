@@ -3,19 +3,19 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
     padding: 20,
     height: "100%",
-    width: "100%"
+    width: "100%",
   },
   productName: {
     fontSize: 18,
-    fontFamily: "OpenSans_500Medium"
+    fontFamily: "OpenSans_500Medium",
   },
   nameProduct: {
-    fontSize: 24,
-    fontFamily: "OpenSans_500Medium"
+    fontSize: 20,
+    fontFamily: "OpenSans_500Medium",
   },
   selectDays: {
     flexDirection: "row",
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 15,
   },
-  itemSupermarket:{
+  itemSupermarket: {
     marginTop: 10,
     borderWidth: 1,
     borderColor: "#ffcfa4",
@@ -34,54 +34,48 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   buttonHistoric: {
-    textAlign: 'center',
+    textAlign: "center",
     backgroundColor: "#ffcfa4",
     borderBottomRightRadius: 9,
     borderBottomLeftRadius: 9,
-    padding: 10
+    padding: 10,
   },
-  buttonHistoricText:{
-    textAlign: "center", 
+  buttonHistoricText: {
+    textAlign: "center",
     color: "#623b32",
     fontSize: 16,
-    fontFamily: "OpenSans_500Medium"
-  },
-  labelCheckBox: {
-    marginLeft: 10,
-    fontSize: 19,
-    fontFamily: "OpenSans_500Medium"
+    fontFamily: "OpenSans_500Medium",
   },
   buttonShare: {
     marginTop: 25,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    textAlign: 'center', 
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    textAlign: "center",
+    alignItems: "center",
     borderWidth: 1,
     borderColor: "#1E90FF",
     borderRadius: 100,
-    width: 355
+    width: 355,
   },
   shareText: {
     fontFamily: "OpenSans_500Medium",
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
     fontSize: 18,
     paddingLeft: "20%",
     color: "#000",
   },
-  shareIcon:{
+  shareIcon: {
     paddingVertical: 10,
     paddingLeft: 15,
     paddingRight: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#1E90FF",
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
   },
 });
-
 
 export default styles;

@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import styles from "./styles";
 import Icon from "react-native-vector-icons/AntDesign";
+import IconF from "react-native-vector-icons/Feather";
 import { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -18,6 +18,7 @@ export default function CollapseProductsList({
   showButton = false,
   navigation = null,
   isFocused,
+  deleteButton = false,
 }) {
   const [visible, setVisible] = useState([]);
   const [purchaseInProgress, setPurchaseInProgress] = useState(null);
@@ -154,7 +155,10 @@ export default function CollapseProductsList({
                 ]}
               >
                 <View
-                  style={[{ gap: 15 }, !showButton && { paddingBottom: 15 }]}
+                  style={[
+                    { gap: 15 },
+                    !showButton && !deleteButton && { paddingBottom: 15 },
+                  ]}
                 >
                   <TouchableOpacity
                     style={styles.buttonOpenCollapse}
@@ -195,35 +199,54 @@ export default function CollapseProductsList({
                     </Text>
                   </TouchableOpacity>
                   {showButton && !visible[index]?.open && (
-                    <LinearGradient
-                      // colors={['#69c906', '#84be00']}
-                      // colors={['#e8c525', '#ebd31c']}
-                      colors={["#25e8c8", "#1ca8eb"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.buttonGradient}
+                    <TouchableOpacity
+                      style={[
+                        styles.startShoppingButton,
+                        {
+                          backgroundColor: "#00c9b7",
+                        },
+                      ]}
+                      onPress={() =>
+                        startShopping(
+                          internalState[index],
+                          item.supermarket.name
+                        )
+                      }
                     >
-                      <TouchableOpacity
-                        style={styles.startShoppingButton}
-                        onPress={() =>
-                          startShopping(
-                            internalState[index],
-                            item.supermarket.name
-                          )
-                        }
-                      >
-                        <Text style={styles.textButton}>
-                          {purchaseInProgress == item.supermarket.name
-                            ? "Continuar Compra"
-                            : "Iniciar Compra"}
-                        </Text>
-                        <Icon
-                          name="shoppingcart"
-                          size={20}
-                          style={{ color: "#fff" }}
-                        />
-                      </TouchableOpacity>
-                    </LinearGradient>
+                      <Text style={styles.textButton}>
+                        {purchaseInProgress == item.supermarket.name
+                          ? "Continuar Compra"
+                          : "Iniciar Compra"}
+                      </Text>
+                      <Icon
+                        name="shoppingcart"
+                        size={20}
+                        style={{ color: "#fff" }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  {deleteButton && !visible[index]?.open && (
+                    <TouchableOpacity
+                      style={[
+                        styles.startShoppingButton,
+                        { backgroundColor: "#ff8080" },
+                      ]}
+                      onPress={() =>
+                        startShopping(
+                          internalState[index],
+                          item.supermarket.name
+                        )
+                      }
+                    >
+                      <IconF
+                        style={{ marginRight: 13 }}
+                        color="#fff"
+                        name="trash-2"
+                        size={25}
+                        onPress={() => removeItem(index)}
+                      />
+                      <Text style={styles.textButton}>Excluir</Text>
+                    </TouchableOpacity>
                   )}
                 </View>
                 {visible[index]?.open && (
@@ -265,35 +288,54 @@ export default function CollapseProductsList({
                       ))}
                     </View>
                     {showButton && (
-                      <LinearGradient
-                        // colors={['#69c906', '#84be00']}
-                        // colors={['#e8c525', '#ebd31c']}
-                        colors={["#25e8c8", "#1ca8eb"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={styles.buttonGradient}
+                      <TouchableOpacity
+                        style={[
+                          styles.startShoppingButton,
+                          {
+                            backgroundColor: "#00c9b7",
+                          },
+                        ]}
+                        onPress={() =>
+                          startShopping(
+                            internalState[index],
+                            item.supermarket.name
+                          )
+                        }
                       >
-                        <TouchableOpacity
-                          style={styles.startShoppingButton}
-                          onPress={() =>
-                            startShopping(
-                              internalState[index],
-                              item.supermarket.name
-                            )
-                          }
-                        >
-                          <Text style={styles.textButton}>
-                            {purchaseInProgress == item.supermarket.name
-                              ? "Continuar Compra"
-                              : "Iniciar Compra"}
-                          </Text>
-                          <Icon
-                            name="shoppingcart"
-                            size={20}
-                            style={{ color: "#fff" }}
-                          />
-                        </TouchableOpacity>
-                      </LinearGradient>
+                        <Text style={styles.textButton}>
+                          {purchaseInProgress == item.supermarket.name
+                            ? "Continuar Compra"
+                            : "Iniciar Compra"}
+                        </Text>
+                        <Icon
+                          name="shoppingcart"
+                          size={20}
+                          style={{ color: "#fff" }}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    {deleteButton && (
+                      <TouchableOpacity
+                        style={[
+                          styles.startShoppingButton,
+                          { backgroundColor: "#ff8080" },
+                        ]}
+                        onPress={() =>
+                          startShopping(
+                            internalState[index],
+                            item.supermarket.name
+                          )
+                        }
+                      >
+                        <IconF
+                          style={{ marginRight: 13 }}
+                          color="#fff"
+                          name="trash-2"
+                          size={25}
+                          onPress={() => removeItem(index)}
+                        />
+                        <Text style={styles.textButton}>Excluir</Text>
+                      </TouchableOpacity>
                     )}
                   </View>
                 )}

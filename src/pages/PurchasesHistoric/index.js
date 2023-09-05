@@ -12,7 +12,6 @@ export default function PurchasesHistoric() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("opa");
     getHistoric();
   }, [isFocused]);
 
@@ -46,7 +45,7 @@ export default function PurchasesHistoric() {
             paddingHorizontal: 10,
           }}
         >
-          <CollapseProductsList state={historic} />
+          <CollapseProductsList state={historic} deleteButton={true} />
         </ScrollView>
       ) : (
         <View style={styles.emptyHistoric}>
