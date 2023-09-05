@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import styles from "./styles";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
@@ -69,6 +69,12 @@ export default function Supermarkets({ navigation }) {
   const [previousRange, setPreviousRange] = useState(0);
 
   const myLocation = useLocation();
+  console.warn("myLocation:", myLocation);
+  // setTimeout(() => {
+  //   if (myLocation == null) {
+  //     myLocation = useLocation();
+  //   }
+  // }, 1000);
 
   useEffect(() => {
     console.log("myLocation:", myLocation);

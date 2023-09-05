@@ -142,14 +142,6 @@ export default function App() {
   const CustomHeader = (title, showCart = true) => {
     return (
       <LinearGradient
-        // colors={[
-        //   "#f09c33",
-        //   "#f59234",
-        //   "#f98736",
-        //   "#fd7b38",
-        //   "#ff6e3c",
-        //   "#ff5f41",
-        // ]}
         colors={["#F8FCFA", "#EDF8F3", "#D3EEE1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}

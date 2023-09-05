@@ -14,8 +14,6 @@ export function LocationProvider({ children }) {
       return;
     }
 
-    console.log("pegando localização");
-
     location = await Location.getCurrentPositionAsync({});
     console.warn("localização:", location);
     setUserLocation(location);
@@ -28,9 +26,11 @@ export function LocationProvider({ children }) {
   }, [userLocation]);
 
   return (
-    <LocationContext.Provider value={userLocation}>
-      {children}
-    </LocationContext.Provider>
+    userLocation && (
+      <LocationContext.Provider value={userLocation}>
+        {children}
+      </LocationContext.Provider>
+    )
   );
 }
 
