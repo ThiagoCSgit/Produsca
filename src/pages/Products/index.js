@@ -100,6 +100,14 @@ export default function Products({ route, navigation }) {
     setIsLoading(true);
     setNoData(null);
 
+    // api
+    //   .get(`/consultas/PrecosProdutosSupermercado?super=${supermarketName}`)
+    //   .then((response) => {
+    //     console.warn("response:", response.data);
+    //     // setCatProducts(response.data)
+    //     setIsLoading(false);
+    //   });
+
     if (supermarketName) {
       // let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
       // console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
@@ -123,13 +131,6 @@ export default function Products({ route, navigation }) {
                 };
               })
             );
-            api
-              .get(`/consultas/PrecosProdutosSupermercado?super=EPA`)
-              .then((response) => {
-                // console.warn('response:',response.data)
-                // setCatProducts(response.data)
-                setIsLoading(false);
-              });
           } else {
             setProducts([]);
             setNoData(response.data);
@@ -331,9 +332,9 @@ export default function Products({ route, navigation }) {
                     ? navigation.navigate("Detalhes do Produto", {
                         supermarket: supermarketName,
                         nameProduct: item.name,
-                        idProduct: item.id,
                         barCode: item.bar_code,
                         cnpj: cnpj,
+                        price: item.price,
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,

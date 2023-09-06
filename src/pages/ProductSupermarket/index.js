@@ -8,9 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import styles from "./styles";
-import { useIsFocused } from "@react-navigation/native";
 import { LineChart } from "react-native-chart-kit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../../service/api";
 
 import Icon from "react-native-vector-icons/Feather";
@@ -22,29 +20,22 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function ProductSupermarket({ route, navigation }) {
-  const { nameProduct, idProduct, supermarket, barCode, cnpj } = route.params;
+  const { nameProduct, supermarket, barCode, cnpj, price } = route.params;
   console.log(route.params);
   const [priceHistory, setPriceHistory] = useState([]);
-  // const [inCart, setInCart] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [quantDays, setQuantDays] = useState(7);
 
-  const isFocused = useIsFocused();
-
-  // useEffect(() => {
-  //   getCheckProducts();
-  // }, [isFocused]);
+  useEffect(() => {
+    getHistoricoPreco();
+  }, []);
 
   useEffect(() => {
     getHistoricoPreco();
-    // getCheckProducts();
-  }, []);
-
-  // useEffect(() => {
-  //   console.log("quantDays detalhes:", quantDays);
-  // }, [quantDays]);
+  }, [quantDays]);
 
   function getHistoricoPreco() {
+    setIsLoading(true);
     let dataFinal = format(new Date(), "yyyy-MM-dd");
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
@@ -57,10 +48,6 @@ export default function ProductSupermarket({ route, navigation }) {
         .get(
           `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
         )
-        // api
-        //   .get(
-        //     `/consultas/HistoricoPrecoSupermercado?nomeProduto=batata&supermercado=EPA`
-        //   )
         .then((response) => {
           console.warn("response.data:", response.data);
           setPriceHistory(response.data);
@@ -68,24 +55,13 @@ export default function ProductSupermarket({ route, navigation }) {
         });
     } catch (error) {
       console.log("error:", error);
+      setIsLoading(false);
     }
   }
 
-  // async function getCheckProducts() {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem(
-  //       `produto-lista-${supermarket}-${idProduct}-${nameProduct}`
-  //     );
-  //     const value = jsonValue != null ? JSON.parse(jsonValue) : {};
-  //     setInCart(value.inCart);
-  //   } catch (e) {
-  //     console.warn("error", e);
-  //   }
-  // }
-
   const onShare = async () => {
-    const result = await Share.share({
-      message: `O(A) ${nameProduct} no ${supermarket} está no precinho aqui no Produsca, o seu app de busca`,
+    await Share.share({
+      message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price}, confira!`,
     });
   };
 
@@ -97,7 +73,7 @@ export default function ProductSupermarket({ route, navigation }) {
         {nameProduct} - {supermarket}
       </Text>
       <View>
-        {priceHistory.length > 0 && (
+        {priceHistory.length > 0 ? (
           <LineChart
             data={{
               labels: priceHistory.map((item) => {
@@ -136,6 +112,16 @@ export default function ProductSupermarket({ route, navigation }) {
               borderRadius: 5,
             }}
           />
+        ) : (
+          <View
+            style={{
+              height: 200,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.message}>{priceHistory.message}</Text>
+          </View>
         )}
         <View style={styles.selectDays}>
           {
@@ -153,23 +139,6 @@ export default function ProductSupermarket({ route, navigation }) {
             </View>
           </TouchableOpacity>
         </View>
-        {/* <View style={styles.buttonsArea}>
-          <Pressable
-            onPress={() => executeAction(inCart, idProduct, supermarket)}
-          >
-            <View style={{ flexDirection: "row", marginLeft: 10 }}>
-              <Checkbox value={inCart} style={{ height: 25, width: 25 }} />
-              <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
-            </View>
-          </Pressable>
-          <Pressable onPress={onShare}>
-            <Icon
-              style={{ marginRight: 25, height: 30, width: 30 }}
-              name="share-2"
-              size={27}
-            />
-          </Pressable>
-        </View> */}
       </View>
     </SafeAreaView>
   );

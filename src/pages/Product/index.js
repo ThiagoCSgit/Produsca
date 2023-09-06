@@ -31,11 +31,10 @@ export default function Products({ route, navigation }) {
   const [supermarktesAvailables, setSupermarktesAvailables] = useState([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isLoadingMarkets, setIsLoadingMarkets] = useState(true);
-  const [noData, setNoData] = useState(null);
+  // const [noData, setNoData] = useState(null);
 
   useEffect(() => {
     getPriceHistory();
-    // getCheckProducts()
     getSupermarketsProduct();
   }, []);
 
@@ -43,42 +42,43 @@ export default function Products({ route, navigation }) {
     getPriceHistory();
   }, [quantDays]);
 
-  function callApis() {
-    setIsLoadingHistory(true);
-    setIsLoadingMarkets(true);
-    setNoData(null);
+  // function callApis() {
+  //   setIsLoadingHistory(true);
+  //   setIsLoadingMarkets(true);
+  //   setNoData(null);
 
-    getPriceHistory();
-    getSupermarketsProduct();
-  }
+  //   getPriceHistory();
+  //   getSupermarketsProduct();
+  // }
 
   function getPriceHistory() {
+    setIsLoadingHistory(true);
     try {
       let dataFinal = format(new Date(), "yyyy-MM-dd");
       let dataInicial = new Date();
       dataInicial.setDate(dataInicial.getDate() - quantDays);
       dataInicial = format(dataInicial, "yyyy-MM-dd");
+      console.warn("opa");
       console.warn(
-        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
+        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
       );
-      // api.get(`/consultas/HistoricoPrecoGeral?nomeproduto=${nameNoSpace}?dataInicial=2023-08-01?dataFinal=2023-07-25`).then(response => {
       api
-        // .get(`/consultas/HistoricoPrecoGeral?nomeproduto=batata`)
         .get(
-          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
-          let historic = response.data;
+          // let historic = response.data;
           console.log("historico response:", response.data);
-          if (historic != null && historic.length > 0) {
-            setPriceHistory(response.data);
-          } else {
-            setNoData(historic);
-          }
+          setPriceHistory(response.data);
+          // if (historic != null && historic.length > 0) {
+          // } else {
+          //   setNoData(historic);
+          // }
           setIsLoadingHistory(false);
         });
     } catch (e) {
       console.log("e:", e);
+      setIsLoadingHistory(false);
     }
   }
 
@@ -110,24 +110,15 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setSupermarktesAvailables([]);
-            setNoData;
+            // setNoData;
           }
           setIsLoadingMarkets(false);
         });
     } catch (e) {
       console.log("e:", e);
+      setIsLoadingMarkets(false);
     }
   }
-
-  // async function getCheckProducts() {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem(`produto-lista-${idProduct}`);
-  //     const value = jsonValue != null ? JSON.parse(jsonValue) : {}
-  //     setInCart(value.inCart)
-  //   } catch (e) {
-  //     console.warn('error', e)
-  //   }
-  // }
 
   const onShare = async () => {
     const result = await Share.share({
@@ -135,16 +126,21 @@ export default function Products({ route, navigation }) {
     });
   };
 
-  return isLoadingHistory && isLoadingMarkets ? (
+  setTimeout(() => {
+    setIsLoadingMarkets(false);
+    setIsLoadingHistory(false);
+  }, 3000);
+
+  return isLoadingHistory || isLoadingMarkets ? (
     <Loading />
-  ) : noData != null ? (
-    <NoData message={noData.message} executeAction={callApis} />
   ) : (
-    <ScrollView>
-      <SafeAreaView style={styles.container}>
+    // ) : noData != null ? (
+    //   <NoData message={noData.message} executeAction={callApis} />
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
         <Text style={styles.nameProduct}>{nameProduct}</Text>
         <View>
-          {priceHistory.length > 0 && (
+          {priceHistory.length > 0 ? (
             <LineChart
               data={{
                 labels: priceHistory.map((item) => {
@@ -183,6 +179,16 @@ export default function Products({ route, navigation }) {
                 borderRadius: 5,
               }}
             />
+          ) : (
+            <View
+              style={{
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={styles.message}>{priceHistory.message}</Text>
+            </View>
           )}
           <View style={styles.selectDays}>
             {
@@ -193,102 +199,96 @@ export default function Products({ route, navigation }) {
             }
           </View>
           <View>
-            <View style={styles.listSupermarktesAvailables}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  marginBottom: 10,
-                  fontFamily: "OpenSans_500Medium",
-                }}
-              >
-                Disponível em:
-              </Text>
-              {supermarktesAvailables.map((item) => (
-                <View style={styles.itemSupermarket}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      paddingBottom: 10,
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("Supermercado", {
-                          name: item.name,
-                          phone: item.phone,
-                          publicPlace: item.publicPlace,
-                          district: item.district,
-                          city: item.city,
-                          state: item.state,
-                          number: item.number,
-                        })
-                      }
+            {supermarktesAvailables.length > 0 && (
+              <View style={styles.listSupermarktesAvailables}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    marginBottom: 10,
+                    fontFamily: "OpenSans_500Medium",
+                  }}
+                >
+                  Disponível em:
+                </Text>
+                {supermarktesAvailables.map((item) => (
+                  <View style={styles.itemSupermarket}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        paddingBottom: 10,
+                      }}
                     >
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("Supermercado", {
+                            name: item.name,
+                            phone: item.phone,
+                            publicPlace: item.publicPlace,
+                            district: item.district,
+                            city: item.city,
+                            state: item.state,
+                            number: item.number,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            color: "#1E90FF",
+                            fontSize: 20,
+                            fontFamily: "OpenSans_500Medium",
+                          }}
+                        >
+                          Supermercado {item.name}
+                        </Text>
+                      </TouchableOpacity>
                       <Text
                         style={{
-                          color: "#1E90FF",
                           fontSize: 20,
+                          color: "#140F07",
                           fontFamily: "OpenSans_500Medium",
                         }}
                       >
-                        Supermercado {item.name}
+                        {" "}
+                        - R${item.product?.preco}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.buttonHistoric}
+                      onPress={() =>
+                        navigation.navigate("Detalhes do Produto", {
+                          supermarket: item.name,
+                          nameProduct: nameProduct,
+                          idProduct: idProduct,
+                        })
+                      }
+                    >
+                      <Text style={styles.buttonHistoricText}>
+                        Histórico de preço
                       </Text>
                     </TouchableOpacity>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        color: "#140F07",
-                        fontFamily: "OpenSans_500Medium",
-                      }}
-                    >
-                      {" "}
-                      - R${item.product?.preco}
-                    </Text>
                   </View>
+                ))}
+                <View style={{ alignItems: "center" }}>
                   <TouchableOpacity
-                    style={styles.buttonHistoric}
-                    onPress={() =>
-                      navigation.navigate("Detalhes do Produto", {
-                        supermarket: item.name,
-                        nameProduct: nameProduct,
-                        idProduct: idProduct,
-                      })
-                    }
+                    onPress={onShare}
+                    style={styles.buttonShare}
                   >
-                    <Text style={styles.buttonHistoricText}>
-                      Histórico de preço
-                    </Text>
+                    <Text style={styles.shareText}>Compartilhar oferta</Text>
+                    <View style={styles.shareIcon}>
+                      <IconFE
+                        style={{ color: "#fff" }}
+                        name="share-2"
+                        size={27}
+                      />
+                    </View>
                   </TouchableOpacity>
                 </View>
-              ))}
-              {/* <View style={styles.buttonsArea}> */}
-              {/* <Pressable onPress={() => executeAction(inCart, idProduct)}>
-                    <View style={{flexDirection: "row", marginLeft: 10}}>
-                      <Checkbox
-                        value={inCart}
-                        style={{height: 25, width: 25}}
-                      />
-                      <Text style={styles.labelCheckBox}>Adicionar ao carrinho</Text>
-                    </View>
-                  </Pressable> */}
-              <View style={{ alignItems: "center" }}>
-                <TouchableOpacity onPress={onShare} style={styles.buttonShare}>
-                  <Text style={styles.shareText}>Compartilhar oferta</Text>
-                  <View style={styles.shareIcon}>
-                    <IconFE
-                      style={{ color: "#fff" }}
-                      name="share-2"
-                      size={27}
-                    />
-                  </View>
-                </TouchableOpacity>
               </View>
-              {/* </View> */}
-            </View>
+            )}
           </View>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }

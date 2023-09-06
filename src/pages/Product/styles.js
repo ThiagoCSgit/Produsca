@@ -76,6 +76,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
   },
+  message: {
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: "OpenSans_500Medium",
+    fontStyle: "italic",
+  },
 });
 
 export default styles;

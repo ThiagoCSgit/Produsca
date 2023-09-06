@@ -28,7 +28,6 @@ export default function Scanner() {
 
   useEffect(() => {
     (async () => {
-      console.log("useEffect para camera:", isFocused);
       if (isFocused) {
         setIsLoading(true);
         const { status } = await BarCodeScanner.requestPermissionsAsync();

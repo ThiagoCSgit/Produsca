@@ -18,18 +18,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: 15,
   },
-  buttonsArea: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginLeft: 10,
-    marginBottom: 15,
-    marginTop: 30,
-  },
-  labelCheckBox: {
-    marginLeft: 10,
-    fontSize: 19,
-    fontFamily: "OpenSans_500Medium",
-  },
   buttonShare: {
     marginTop: 25,
     flexDirection: "row",
@@ -59,6 +47,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#1E90FF",
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
+  },
+  message: {
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: "OpenSans_500Medium",
+    fontStyle: "italic",
   },
 });
 
