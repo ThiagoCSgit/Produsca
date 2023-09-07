@@ -40,17 +40,23 @@ export default function ProductSupermarket({ route, navigation }) {
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
     dataInicial = format(dataInicial, "yyyy-MM-dd");
+    console.warn(`/consultas/HistoricoPrecoProduto`);
     console.warn(
-      `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
+      `/consultas/HistoricoPrecoSupermercado?${
+        barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
+      }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
     );
     try {
       api
         .get(
-          `/consultas/HistoricoPrecoSupermercado?codigo_barra=${barCode}&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
+          `/consultas/HistoricoPrecoSupermercado?${
+            barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
+          }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
           console.warn("response.data:", response.data);
-          setPriceHistory(response.data);
+          // let listPrecos = response.data.map()
+          setPriceHistory(response.data.listPrecoGeral);
           setIsLoading(false);
         });
     } catch (error) {
@@ -61,7 +67,7 @@ export default function ProductSupermarket({ route, navigation }) {
 
   const onShare = async () => {
     await Share.share({
-      message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price}, confira!`,
+      message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price} no Produsca, confira!`,
     });
   };
 
@@ -77,7 +83,7 @@ export default function ProductSupermarket({ route, navigation }) {
           <LineChart
             data={{
               labels: priceHistory.map((item) => {
-                return format(new Date(`${item.data}`), "dd MMMM yy", {
+                return format(new Date(`${item.data}`), "dd/MM/yy", {
                   locale: ptBR,
                 });
               }),
@@ -96,14 +102,14 @@ export default function ProductSupermarket({ route, navigation }) {
               backgroundGradientTo: "#005fff",
               decimalPlaces: 2, // optional, defaults to 2dp
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `#000`,
               propsForLabels: {
                 fontSize: 14, // Defina o tamanho da fonte desejado aqui
               },
               propsForDots: {
                 r: "6",
                 strokeWidth: "2",
-                stroke: "#00f1ff",
+                stroke: "#000",
               },
             }}
             bezier

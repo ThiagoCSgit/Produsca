@@ -122,11 +122,6 @@ export default function Supermarket({ route, navigation }) {
   const [supermarketProducts, setSupermarketProducts] = useState([]);
 
   useEffect(() => {
-    // api.get(`/consultas/PrecosProdutosSupermercado?super=EPA`).then(response => {
-    //   console.warn('response:',response.data)
-    //   // setCatProducts(response.data)
-    //   setIsLoading(false)
-    // })
     getCategories();
   }, []);
 

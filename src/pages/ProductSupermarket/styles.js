@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
   nameProduct: {
     fontSize: 20,
     fontFamily: "OpenSans_500Medium",
+    textAlign: "center",
   },
   selectDays: {
     flexDirection: "row",

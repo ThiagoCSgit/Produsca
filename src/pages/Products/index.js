@@ -100,20 +100,25 @@ export default function Products({ route, navigation }) {
     setIsLoading(true);
     setNoData(null);
 
-    // api
-    //   .get(`/consultas/PrecosProdutosSupermercado?super=${supermarketName}`)
-    //   .then((response) => {
-    //     console.warn("response:", response.data);
-    //     // setCatProducts(response.data)
-    //     setIsLoading(false);
-    //   });
-
-    if (supermarketName) {
-      // let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
-      // console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
+    if (supermarketName || cnpj) {
+      console.warn("tem cnpj ou nome");
+      console.warn(
+        `rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
+          cnpj
+            ? `CNPJSupermercado=${cnpj}`
+            : `NomeSupermercado=${supermarketName}`
+        }`
+      );
+      // `/consultas/HistoricoPrecoSupermercado?${
+      //   barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
+      // }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
       api
         .get(
-          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${supermarketName}`
+          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
+            cnpj
+              ? `CNPJSupermercado=${cnpj}`
+              : `NomeSupermercado=${supermarketName}`
+          }`
         )
         .then((response) => {
           console.warn("response da api:", response.data);
@@ -138,7 +143,8 @@ export default function Products({ route, navigation }) {
           setIsLoading(false);
         });
     } else {
-      // console.log(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
+      console.warn("não tem cnpj ou nome");
+      console.warn(`/consultas/ProdutosCategoria?categoria=${categoryName}`);
       api
         .get(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
         .then((response) => {

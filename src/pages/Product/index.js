@@ -58,7 +58,6 @@ export default function Products({ route, navigation }) {
       let dataInicial = new Date();
       dataInicial.setDate(dataInicial.getDate() - quantDays);
       dataInicial = format(dataInicial, "yyyy-MM-dd");
-      console.warn("opa");
       console.warn(
         `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
       );
@@ -68,8 +67,8 @@ export default function Products({ route, navigation }) {
         )
         .then((response) => {
           // let historic = response.data;
-          console.log("historico response:", response.data);
-          setPriceHistory(response.data);
+          console.warn("historico response:", response.data);
+          setPriceHistory(response.data.listPrecoGeral);
           // if (historic != null && historic.length > 0) {
           // } else {
           //   setNoData(historic);
@@ -83,17 +82,18 @@ export default function Products({ route, navigation }) {
   }
 
   function getSupermarketsProduct() {
-    console.log(`/consultas/SupermercadosProduto?nomeproduto=${nameProduct}`);
+    console.warn(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`);
     try {
       api
-        .get(`/consultas/SupermercadosProduto?nomeProduto=${nameProduct}`)
+        .get(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`)
         .then((response) => {
-          console.log("response supermercados produtos:", response.data);
+          console.warn("response supermercados produtos:", response.data);
           // setSupermarktesAvailables(response.data)
           let listMarkets = response.data;
           if (listMarkets != null && listMarkets.length > 0) {
             setSupermarktesAvailables(
               listMarkets.map((item, index) => {
+                console.warn("item da lista:", item);
                 return {
                   id: index + 1,
                   name: item.nome,
@@ -110,7 +110,6 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setSupermarktesAvailables([]);
-            // setNoData;
           }
           setIsLoadingMarkets(false);
         });
@@ -120,9 +119,13 @@ export default function Products({ route, navigation }) {
     }
   }
 
+  useEffect(() => {
+    console.warn("effect supermarktesAvailables:", supermarktesAvailables);
+  }, [supermarktesAvailables]);
+
   const onShare = async () => {
     const result = await Share.share({
-      message: `O ${nameProduct} está no precinho aqui no Produsca, o seu app de busca`,
+      // message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price} no Produsca, confira!`,
     });
   };
 
@@ -239,7 +242,7 @@ export default function Products({ route, navigation }) {
                             fontFamily: "OpenSans_500Medium",
                           }}
                         >
-                          Supermercado {item.name}
+                          {item.name || "teste"}
                         </Text>
                       </TouchableOpacity>
                       <Text
