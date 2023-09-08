@@ -106,7 +106,6 @@ export default function ShopCart({ route, navigation }) {
   }
 
   function itemPrice(value, quantity = 1) {
-    console.warn("itemPrice, value:", value);
     if (value != -1) {
       return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
         minimumFractionDigits: 2,

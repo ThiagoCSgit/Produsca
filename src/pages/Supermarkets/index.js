@@ -17,50 +17,6 @@ import { useLocation } from "../../context/LocationProvider";
 import api from "../../service/api";
 
 export default function Supermarkets({ navigation }) {
-  // const [supermarkets, setSupermarkets] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Extrabom",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia",
-  //     city: "Vila Velha",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Perim",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia 2",
-  //     city: "Vitória",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Carone",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia 3",
-  //     city: "Vitória",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Epa",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia 4",
-  //     city: "Serra",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Mineirão",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia 5",
-  //     city: "Vila Velha",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Atacadão",
-  //     image: require("../../images/foodImage.png"),
-  //     address: "Rua da Fantasia 6",
-  //     city: "Vila Velha",
-  //   },
-  // ]);
   const [supermarkets, setSupermarkets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
@@ -69,32 +25,15 @@ export default function Supermarkets({ navigation }) {
   const [previousRange, setPreviousRange] = useState(0);
 
   const myLocation = useLocation();
-  console.warn("myLocation:", myLocation);
-  // setTimeout(() => {
-  //   if (myLocation == null) {
-  //     myLocation = useLocation();
-  //   }
-  // }, 1000);
 
   useEffect(() => {
-    console.log("myLocation:", myLocation);
-    console.log("range:", range);
-    console.log("previousRange:", previousRange);
     if (myLocation && !modalVisible && range != previousRange) {
-      console.log("lat:", myLocation.coords.latitude);
-      console.log("lon:", myLocation.coords.longitude);
       setPreviousRange(range);
-      // console.log('chamou a rota')
-      console.log(
-        "rota:",
-        `/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`
-      );
       getNearbySupermarkets();
     }
   }, [myLocation, range, modalVisible]);
 
   async function getNearbySupermarkets() {
-    console.log("minha localização:", myLocation);
     setNoData(null);
     setIsLoading(true);
     api
@@ -102,11 +41,8 @@ export default function Supermarkets({ navigation }) {
         `/consultas/SupermercadosProximos?latitude=${myLocation.coords.latitude}&longitude=${myLocation.coords.longitude}&raioDistancia=${range}`
       )
       .then((response) => {
-        console.warn("response:", response.data);
         let listMarkets = response.data;
-        console.log("listMarkets:", listMarkets);
         if (listMarkets != null && listMarkets.length > 0) {
-          console.log("tem dados:");
           setSupermarkets(
             listMarkets.map((item, index) => {
               return {
@@ -125,7 +61,6 @@ export default function Supermarkets({ navigation }) {
           );
         } else {
           setSupermarkets([]);
-          console.log("sem dados:", response.data);
           setNoData(response.data);
         }
         setIsLoading(false);

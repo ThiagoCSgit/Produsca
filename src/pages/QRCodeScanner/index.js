@@ -40,17 +40,11 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    api.post("/envios/LinkNotaFiscal", { link: data }).then((response) => {
-      console.log("response:", response);
-    });
+    api.post("/envios/LinkNotaFiscal", { link: data });
   };
 
   const handleFlashToggle = async () => {
     setFlashOn(!flashOn);
-    const flashMode = flashOn
-      ? Camera.Constants.FlashMode.off
-      : Camera.Constants.FlashMode.torch;
-    await cameraRef.current?.setFlashModeAsync(flashMode);
   };
 
   if (hasPermission === null && isLoading) {

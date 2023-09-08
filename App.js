@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, SafeAreaView, Pressable } from "react-native";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -42,9 +42,6 @@ export default function App() {
   const Stack = createStackNavigator();
   const [state, setState] = useState(null);
   const navigationRef = useNavigationContainerRef();
-
-  // const currenLocation = useContext(currentLocationContext);
-  // console.warn("currenLocation:", currenLocation);
 
   const [fontLoaded] = useFonts({
     OpenSans_400Regular,
@@ -103,11 +100,7 @@ export default function App() {
             return (
               <SafeAreaView>
                 <LinearGradient
-                  // colors={["#bbbbbb", "#d3eee7", "#bcc4c2"]}
-                  // colors={["#dddbdb", "#cfddd9", "#b4c1bd"]}
                   colors={["#F8FCFA", "#EDF8F3", "#D3EEE1"]}
-                  // colors={["#fff", "#fff"]}
-                  // colors={["red", "blue"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.headerGradient}

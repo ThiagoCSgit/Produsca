@@ -181,11 +181,9 @@ export default function ShoppingList({ navigation }) {
           />
           <View
             style={{
-              // backgroundColor: "red",
               alignItems: "center",
               justifyContent: "center",
               width: "100%",
-              // padding: 10,
               position: "relative",
               top: 10,
             }}

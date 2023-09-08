@@ -47,16 +47,12 @@ export default function Products({ route, navigation }) {
       let dataInicial = new Date();
       dataInicial.setDate(dataInicial.getDate() - quantDays);
       dataInicial = format(dataInicial, "yyyy-MM-dd");
-      console.warn(
-        `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
-      );
       api
         .get(
           `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
           let historic = response.data;
-          console.warn("historico response:", response.data);
           if (historic != null && historic?.listPrecoGeral.length > 0) {
             setPriceHistory(historic.listPrecoGeral);
           } else {
@@ -71,7 +67,6 @@ export default function Products({ route, navigation }) {
   }
 
   function getSupermarketsProduct() {
-    console.warn(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`);
     try {
       api
         .get(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`)
@@ -80,7 +75,6 @@ export default function Products({ route, navigation }) {
           if (listMarkets != null && listMarkets.length > 0) {
             setSupermarktesAvailables(
               listMarkets.map((item, index) => {
-                console.warn("item da lista:", item);
                 return {
                   id: index + 1,
                   name: item.nome,
@@ -101,7 +95,7 @@ export default function Products({ route, navigation }) {
           setIsLoadingMarkets(false);
         });
     } catch (e) {
-      console.log("e:", e);
+      console.warn("error:", e);
       setIsLoadingMarkets(false);
     }
   }

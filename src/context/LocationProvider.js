@@ -15,7 +15,6 @@ export function LocationProvider({ children }) {
     }
 
     location = await Location.getCurrentPositionAsync({});
-    console.warn("localização:", location);
     setUserLocation(location);
   }
 
