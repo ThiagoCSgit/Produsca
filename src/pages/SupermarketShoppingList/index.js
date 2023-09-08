@@ -13,56 +13,6 @@ import { useLocation } from "../../context/LocationProvider";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function SupermaketShoppingList({ route, navigation }) {
-  // const [state, setState] = useState([
-  //   {
-  //     supermarket: {
-  //       name: "EPA",
-  //       city: "Vitória",
-  //       state: "ES",
-  //       publicPlace: "Rua da Fantasia",
-  //       number: 123,
-  //       phone: "27 33439846",
-  //       district: "Natal Amigo",
-  //     },
-  //     products: [
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //       { name: "batata", price: 10 },
-  //     ],
-  //     id: 1,
-  //   },
-  //   {
-  //     supermarket: {
-  //       name: "Extrabom",
-  //       city: "Vitória",
-  //       state: "ES",
-  //       publicPlace: "Rua da Fantasia",
-  //       number: 123,
-  //       phone: "27 33439846",
-  //       district: "Natal Amigo",
-  //     },
-  //     products: [{ name: "batata", price: 10 }],
-  //     id: 2,
-  //   },
-  // ]);
   const [state, setState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [range, setRange] = useState(1000);
@@ -73,15 +23,8 @@ export default function SupermaketShoppingList({ route, navigation }) {
   const isFocused = useIsFocused();
 
   const myLocation = useLocation();
-  console.warn("paremtros:", route.params.list);
 
   useEffect(() => {
-    console.warn("useEffetc", myLocation, modalVisible, range != previousRange);
-    console.warn("previousRange:", previousRange, "range:", range);
-    console.warn(
-      "expressão do if:",
-      myLocation && !modalVisible && range != previousRange
-    );
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
       postShopList();
@@ -97,8 +40,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
   function postShopList() {
     setIsLoading(true);
     setNoData(null);
-    console.warn("myLocation:", myLocation);
-    console.warn("minha localização:", myLocation);
     let listNomeProd = route.params.list.map((item) => {
       return {
         nome: item.name,
@@ -106,16 +47,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
         qtd: item.qtd,
       };
     });
-    console.warn("listNomeProd:", listNomeProd);
 
-    console.warn("parametros da rota:", {
-      latitudeUsuario: myLocation?.coords.latitude,
-      longitudeUsuario: myLocation?.coords.longitude,
-      raioDistanciaMetros: range,
-      listaNomeProduto: listNomeProd,
-    });
-
-    console.warn("listNomeProd:", listNomeProd);
     api
       .post("/envios/ProdutosEscolhidosCarrinho", {
         latitudeUsuario: myLocation?.coords.latitude,
@@ -124,7 +56,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
         listaNomeProduto: listNomeProd,
       })
       .then((response) => {
-        console.warn("Supermercados disponíveis:", response.data);
         let listResponse = response.data;
 
         if (listResponse != null && listResponse.length > 0) {
@@ -155,7 +86,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
               id: randomIdGeneretor(3),
             };
           });
-          console.warn("data retornada:", data);
           setState(data);
         } else {
           setState([]);
@@ -163,64 +93,16 @@ export default function SupermaketShoppingList({ route, navigation }) {
         }
         setIsLoading(false);
       });
-    // let data = [
-    //   {
-    //     supermarket: {
-    //       name: "EPA",
-    //       publicPlace: "Rua da Fantasia",
-    //       number: 52,
-    //       city: "VILA VELHA",
-    //       state: "ES",
-    //       district: "PRAIA DO SUÁ",
-    //       phone: "2733439846",
-    //       cpnj: 12223333,
-    //     },
-    //     products: listNomeProd.map((prod) => {
-    //       return {
-    //         name: prod.nome,
-    //         price: 10,
-    //         describe: "descrição",
-    //         image: "oapopa",
-    //         qtd: prod.qtd,
-    //       };
-    //     }),
-    //     id: randomIdGeneretor(3),
-    //   },
-    //   {
-    //     supermarket: {
-    //       name: "Extrabom",
-    //       publicPlace: "Rua da Fantasia",
-    //       number: 52,
-    //       city: "VILA VELHA",
-    //       state: "ES",
-    //       district: "PRAIA DO SUÁ",
-    //       phone: "2733439846",
-    //       cpnj: 12223333,
-    //     },
-    //     products: listNomeProd.map((prod) => {
-    //       return {
-    //         name: prod.nome,
-    //         price: 10,
-    //         describe: "descrição",
-    //         image: "oapopa",
-    //         qtd: prod.qtd,
-    //       };
-    //     }),
-    //     id: randomIdGeneretor(3),
-    //   },
-    // ];
   }
 
   function alertNoPrice() {
     if (state.length > 0) {
-      console.warn("len de state maior que 0:", state);
       let noPrice = null;
       for (let i = 0; i < state.length; i++) {
         noPrice = state[i].products.find((item) => {
           return item.price == -1;
         });
       }
-      console.warn("noPrice:", noPrice);
       if (noPrice) {
         Alert.alert(
           "Produtos não cadastrados",

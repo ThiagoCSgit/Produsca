@@ -65,7 +65,6 @@ export default function CollapseProductsList({
   }
 
   async function deleteShopping(id) {
-    // let savedKeys = await AsyncStorage.getAllKeys();
     await AsyncStorage.removeItem(id);
     getHistoric();
   }
@@ -258,7 +257,6 @@ export default function CollapseProductsList({
                           style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            // width: Dimensions.get("window").width - 100,
                           }}
                         >
                           <Text

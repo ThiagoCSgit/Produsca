@@ -22,9 +22,7 @@ export default function PurchasesHistoric() {
         return key;
       }
     });
-    console.warn("key gethistoric:", filteredKeys);
     let shopping = await AsyncStorage.multiGet(filteredKeys);
-    // console.warn("shopping:", shopping);
     let newList = shopping.map((item) => {
       let id = item[0];
       let products = JSON.parse(item[1]).products;
@@ -32,7 +30,6 @@ export default function PurchasesHistoric() {
 
       return { id: id, products: products, supermarket: supermarket };
     });
-    // console.warn("newList historic:", newList);
     setHistoric(newList);
   }
 

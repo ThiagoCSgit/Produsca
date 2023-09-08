@@ -25,100 +25,7 @@ export default function Supermarket({ route, navigation }) {
     number: route.params.number,
     cnpj: route.params.cnpj,
   };
-  // const [supermarketInfos, setSupermarketInfos] = useState({address: "Rua da Fantasia, 645", contact: "(27) 33498522", name: route.params.name})
   const [isLoading, setIsLoading] = useState(true);
-  // const [supermarketProducts, setSupermarketProducts] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 11,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 12,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 13,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 14,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 15,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 16,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 17,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 18,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  // ]);
   const [supermarketProducts, setSupermarketProducts] = useState([]);
 
   useEffect(() => {
@@ -128,7 +35,6 @@ export default function Supermarket({ route, navigation }) {
   async function getCategories() {
     setIsLoading(true);
     api.get("/consultas/CategoriasProdutos").then((response) => {
-      console.warn("response categoria:", response.data);
       let listCategorys = response.data;
       if (listCategorys != null && listCategorys.length > 0) {
         setSupermarketProducts(

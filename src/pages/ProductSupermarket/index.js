@@ -39,11 +39,7 @@ export default function ProductSupermarket({ route, navigation }) {
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
     dataInicial = format(dataInicial, "yyyy-MM-dd");
-    console.warn(
-      `/consultas/HistoricoPrecoSupermercado?${
-        barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
-      }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
-    );
+
     try {
       api
         .get(
@@ -52,16 +48,10 @@ export default function ProductSupermarket({ route, navigation }) {
           }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
-          console.warn("response.data:", response.data);
-          // let listPrecos = response.data.map()
           let historic = response.data;
-          console.warn("historico response:", response.data);
-          // setPriceHistory(response.data.listPrecoGeral);
           if (historic != null && historic.listPrecoGeral.length > 0) {
-            console.warn("entrou no if:", historic.listPrecoGeral);
             setPriceHistory(historic.listPrecoGeral);
           } else {
-            console.warn("entrou no else:", historic);
             setPriceHistory(historic);
           }
           setIsLoading(false);

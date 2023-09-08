@@ -3,8 +3,6 @@ import IconMCI from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
 
 export default function NoData({ message, executeAction }) {
-  console.log("message:", message);
-  console.log("executeAction:", executeAction);
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require("../../images/404.png")} />

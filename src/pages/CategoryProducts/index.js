@@ -24,99 +24,6 @@ export default function CategoryProducts({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [shoppingList, setShoppingList] = useState(null);
 
-  // const [catProducts, setCatProducts] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 11,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 12,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 13,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 14,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 15,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 16,
-  //     name: "Alimentação",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 17,
-  //     name: "Limpeza",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  //   {
-  //     id: 18,
-  //     name: "Cama e banho",
-  //     image: require("../../images/foodImage.png"),
-  //   },
-  // ]);
-
   const [catProducts, setCatProducts] = useState(null);
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -126,7 +33,6 @@ export default function CategoryProducts({ navigation }) {
   }, [isFocused]);
 
   async function hasPurchaseInProgress() {
-    // await AsyncStorage.clear();
     let savedKeys = await AsyncStorage.getAllKeys();
     let filteredKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
@@ -157,7 +63,6 @@ export default function CategoryProducts({ navigation }) {
         .then((response) => {
           let listCategories = response.data;
           if (listCategories != null && listCategories.length > 0) {
-            // console.warn("listCategories:", listCategories);
             setCatProducts(
               listCategories.map((item, index) => {
                 return {
@@ -177,7 +82,7 @@ export default function CategoryProducts({ navigation }) {
           console.warn("erro:", e);
         });
     } catch (e) {
-      console.log(e);
+      console.warn("error:", e);
     }
   }
 

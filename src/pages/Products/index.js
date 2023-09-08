@@ -21,68 +21,6 @@ export default function Products({ route, navigation }) {
   const { categoryName, supermarketName, cnpj } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
-  // const [products, setProducts] = useState([
-  //   {
-  //     id: "1",
-  //     name: "Laranja",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "Cofril",
-  //     price: "10,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Sobrecoxa de Frango",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "Perdigão",
-  //     price: "15,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Filé Mingnon",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "Montana",
-  //     price: "22,90",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Banana Ouro",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "",
-  //     price: "9,75",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "5",
-  //     name: "Manga Tommy Atkins",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "",
-  //     price: "4,73",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  //   {
-  //     id: "6",
-  //     name: "Tomate Orgânico",
-  //     image: require("../../images/foodImage.png"),
-  //     qtd: 0,
-  //     mark: "Viver",
-  //     price: "10,80",
-  //     minPrice: "1,23",
-  //     maxPrice: "72,23",
-  //   },
-  // ]);
   const [products, setProducts] = useState([]);
   const isFocused = useIsFocused();
 
@@ -101,17 +39,6 @@ export default function Products({ route, navigation }) {
     setNoData(null);
 
     if (supermarketName || cnpj) {
-      console.warn("tem cnpj ou nome");
-      console.warn(
-        `rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
-          cnpj
-            ? `CNPJSupermercado=${cnpj}`
-            : `NomeSupermercado=${supermarketName}`
-        }`
-      );
-      // `/consultas/HistoricoPrecoSupermercado?${
-      //   barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
-      // }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
       api
         .get(
           `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
@@ -121,7 +48,6 @@ export default function Products({ route, navigation }) {
           }`
         )
         .then((response) => {
-          console.warn("response da api:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
@@ -143,17 +69,13 @@ export default function Products({ route, navigation }) {
           setIsLoading(false);
         });
     } else {
-      console.warn("não tem cnpj ou nome");
-      console.warn(`/consultas/ProdutosCategoria?categoria=${categoryName}`);
       api
         .get(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
         .then((response) => {
-          console.warn("response sem supermercado:", response.data);
           let listProd = response.data;
           if (listProd != null && listProd.length > 0) {
             setProducts(
               listProd.map((item, index) => {
-                console.log(" o nome:", item.nome);
                 return {
                   id: `${index + 1}-${item.nome}`,
                   name: item.nome,
@@ -174,9 +96,7 @@ export default function Products({ route, navigation }) {
 
   async function getCheckProducts() {
     try {
-      // await AsyncStorage.clear();
       let newList = [...products];
-      // console.log('newList recebendo products:',newList)
       newList.forEach((item) => {
         item.qtd = 0;
       });
@@ -289,14 +209,12 @@ export default function Products({ route, navigation }) {
     if (!supermarket) {
       productsOnList.forEach(async (item) => {
         if (item.includes(`produto-lista-${supermarket}-`)) {
-          console.log("item de outro mercado:", item);
           await AsyncStorage.removeItem(item);
         }
       });
     } else {
       productsOnList.forEach(async (item) => {
         if (item.includes(`produto-lista-noMarket-`)) {
-          console.log("item sem mercado:", item);
           await AsyncStorage.removeItem(item);
         }
       });
@@ -328,7 +246,6 @@ export default function Products({ route, navigation }) {
                 borderColor: "#D4EEE2",
                 borderRadius: 10,
                 paddingHorizontal: 10,
-                // alignItems: "center",
               }}
             >
               <Pressable
@@ -351,7 +268,6 @@ export default function Products({ route, navigation }) {
                 <Image
                   style={styles.productIcon}
                   source={{ uri: item.image }}
-                  // source={item.image}
                 />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
