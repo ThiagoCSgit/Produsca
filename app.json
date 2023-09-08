@@ -4,7 +4,7 @@
     "slug": "Produsca",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon_app.jpg",
+    "icon": "./assets/icon_app.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/icon_splash.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon_app_adaptive.jpg",
+        "foregroundImage": "./assets/icon_app_adaptive.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.thiago_santos.Produsca"
