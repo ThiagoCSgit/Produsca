@@ -5,9 +5,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    padding: 20,
+    justifyContent: "center",
+    paddingVertical: 20,
+    paddingHorizontal: 0,
     height: "100%",
-    width: "100%",
   },
   productName: {
     fontSize: 18,
@@ -20,12 +21,16 @@ const styles = StyleSheet.create({
   },
   selectDays: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     marginTop: 15,
+    width: "100%",
+    gap: 20,
   },
   listSupermarktesAvailables: {
     padding: 10,
     marginTop: 15,
+    width: "100%",
+    justifyContent: "center",
   },
   itemSupermarket: {
     marginTop: 10,

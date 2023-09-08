@@ -81,7 +81,7 @@ export default function Scanner() {
           />
           {scanned && (
             <Button
-              title="Aperte para scanear novamente"
+              title="Nota escaneada, aperte para escanear novamente"
               onPress={() => setScanned(false)}
             />
           )}

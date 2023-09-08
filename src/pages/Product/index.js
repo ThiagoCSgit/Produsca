@@ -16,7 +16,6 @@ import api from "../../service/api";
 
 import Loading from "../../components/Loading";
 import RadioButtonDays from "../../components/RadioButtonDays";
-import NoData from "../../components/NoData";
 
 import IconFE from "react-native-vector-icons/Feather";
 
@@ -24,14 +23,13 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function Products({ route, navigation }) {
-  const { nameProduct, idProduct } = route.params;
+  const { nameProduct } = route.params;
 
   const [priceHistory, setPriceHistory] = useState([]);
   const [quantDays, setQuantDays] = useState(7);
   const [supermarktesAvailables, setSupermarktesAvailables] = useState([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isLoadingMarkets, setIsLoadingMarkets] = useState(true);
-  // const [noData, setNoData] = useState(null);
 
   useEffect(() => {
     getPriceHistory();
@@ -41,15 +39,6 @@ export default function Products({ route, navigation }) {
   useEffect(() => {
     getPriceHistory();
   }, [quantDays]);
-
-  // function callApis() {
-  //   setIsLoadingHistory(true);
-  //   setIsLoadingMarkets(true);
-  //   setNoData(null);
-
-  //   getPriceHistory();
-  //   getSupermarketsProduct();
-  // }
 
   function getPriceHistory() {
     setIsLoadingHistory(true);
@@ -66,13 +55,13 @@ export default function Products({ route, navigation }) {
           `/consultas/HistoricoPrecoGeral?nome_produto=${nameProduct}&dataInicial=${dataInicial}&dataFinal=${dataFinal}`
         )
         .then((response) => {
-          // let historic = response.data;
+          let historic = response.data;
           console.warn("historico response:", response.data);
-          setPriceHistory(response.data.listPrecoGeral);
-          // if (historic != null && historic.length > 0) {
-          // } else {
-          //   setNoData(historic);
-          // }
+          if (historic != null && historic.length > 0) {
+            setPriceHistory(historic.listPrecoGeral);
+          } else {
+            setPriceHistory(historic);
+          }
           setIsLoadingHistory(false);
         });
     } catch (e) {
@@ -87,8 +76,6 @@ export default function Products({ route, navigation }) {
       api
         .get(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`)
         .then((response) => {
-          console.warn("response supermercados produtos:", response.data);
-          // setSupermarktesAvailables(response.data)
           let listMarkets = response.data;
           if (listMarkets != null && listMarkets.length > 0) {
             setSupermarktesAvailables(
@@ -119,13 +106,22 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  useEffect(() => {
-    console.warn("effect supermarktesAvailables:", supermarktesAvailables);
-  }, [supermarktesAvailables]);
+  function convertToReal(value) {
+    return Number.parseFloat(value).toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+    });
+  }
 
   const onShare = async () => {
     const result = await Share.share({
-      // message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price} no Produsca, confira!`,
+      message: `O(A) ${
+        supermarktesAvailables[0].product.nome
+      } está custando${supermarktesAvailables.map(
+        (item) =>
+          ` ${convertToReal(item.product.preco)} no ${
+            item.name || "supermercado sem nome"
+          }`
+      )}, aqui no Produsca, confira!`,
     });
   };
 
@@ -137,12 +133,15 @@ export default function Products({ route, navigation }) {
   return isLoadingHistory || isLoadingMarkets ? (
     <Loading />
   ) : (
-    // ) : noData != null ? (
-    //   <NoData message={noData.message} executeAction={callApis} />
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Text style={styles.nameProduct}>{nameProduct}</Text>
-        <View>
+        <View style={{ alignItems: "center" }}>
           {priceHistory.length > 0 ? (
             <LineChart
               data={{
@@ -186,7 +185,10 @@ export default function Products({ route, navigation }) {
             <View
               style={{
                 height: 200,
+                width: "100%",
+                paddingHorizontal: 10,
                 alignItems: "center",
+                textAlign: "center",
                 justifyContent: "center",
               }}
             >
@@ -238,22 +240,22 @@ export default function Products({ route, navigation }) {
                         <Text
                           style={{
                             color: "#1E90FF",
-                            fontSize: 20,
+                            fontSize: 18,
                             fontFamily: "OpenSans_500Medium",
                           }}
                         >
-                          {item.name || "teste"}
+                          {item.name || "Supermercado sem nome"}
                         </Text>
                       </TouchableOpacity>
                       <Text
                         style={{
-                          fontSize: 20,
+                          fontSize: 18,
                           color: "#140F07",
                           fontFamily: "OpenSans_500Medium",
                         }}
                       >
                         {" "}
-                        - R${item.product?.preco}
+                        - R${convertToReal(item.product?.preco)}
                       </Text>
                     </View>
                     <TouchableOpacity
@@ -262,7 +264,9 @@ export default function Products({ route, navigation }) {
                         navigation.navigate("Detalhes do Produto", {
                           supermarket: item.name,
                           nameProduct: nameProduct,
-                          idProduct: idProduct,
+                          cnpj: item.cnpj,
+                          barCode: item.product?.codigo_barra,
+                          price: item.product?.preco,
                         })
                       }
                     >

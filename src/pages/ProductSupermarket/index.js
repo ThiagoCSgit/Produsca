@@ -21,7 +21,6 @@ import { ptBR } from "date-fns/locale";
 
 export default function ProductSupermarket({ route, navigation }) {
   const { nameProduct, supermarket, barCode, cnpj, price } = route.params;
-  console.log(route.params);
   const [priceHistory, setPriceHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [quantDays, setQuantDays] = useState(7);
@@ -56,7 +55,14 @@ export default function ProductSupermarket({ route, navigation }) {
         .then((response) => {
           console.warn("response.data:", response.data);
           // let listPrecos = response.data.map()
-          setPriceHistory(response.data.listPrecoGeral);
+          let historic = response.data;
+          console.warn("historico response:", response.data);
+          // setPriceHistory(response.data.listPrecoGeral);
+          if (historic != null && historic.length > 0) {
+            setPriceHistory(historic.listPrecoGeral);
+          } else {
+            setPriceHistory(historic);
+          }
           setIsLoading(false);
         });
     } catch (error) {
@@ -67,7 +73,9 @@ export default function ProductSupermarket({ route, navigation }) {
 
   const onShare = async () => {
     await Share.share({
-      message: `O(A) ${nameProduct} no ${supermarket} está custando apenas R$${price} no Produsca, confira!`,
+      message: `O(A) ${nameProduct}${
+        supermarket ? ` no${supermarket}` : ""
+      } está custando apenas R$${price} no Produsca, confira!`,
     });
   };
 
@@ -102,14 +110,14 @@ export default function ProductSupermarket({ route, navigation }) {
               backgroundGradientTo: "#005fff",
               decimalPlaces: 2, // optional, defaults to 2dp
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `#000`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               propsForLabels: {
                 fontSize: 14, // Defina o tamanho da fonte desejado aqui
               },
               propsForDots: {
                 r: "6",
                 strokeWidth: "2",
-                stroke: "#000",
+                stroke: "#00f1ff",
               },
             }}
             bezier
