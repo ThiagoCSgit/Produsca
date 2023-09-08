@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Camera } from "expo-camera";
 import styles from "./styles";
@@ -24,8 +24,6 @@ export default function Scanner() {
   const [flashOn, setFlashOn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const cameraRef = useRef(null);
-
   useEffect(() => {
     (async () => {
       if (isFocused) {
@@ -40,7 +38,7 @@ export default function Scanner() {
     })();
   }, [isFocused]);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
     api.post("/envios/LinkNotaFiscal", { link: data }).then((response) => {
       console.log("response:", response);
@@ -72,7 +70,6 @@ export default function Scanner() {
           <Camera
             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
             style={StyleSheet.absoluteFillObject}
-            ref={cameraRef}
             flashMode={
               flashOn
                 ? Camera.Constants.FlashMode.torch

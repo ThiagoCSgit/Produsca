@@ -57,7 +57,7 @@ export default function Products({ route, navigation }) {
         .then((response) => {
           let historic = response.data;
           console.warn("historico response:", response.data);
-          if (historic != null && historic.length > 0) {
+          if (historic != null && historic?.listPrecoGeral.length > 0) {
             setPriceHistory(historic.listPrecoGeral);
           } else {
             setPriceHistory(historic);
@@ -118,8 +118,8 @@ export default function Products({ route, navigation }) {
         supermarktesAvailables[0].product.nome
       } está custando${supermarktesAvailables.map(
         (item) =>
-          ` ${convertToReal(item.product.preco)} no ${
-            item.name || "supermercado sem nome"
+          ` ${convertToReal(item.product.preco)}${
+            item.name ? ` no ${item.name}` : ""
           }`
       )}, aqui no Produsca, confira!`,
     });
@@ -244,7 +244,7 @@ export default function Products({ route, navigation }) {
                             fontFamily: "OpenSans_500Medium",
                           }}
                         >
-                          {item.name || "Supermercado sem nome"}
+                          {item.name || "Supermercado"}
                         </Text>
                       </TouchableOpacity>
                       <Text
