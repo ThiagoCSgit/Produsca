@@ -53,9 +53,15 @@ export default function App() {
     return <View />;
   }
 
+  function updateState(navigation) {
+    setState(navigation);
+  }
+
   function Tabs({ navigation }) {
     if (!state) {
-      setState(navigation);
+      setTimeout(() => {
+        updateState(navigation), 100;
+      });
     }
     return (
       <Tab.Navigator
