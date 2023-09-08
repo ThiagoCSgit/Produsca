@@ -16,8 +16,6 @@ import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
-import { usePurchaseStatus } from "../../context/PurchaseStatusProvide";
-
 export default function ShopCart({ route, navigation }) {
   const [cartList, setCartList] = useState({
     id: 0,
@@ -27,8 +25,6 @@ export default function ShopCart({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
-
-  const { setPurchaseInProgress } = usePurchaseStatus();
 
   useEffect(() => {
     getCartProducts();
@@ -110,16 +106,23 @@ export default function ShopCart({ route, navigation }) {
   }
 
   function itemPrice(value, quantity = 1) {
-    return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
-      minimumFractionDigits: 2,
-    });
+    console.warn("itemPrice, value:", value);
+    if (value != -1) {
+      return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
+        minimumFractionDigits: 2,
+      });
+    } else {
+      return "- -";
+    }
   }
 
   function totalValue() {
     let sum = 0;
     if (cartList.products.length > 0) {
       cartList.products.forEach((item) => {
-        sum += item.price * item.qtd;
+        if (item.price != -1) {
+          sum += item.price * item.qtd;
+        }
       });
     }
     let valor = itemPrice(`${sum}`);
@@ -187,7 +190,6 @@ export default function ShopCart({ route, navigation }) {
     } catch (e) {
       console.warn("error:", e);
     }
-    setPurchaseInProgress(false);
   }
 
   async function cancelPurchase() {
@@ -229,11 +231,11 @@ export default function ShopCart({ route, navigation }) {
                       style={[styles.itemName, item.check && styles.bought]}
                     >
                       {item?.marca
-                        ? `${item.name}, ${item.marca} ${"\n"} R$${itemPrice(
+                        ? `${item.name}, ${item.marca} ${"\n"} R$ ${itemPrice(
                             `${item.price}`,
                             `${item.qtd}`
                           )}`
-                        : `${item.name} ${"\n"} R$${itemPrice(
+                        : `${item.name} ${"\n"} R$ ${itemPrice(
                             `${item.price}`,
                             `${item.qtd}`
                           )}`}

@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#D4EEE2",
   },
   iconGPS: {
-    color: "#fff",
     marginRight: 15,
     color: "#253D4E",
   },
@@ -25,11 +24,13 @@ const styles = StyleSheet.create({
   containerModal: {
     justifyContent: "center",
     alignItems: "center",
+    flex: 1,
+  },
+  modalView: {
     margin: 20,
     backgroundColor: "#fff",
-    height: 200,
+    padding: 45,
     position: "relative",
-    top: Dimensions.get("window").height / 3,
     borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 5, height: 5 },

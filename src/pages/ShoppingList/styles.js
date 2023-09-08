@@ -6,23 +6,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: 20,
+    paddingBottom: 0,
     height: "100%",
     width: "100%",
   },
   emptyCartImage: {
     width: 300,
     height: 300,
-  },
-  screenList: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-  },
-  listProducts: {
-    flex: 1,
-    // width: "100%",
-    // backgroundColor: "red",
   },
   labelEmptyCart: {
     textAlign: "center",
@@ -40,14 +32,12 @@ const styles = StyleSheet.create({
     borderColor: "#D4EEE2",
     borderRadius: 10,
     paddingTop: 10,
-    minHeight: 130,
   },
   itemName: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
     textAlign: "left",
-    marginBottom: 10,
   },
   quantItems: {
     flexDirection: "row",
@@ -62,7 +52,7 @@ const styles = StyleSheet.create({
   },
   buttonSimulate: {
     borderRadius: 100,
-    marginBottom: 20,
+    marginBottom: 40,
     paddingVertical: 15,
     paddingHorizontal: 20,
     justifyContent: "center",

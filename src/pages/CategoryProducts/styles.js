@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  listCategorys: {
+  listCategories: {
     flex: 1,
   },
   categoryItem: {
@@ -38,8 +38,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 4,
   },
   categoryIcon: {
-    width: Dimensions.get("window").width / 6,
-    height: Dimensions.get("window").width / 6,
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    borderRadius: 100,
   },
   categoryName: {
     fontSize: 18,

@@ -21,7 +21,6 @@ import ShopCartButton from "./src/components/Cart";
 import PurchasesHistoric from "./src/pages/PurchasesHistoric";
 
 import { LocationProvider } from "./src/context/LocationProvider";
-import { PurchaseStatusProvider } from "./src/context/PurchaseStatusProvide";
 
 import IconAD from "react-native-vector-icons/AntDesign";
 import IconET from "react-native-vector-icons/Entypo";
@@ -143,14 +142,6 @@ export default function App() {
   const CustomHeader = (title, showCart = true) => {
     return (
       <LinearGradient
-        // colors={[
-        //   "#f09c33",
-        //   "#f59234",
-        //   "#f98736",
-        //   "#fd7b38",
-        //   "#ff6e3c",
-        //   "#ff5f41",
-        // ]}
         colors={["#F8FCFA", "#EDF8F3", "#D3EEE1"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
@@ -169,95 +160,93 @@ export default function App() {
 
   return (
     <LocationProvider>
-      <PurchaseStatusProvider>
-        <NavigationContainer style={styles.container} ref={navigationRef}>
-          <Stack.Navigator>
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
-              name=" "
-              component={Tabs}
-            />
-            <Stack.Screen
-              name="Produtos"
-              component={Products}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Produto"
-              component={Product}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Detalhes do Produto"
-              component={ProductSupermarket}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Supermercado"
-              component={Supermarket}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Carrinho"
-              component={ShopCart}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return (
-                    <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
-                  );
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Lista de Compras"
-              component={ShoppingList}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return (
-                    <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
-                  );
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Supermercados disponíveis"
-              component={SupermarketShoppingList}
-              options={{
-                header: (scene) => {
-                  const title = scene.route.name;
-                  return (
-                    <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
-                  );
-                },
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PurchaseStatusProvider>
+      <NavigationContainer style={styles.container} ref={navigationRef}>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name=" "
+            component={Tabs}
+          />
+          <Stack.Screen
+            name="Produtos"
+            component={Products}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Produto"
+            component={Product}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Detalhes do Produto"
+            component={ProductSupermarket}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Supermercado"
+            component={Supermarket}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return <SafeAreaView>{CustomHeader(title)}</SafeAreaView>;
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Carrinho"
+            component={ShopCart}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return (
+                  <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
+                );
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Lista de Compras"
+            component={ShoppingList}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return (
+                  <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
+                );
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Supermercados disponíveis"
+            component={SupermarketShoppingList}
+            options={{
+              header: (scene) => {
+                const title = scene.route.name;
+                return (
+                  <SafeAreaView>{CustomHeader(title, false)}</SafeAreaView>
+                );
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </LocationProvider>
   );
 }

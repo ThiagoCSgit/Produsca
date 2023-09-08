@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import styles from "./styles";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import Loading from "../../components/Loading";
 import NoData from "../../components/NoData";
@@ -17,57 +17,64 @@ import { useLocation } from "../../context/LocationProvider";
 import api from "../../service/api";
 
 export default function Supermarkets({ navigation }) {
-  const [supermarkets, setSupermarkets] = useState([
-    {
-      id: 1,
-      name: "Extrabom",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia",
-      city: "Vila Velha",
-    },
-    {
-      id: 2,
-      name: "Perim",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 2",
-      city: "Vitória",
-    },
-    {
-      id: 3,
-      name: "Carone",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 3",
-      city: "Vitória",
-    },
-    {
-      id: 4,
-      name: "Epa",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 4",
-      city: "Serra",
-    },
-    {
-      id: 5,
-      name: "Mineirão",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 5",
-      city: "Vila Velha",
-    },
-    {
-      id: 6,
-      name: "Atacadão",
-      image: require("../../images/foodImage.png"),
-      address: "Rua da Fantasia 6",
-      city: "Vila Velha",
-    },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [supermarkets, setSupermarkets] = useState([
+  //   {
+  //     id: 1,
+  //     name: "Extrabom",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia",
+  //     city: "Vila Velha",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Perim",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 2",
+  //     city: "Vitória",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Carone",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 3",
+  //     city: "Vitória",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Epa",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 4",
+  //     city: "Serra",
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Mineirão",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 5",
+  //     city: "Vila Velha",
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Atacadão",
+  //     image: require("../../images/foodImage.png"),
+  //     address: "Rua da Fantasia 6",
+  //     city: "Vila Velha",
+  //   },
+  // ]);
+  const [supermarkets, setSupermarkets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
 
   const myLocation = useLocation();
+  console.warn("myLocation:", myLocation);
+  // setTimeout(() => {
+  //   if (myLocation == null) {
+  //     myLocation = useLocation();
+  //   }
+  // }, 1000);
 
   useEffect(() => {
     console.log("myLocation:", myLocation);
@@ -112,6 +119,7 @@ export default function Supermarkets({ navigation }) {
                 phone: item.telefone,
                 district: item.nomeBairro,
                 image: require("../../images/icone_mercado.png"),
+                cnpj: item.cnpj,
               };
             })
           );
@@ -140,10 +148,7 @@ export default function Supermarkets({ navigation }) {
     </View>
   ) : (
     <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: modalVisible ? "rgba(122, 118, 114, 0.4)" : "#fff" },
-      ]}
+      style={[styles.container, { opacity: modalVisible ? 0.4 : 1 }]}
     >
       <FlatList
         style={styles.listSupermarkets}
@@ -163,6 +168,7 @@ export default function Supermarkets({ navigation }) {
                   city: item.city,
                   state: item.state,
                   number: item.number,
+                  cnpj: item.cnpj,
                 })
               }
             >

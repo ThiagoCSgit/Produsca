@@ -1,4 +1,4 @@
-import { View, ScrollView, Text } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import styles from "./styles";
 import { useEffect, useState } from "react";
 import api from "../../service/api";
@@ -65,7 +65,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   // ]);
   const [state, setState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [range, setRange] = useState(2000);
+  const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [noData, setNoData] = useState(null);
@@ -87,6 +87,12 @@ export default function SupermaketShoppingList({ route, navigation }) {
       postShopList();
     }
   }, [myLocation, range, modalVisible]);
+
+  useEffect(() => {
+    if (state.length > 0) {
+      alertNoPrice();
+    }
+  }, [state]);
 
   function postShopList() {
     setIsLoading(true);
@@ -110,97 +116,118 @@ export default function SupermaketShoppingList({ route, navigation }) {
     });
 
     console.warn("listNomeProd:", listNomeProd);
-    // api
-    //   .post("/envios/ProdutosEscolhidosCarrinho", {
-    //     latitudeUsuario: myLocation?.coords.latitude,
-    //     longitudeUsuario: myLocation?.coords.longitude,
-    //     raioDistanciaMetros: range,
-    //     listaNomeProduto: listNomeProd,
-    //   })
-    //   .then((response) => {
-    //     console.warn("Supermercados disponíveis:", response.data);
-    //     let listResponse = response.data;
+    api
+      .post("/envios/ProdutosEscolhidosCarrinho", {
+        latitudeUsuario: myLocation?.coords.latitude,
+        longitudeUsuario: myLocation?.coords.longitude,
+        raioDistanciaMetros: range,
+        listaNomeProduto: listNomeProd,
+      })
+      .then((response) => {
+        console.warn("Supermercados disponíveis:", response.data);
+        let listResponse = response.data;
 
-    // if (listResponse != null && listResponse.length > 0) {
-    // let data = listResponse.map((item) => {
-    //   let supermercado = {
-    //     name: item.nomeSupermercado,
-    //     publicPlace: item.logradouro,
-    //     number: item.numero,
-    //     city: item.nomeCidade,
-    //     state: item.nomeEstado,
-    //     district: item.nomeBairro,
-    //     phone: item.telefone,
-    //     cpnj: item.cnpj,
-    //   };
-    //   let produtos = item.produtos.map((prod) => {
-    //     return {
-    //       name: prod.nome,
-    //       price: prod.preco,
-    //       describe: prod.descricao,
-    //       image: prod.link_image,
-    //     };
-    //   });
-    //   return {
-    //     supermarket: supermercado,
-    //     products: produtos,
+        if (listResponse != null && listResponse.length > 0) {
+          let data = listResponse.map((item) => {
+            let supermercado = {
+              name: item.nomeSupermercado,
+              publicPlace: item.logradouro,
+              number: item.numero,
+              city: item.nomeCidade,
+              state: item.nomeEstado,
+              district: item.nomeBairro,
+              phone: item.telefone,
+              cpnj: item.cnpj,
+            };
+            let produtos = item.produtos.map((prod, index) => {
+              if (prod.nome.trim() == listNomeProd[index].nome.trim())
+                return {
+                  name: prod.nome,
+                  price: prod.preco,
+                  describe: prod.descricao,
+                  image: prod.link_image,
+                  qtd: listNomeProd[index].qtd,
+                };
+            });
+            return {
+              supermarket: supermercado,
+              products: produtos,
+              id: randomIdGeneretor(3),
+            };
+          });
+          console.warn("data retornada:", data);
+          setState(data);
+        } else {
+          setState([]);
+          setNoData(listResponse);
+        }
+        setIsLoading(false);
+      });
+    // let data = [
+    //   {
+    //     supermarket: {
+    //       name: "EPA",
+    //       publicPlace: "Rua da Fantasia",
+    //       number: 52,
+    //       city: "VILA VELHA",
+    //       state: "ES",
+    //       district: "PRAIA DO SUÁ",
+    //       phone: "2733439846",
+    //       cpnj: 12223333,
+    //     },
+    //     products: listNomeProd.map((prod) => {
+    //       return {
+    //         name: prod.nome,
+    //         price: 10,
+    //         describe: "descrição",
+    //         image: "oapopa",
+    //         qtd: prod.qtd,
+    //       };
+    //     }),
     //     id: randomIdGeneretor(3),
-    //   };
-    // });
-    let data = [
-      {
-        supermarket: {
-          name: "EPA",
-          publicPlace: "Rua da Fantasia",
-          number: 52,
-          city: "VILA VELHA",
-          state: "ES",
-          district: "PRAIA DO SUÁ",
-          phone: "2733439846",
-          cpnj: 12223333,
-        },
-        products: listNomeProd.map((prod) => {
-          return {
-            name: prod.nome,
-            price: 10,
-            describe: "descrição",
-            image: "oapopa",
-            qtd: prod.qtd,
-          };
-        }),
-        id: randomIdGeneretor(3),
-      },
-      {
-        supermarket: {
-          name: "Extrabom",
-          publicPlace: "Rua da Fantasia",
-          number: 52,
-          city: "VILA VELHA",
-          state: "ES",
-          district: "PRAIA DO SUÁ",
-          phone: "2733439846",
-          cpnj: 12223333,
-        },
-        products: listNomeProd.map((prod) => {
-          return {
-            name: prod.nome,
-            price: 10,
-            describe: "descrição",
-            image: "oapopa",
-            qtd: prod.qtd,
-          };
-        }),
-        id: randomIdGeneretor(3),
-      },
-    ];
-    console.warn("data retornada:", data);
-    setState(data);
-    // } else {
-    //   setState([]);
-    //   setNoData(listResponse);
-    // }
-    setIsLoading(false);
-    // });
+    //   },
+    //   {
+    //     supermarket: {
+    //       name: "Extrabom",
+    //       publicPlace: "Rua da Fantasia",
+    //       number: 52,
+    //       city: "VILA VELHA",
+    //       state: "ES",
+    //       district: "PRAIA DO SUÁ",
+    //       phone: "2733439846",
+    //       cpnj: 12223333,
+    //     },
+    //     products: listNomeProd.map((prod) => {
+    //       return {
+    //         name: prod.nome,
+    //         price: 10,
+    //         describe: "descrição",
+    //         image: "oapopa",
+    //         qtd: prod.qtd,
+    //       };
+    //     }),
+    //     id: randomIdGeneretor(3),
+    //   },
+    // ];
+  }
+
+  function alertNoPrice() {
+    if (state.length > 0) {
+      console.warn("len de state maior que 0:", state);
+      let noPrice = null;
+      for (let i = 0; i < state.length; i++) {
+        noPrice = state[i].products.find((item) => {
+          return item.price == -1;
+        });
+      }
+      console.warn("noPrice:", noPrice);
+      if (noPrice) {
+        Alert.alert(
+          "Produtos não cadastrados",
+          "Existem alguns produtos que ainda não tem preços cadastrados, então o valor da sua comprar será diferente do informado. Nos ajude a crescer contribuindo com os dados da sua compra!"
+        );
+      }
+    }
   }
 
   function randomIdGeneretor(length) {

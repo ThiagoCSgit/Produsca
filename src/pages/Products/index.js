@@ -18,7 +18,7 @@ import NoData from "../../components/NoData";
 import Icon from "react-native-vector-icons/AntDesign";
 
 export default function Products({ route, navigation }) {
-  const { categoryName, supermarketName } = route.params;
+  const { categoryName, supermarketName, cnpj } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [noData, setNoData] = useState(null);
   // const [products, setProducts] = useState([
@@ -100,12 +100,25 @@ export default function Products({ route, navigation }) {
     setIsLoading(true);
     setNoData(null);
 
-    if (supermarketName) {
-      // let nameNoSpace = supermarketName.split(/\s+/).join("").toLowerCase();
-      // console.log(`rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${nameNoSpace}`)
+    if (supermarketName || cnpj) {
+      console.warn("tem cnpj ou nome");
+      console.warn(
+        `rota super: /consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
+          cnpj
+            ? `CNPJSupermercado=${cnpj}`
+            : `NomeSupermercado=${supermarketName}`
+        }`
+      );
+      // `/consultas/HistoricoPrecoSupermercado?${
+      //   barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
+      // }&CNPJSupermercado=${cnpj}&dataInicio=${dataInicial}&dataFinal=${dataFinal}`
       api
         .get(
-          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&NomeSupermercado=${supermarketName}`
+          `/consultas/ProdutosCategoriaSupermercados?categoria=${categoryName}&${
+            cnpj
+              ? `CNPJSupermercado=${cnpj}`
+              : `NomeSupermercado=${supermarketName}`
+          }`
         )
         .then((response) => {
           console.warn("response da api:", response.data);
@@ -114,21 +127,15 @@ export default function Products({ route, navigation }) {
             setProducts(
               listProd.map((item, index) => {
                 return {
-                  id: index + 1,
+                  id: `${index + 1}-${item.nome}`,
                   name: item.nome,
-                  image: require("../../images/foodImage.png"),
-                  price: "10,80",
+                  image: `${item.link_imagem}`,
+                  price: item.preco,
+                  bar_code: item.codigo_barra,
                   qtd: 0,
                 };
               })
             );
-            api
-              .get(`/consultas/PrecosProdutosSupermercado?super=EPA`)
-              .then((response) => {
-                // console.warn('response:',response.data)
-                // setCatProducts(response.data)
-                setIsLoading(false);
-              });
           } else {
             setProducts([]);
             setNoData(response.data);
@@ -136,7 +143,8 @@ export default function Products({ route, navigation }) {
           setIsLoading(false);
         });
     } else {
-      // console.log(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
+      console.warn("não tem cnpj ou nome");
+      console.warn(`/consultas/ProdutosCategoria?categoria=${categoryName}`);
       api
         .get(`/consultas/ProdutosCategoria?categoria=${categoryName}`)
         .then((response) => {
@@ -147,7 +155,7 @@ export default function Products({ route, navigation }) {
               listProd.map((item, index) => {
                 console.log(" o nome:", item.nome);
                 return {
-                  id: index + 1,
+                  id: `${index + 1}-${item.nome}`,
                   name: item.nome,
                   image: `${item.link_imagem}`,
                   price: item.preco,
@@ -174,22 +182,26 @@ export default function Products({ route, navigation }) {
       });
 
       let productChecked = null;
-
       for (let i = 0; i < newList.length; i++) {
         item = newList[i];
         if (supermarketName) {
-          productChecked = await AsyncStorage.getItem(
-            `produto-lista-${supermarketName}-${item.id}`
+          productChecked = JSON.parse(
+            await AsyncStorage.getItem(
+              `produto-lista-${supermarketName}-${item.id}-${item.name}`
+            )
           );
         } else {
-          productChecked = await AsyncStorage.getItem(
-            `produto-lista-noMarket-${item.id}`
+          productChecked = JSON.parse(
+            await AsyncStorage.getItem(
+              `produto-lista-noMarket-${item.id}-${item.name}`
+            )
           );
         }
-
         if (productChecked != null) {
-          productChecked = JSON.parse(productChecked);
-          if (item.id == productChecked.id) {
+          if (
+            item.id == productChecked.id &&
+            categoryName == productChecked.category
+          ) {
             newList[i] = productChecked;
           }
         }
@@ -214,7 +226,12 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd, supermarket);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
   }
 
   function decreaseQuantity(id, supermarket = null) {
@@ -231,21 +248,25 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd, supermarket);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket) {
+  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
     let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}`
-      : `produto-lista-noMarket-${idProd}`;
+      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+      : `produto-lista-noMarket-${idProd}-${productName}`;
 
     cleanShoppingList(supermarket, id);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
-      console.log("id:", id);
-      console.log("itemToAdd:", itemToAdd);
+      itemToAdd.category = categoryName;
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -262,11 +283,9 @@ export default function Products({ route, navigation }) {
 
   async function cleanShoppingList(supermarket, id) {
     let asyncStorage = await AsyncStorage.getAllKeys();
-    console.warn("asyncStorage:", asyncStorage);
     let productsOnList = asyncStorage.filter((item) =>
       item.includes("produto-lista")
     );
-    console.log("clear id:", id, "supermarket:", supermarket);
     if (!supermarket) {
       productsOnList.forEach(async (item) => {
         if (item.includes(`produto-lista-${supermarket}-`)) {
@@ -283,63 +302,6 @@ export default function Products({ route, navigation }) {
       });
     }
   }
-  // async function cleanShoppingList(supermarket, id) {
-  //   let asyncStorage = await AsyncStorage.getAllKeys();
-  //   console.warn("asyncStorage:", asyncStorage);
-  //   let productsKeys = asyncStorage.filter((item) =>
-  //     item.includes("produto-lista")
-  //   );
-  //   console.warn("productsKeys:", productsKeys);
-  //   let hasProductSupermarket = false
-  //   productsKeys.forEach(async (item) => {
-  //     if (item.includes(`produto-lista-${supermarket}-`)) {
-  //       console.log("item de outro mercado:", item);
-  //       hasProductSupermarket = true
-  //       // await AsyncStorage.removeItem(item);
-  //     }
-  //   });
-  //   if(hasProductSupermarket){
-  //     productsKeys.forEach(async (item) => {
-  //       if (!item.includes(`produto-lista-${supermarket}-`)) {
-  //         console.log("item de outro mercado:", item);
-  //         await AsyncStorage.removeItem(item);
-  //       }
-  //     });
-  //   }
-  //   else{
-
-  //   }
-  // }
-
-  // async function addOrRemoveToShopCart(value, id, supermarket = '') {
-  //   let newList = [...products]
-  //   setProducts(newList.map(item => {
-  //     if (item.id == id) {
-  //       item.qtd = value
-  //     }
-  //     return item
-  //   }))
-
-  //   if (value) {
-  //     let itemToAdd = products.find(item => item.id == id)
-  //     itemToAdd.quantityItems = 1
-  //     itemToAdd.supermarket = supermarket
-  //     id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-  //     try {
-  //       await AsyncStorage.setItem(id, JSON.stringify(itemToAdd))
-  //     } catch (e) {
-  //       console.warn('error:', e)
-  //     }
-  //   }
-  //   else {
-  //     try {
-  //       id = supermarket ? `produto-lista-${supermarket}-${id}` : `produto-lista-${id}`
-  //       await AsyncStorage.removeItem(id)
-  //     } catch (e) {
-  //       console.warn('error:', e)
-  //     }
-  //   }
-  // }
 
   return isLoading ? (
     <Loading />
@@ -349,9 +311,7 @@ export default function Products({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <Text style={styles.titlePage}>
         {`${
-          supermarketName
-            ? categoryName + " - " + supermarketName
-            : categoryName
+          supermarketName ? categoryName + "\n" + supermarketName : categoryName
         }`}
       </Text>
       <FlatList
@@ -378,7 +338,9 @@ export default function Products({ route, navigation }) {
                     ? navigation.navigate("Detalhes do Produto", {
                         supermarket: supermarketName,
                         nameProduct: item.name,
-                        idProduct: item.id,
+                        barCode: item.bar_code,
+                        cnpj: cnpj,
+                        price: item.price,
                       })
                     : navigation.navigate("Produto", {
                         nameProduct: item.name,

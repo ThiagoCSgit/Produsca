@@ -23,19 +23,16 @@ export default function ShoppingList({ navigation }) {
   async function getCartProducts() {
     try {
       let productKeys = await AsyncStorage.getAllKeys();
-      console.log("productKeys getCart:", productKeys);
 
       let filteredKeys = productKeys.filter((key) => {
         if (key.includes("produto-lista-")) {
           return key;
         }
       });
-
       let products = await AsyncStorage.multiGet(filteredKeys);
       let newList = products.map((product) => {
         return JSON.parse(product[1]);
       });
-      console.warn("preenchendo cartList:", newList);
       setCartList(newList);
     } catch (e) {
       console.warn("error", e);
@@ -55,60 +52,84 @@ export default function ShoppingList({ navigation }) {
 
   async function increaseQuantity(id, supermarket = null) {
     let newList = [...cartList];
+    let currentProduct = "";
 
     setCartList(
       newList.map((item) => {
         if (item.id == id) {
           item.qtd++;
+          currentProduct = item;
         }
         return item;
       })
     );
 
-    let itemToAdd = cartList.find((item) => item.id == id);
-    itemToAdd.supermarket = supermarket;
-    id = supermarket
-      ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-noMarket-${id}`;
-    try {
-      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    } catch (e) {
-      console.warn("error:", e);
-    }
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
   }
 
   async function decreaseQuantity(id, supermarket = null) {
     let newList = [...cartList];
+    let currentProduct = "";
 
     setCartList(
       newList.map((item) => {
         if (item.id == id && item.qtd > 1) {
           item.qtd--;
+          currentProduct = item;
         }
         return item;
       })
     );
 
-    let itemToAdd = cartList.find((item) => item.id == id);
-    itemToAdd.supermarket = supermarket;
-    console.log("item adicionado:", itemToAdd);
-    id = supermarket
-      ? `produto-lista-${supermarket}-${id}`
-      : `produto-lista-noMarket-${id}`;
-    try {
-      await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
-    } catch (e) {
-      console.warn("error:", e);
+    addOrRemoveToShopCart(
+      currentProduct.id,
+      currentProduct.qtd,
+      supermarket,
+      currentProduct.name
+    );
+  }
+
+  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
+    let id = supermarket
+      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+      : `produto-lista-noMarket-${idProd}-${productName}`;
+
+    if (qtd > 0) {
+      let itemToAdd = cartList.find((item) => item.id == idProd);
+      try {
+        await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
+      } catch (e) {
+        console.warn("error:", e);
+      }
+    } else {
+      try {
+        await AsyncStorage.removeItem(id);
+      } catch (e) {
+        console.warn("error", e);
+      }
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
       {cartList.length > 0 ? (
-        <>
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            alignItems: "center",
+          }}
+        >
           <FlatList
-            style={styles.listProducts}
-            contentContainerStyle={{ gap: 30, paddingTop: 30 }}
+            contentContainerStyle={{
+              gap: 15,
+              paddingHorizontal: 20,
+            }}
             data={cartList}
             numColumns={1}
             key={"_"}
@@ -149,8 +170,8 @@ export default function ShoppingList({ navigation }) {
                     onPress={() =>
                       removeItem(
                         item.supermarket
-                          ? `produto-lista-${item.supermarket}-${item.id}`
-                          : `produto-lista-noMarket-${item.id}`
+                          ? `produto-lista-${item.supermarket}-${item.id}-${item.name}`
+                          : `produto-lista-noMarket-${item.id}-${item.name}`
                       )
                     }
                   />
@@ -158,23 +179,34 @@ export default function ShoppingList({ navigation }) {
               );
             }}
           />
-          <TouchableOpacity
-            style={styles.buttonSimulate}
-            onPress={() => {
-              console.warn("tem produto pra simular:", cartList);
-              navigation.navigate("Supermercados disponíveis", {
-                list: cartList,
-              });
+          <View
+            style={{
+              // backgroundColor: "red",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              // padding: 10,
+              position: "relative",
+              top: 10,
             }}
           >
-            <IconMCI
-              style={styles.iconCalculator}
-              name="calculator-variant-outline"
-              size={25}
-            />
-            <Text style={styles.textButton}>Simular Compra</Text>
-          </TouchableOpacity>
-        </>
+            <TouchableOpacity
+              style={styles.buttonSimulate}
+              onPress={() => {
+                navigation.navigate("Supermercados disponíveis", {
+                  list: cartList,
+                });
+              }}
+            >
+              <IconMCI
+                style={styles.iconCalculator}
+                name="calculator-variant-outline"
+                size={25}
+              />
+              <Text style={styles.textButton}>Simular Compra</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
         <View>
           <Image

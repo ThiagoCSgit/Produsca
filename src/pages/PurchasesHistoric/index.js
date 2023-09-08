@@ -12,7 +12,6 @@ export default function PurchasesHistoric() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("opa");
     getHistoric();
   }, [isFocused]);
 
@@ -23,9 +22,9 @@ export default function PurchasesHistoric() {
         return key;
       }
     });
-    console.warn("key:", filteredKeys);
+    console.warn("key gethistoric:", filteredKeys);
     let shopping = await AsyncStorage.multiGet(filteredKeys);
-    console.warn("shopping:", shopping);
+    // console.warn("shopping:", shopping);
     let newList = shopping.map((item) => {
       let id = item[0];
       let products = JSON.parse(item[1]).products;
@@ -33,7 +32,7 @@ export default function PurchasesHistoric() {
 
       return { id: id, products: products, supermarket: supermarket };
     });
-    console.warn("newList historic:", newList);
+    // console.warn("newList historic:", newList);
     setHistoric(newList);
   }
 
@@ -46,7 +45,11 @@ export default function PurchasesHistoric() {
             paddingHorizontal: 10,
           }}
         >
-          <CollapseProductsList state={historic} />
+          <CollapseProductsList
+            state={historic}
+            deleteButton={true}
+            getHistoric={getHistoric}
+          />
         </ScrollView>
       ) : (
         <View style={styles.emptyHistoric}>

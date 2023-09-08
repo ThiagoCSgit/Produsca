@@ -24,10 +24,11 @@ const styles = StyleSheet.create({
   },
   supermarketInfos: {
     fontFamily: "OpenSans_400Regular",
-    color: "#9D9FA0",
+    color: "#1E90FF",
     fontStyle: "italic",
     fontSize: 16,
     marginHorizontal: 20,
+    textDecorationLine: "underline",
   },
   buttonOpenCollapse: {
     flexDirection: "row",
@@ -45,6 +46,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     fontFamily: "OpenSans_400Regular",
     color: "#5C5A66",
+    alignItems: "center",
+    justifyContent: "center",
   },
   startShoppingButton: {
     borderBottomLeftRadius: 8,

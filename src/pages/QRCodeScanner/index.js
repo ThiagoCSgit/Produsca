@@ -28,7 +28,6 @@ export default function Scanner() {
 
   useEffect(() => {
     (async () => {
-      console.log("useEffect para camera:", isFocused);
       if (isFocused) {
         setIsLoading(true);
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -82,7 +81,7 @@ export default function Scanner() {
           />
           {scanned && (
             <Button
-              title="Aperte para scanear novamente"
+              title="Nota escaneada, aperte para escanear novamente"
               onPress={() => setScanned(false)}
             />
           )}
