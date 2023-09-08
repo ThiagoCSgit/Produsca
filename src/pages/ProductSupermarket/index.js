@@ -39,7 +39,6 @@ export default function ProductSupermarket({ route, navigation }) {
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
     dataInicial = format(dataInicial, "yyyy-MM-dd");
-    console.warn(`/consultas/HistoricoPrecoProduto`);
     console.warn(
       `/consultas/HistoricoPrecoSupermercado?${
         barCode ? `codigo_barra=${barCode}` : `nome_produto=${nameProduct}`
@@ -58,9 +57,11 @@ export default function ProductSupermarket({ route, navigation }) {
           let historic = response.data;
           console.warn("historico response:", response.data);
           // setPriceHistory(response.data.listPrecoGeral);
-          if (historic != null && historic.length > 0) {
+          if (historic != null && historic.listPrecoGeral.length > 0) {
+            console.warn("entrou no if:", historic.listPrecoGeral);
             setPriceHistory(historic.listPrecoGeral);
           } else {
+            console.warn("entrou no else:", historic);
             setPriceHistory(historic);
           }
           setIsLoading(false);
@@ -71,11 +72,17 @@ export default function ProductSupermarket({ route, navigation }) {
     }
   }
 
+  function convertToReal(value) {
+    return Number.parseFloat(value).toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+    });
+  }
+
   const onShare = async () => {
     await Share.share({
       message: `O(A) ${nameProduct}${
         supermarket ? ` no${supermarket}` : ""
-      } está custando apenas R$${price} no Produsca, confira!`,
+      } está custando apenas R$${convertToReal(price)} no Produsca, confira!`,
     });
   };
 
@@ -84,7 +91,7 @@ export default function ProductSupermarket({ route, navigation }) {
   ) : (
     <SafeAreaView style={styles.container}>
       <Text style={styles.nameProduct}>
-        {nameProduct} - {supermarket}
+        {nameProduct} {supermarket && `- ${supermarket}`}
       </Text>
       <View>
         {priceHistory.length > 0 ? (
