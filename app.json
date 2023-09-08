@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_app_adaptive.jpg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.thiago_santos.Produsca"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "633366d1-d1a6-4718-82f2-621f5886bd1d"
+      }
     }
   }
 }
