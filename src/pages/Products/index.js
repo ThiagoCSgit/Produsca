@@ -238,7 +238,7 @@ export default function Products({ route, navigation }) {
         data={products}
         numColumns={1}
         key={"_"}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
             <View
               style={{
@@ -247,6 +247,7 @@ export default function Products({ route, navigation }) {
                 borderRadius: 10,
                 paddingHorizontal: 10,
               }}
+              key={index}
             >
               <Pressable
                 style={styles.productItem}

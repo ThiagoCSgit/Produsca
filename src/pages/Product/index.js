@@ -209,8 +209,8 @@ export default function Products({ route, navigation }) {
                 >
                   Disponível em:
                 </Text>
-                {supermarktesAvailables.map((item) => (
-                  <View style={styles.itemSupermarket}>
+                {supermarktesAvailables.map((item, index) => (
+                  <View style={styles.itemSupermarket} key={index}>
                     <View
                       style={{
                         flexDirection: "row",
