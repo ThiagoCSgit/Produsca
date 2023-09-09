@@ -263,14 +263,14 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   headerGradient: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
   headerGradientAlternative: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
     paddingLeft: 30,
     flexDirection: "row",
