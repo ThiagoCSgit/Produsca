@@ -1,4 +1,11 @@
-import { StyleSheet, View, Text, SafeAreaView, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  Pressable,
+  StatusBar,
+} from "react-native";
 import { useState } from "react";
 import {
   NavigationContainer,
@@ -159,6 +166,7 @@ export default function App() {
 
   return (
     <LocationProvider>
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <NavigationContainer style={styles.container} ref={navigationRef}>
         <Stack.Navigator>
           <Stack.Screen

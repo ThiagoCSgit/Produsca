@@ -21,13 +21,11 @@ export default function SupermaketShoppingList({ route, navigation }) {
   const [previousRange, setPreviousRange] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [noData, setNoData] = useState(null);
+  const [myLocation, setMyLocation] = useState(useLocation());
 
   const isFocused = useIsFocused();
 
-  let myLocation = useLocation();
-
   useEffect(() => {
-    myLocation = null;
     if (myLocation == null) {
       setPosition();
     }
@@ -47,7 +45,8 @@ export default function SupermaketShoppingList({ route, navigation }) {
   }, [state]);
 
   async function setPosition() {
-    myLocation = await getLocation();
+    let location = await getLocation();
+    setMyLocation(location);
   }
 
   function postShopList() {

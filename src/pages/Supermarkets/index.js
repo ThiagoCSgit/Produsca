@@ -25,11 +25,9 @@ export default function Supermarkets({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
-
-  let myLocation = useLocation();
+  const [myLocation, setMyLocation] = useState(useLocation());
 
   useEffect(() => {
-    myLocation = null;
     if (myLocation == null) {
       setPosition();
     }
@@ -43,7 +41,8 @@ export default function Supermarkets({ navigation }) {
   }, [myLocation, range, modalVisible]);
 
   async function setPosition() {
-    myLocation = await getLocation();
+    let location = await getLocation();
+    setMyLocation(location);
   }
 
   async function getNearbySupermarkets() {
