@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Dimensions,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Alert,
@@ -12,7 +11,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { Camera } from "expo-camera";
 import styles from "./styles";
 import api from "../../service/api";
-import IconET from "react-native-vector-icons/Entypo";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -85,12 +84,6 @@ export default function Scanner({ navigation }) {
                 : Camera.Constants.FlashMode.off
             }
           />
-          {/* {scanned && (
-            <Button
-              title="Nota escaneada, aperte para escanear novamente"
-              onPress={() => setScanned(false)}
-            />
-          )} */}
         </View>
         <View
           style={{
@@ -100,10 +93,19 @@ export default function Scanner({ navigation }) {
           }}
         >
           <TouchableOpacity
-            style={styles.flashButton}
+            style={[
+              styles.flashButton,
+              flashOn
+                ? { backgroundColor: "#fff" }
+                : { backgroundColor: "#1a1a1a" },
+            ]}
             onPress={handleFlashToggle}
           >
-            <IconET name="flashlight" size={25} />
+            {flashOn ? (
+              <Icon name="flashlight" size={25} />
+            ) : (
+              <Icon name="flashlight-off" size={25} color="#fff" />
+            )}
           </TouchableOpacity>
         </View>
       </View>
