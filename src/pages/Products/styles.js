@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   productInfos: {
-    // justifyContent: "center",
     marginLeft: 15,
   },
   productIcon: {
@@ -37,9 +36,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   nameProduct: {
-    // fontSize: 16,
-    // fontFamily: "OpenSans_500Medium",
-    // alignItems: "center",
     width: Dimensions.get("window").width - 180,
     fontSize: 14,
     fontFamily: "OpenSans_400Regular",
