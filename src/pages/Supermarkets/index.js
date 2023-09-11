@@ -14,6 +14,8 @@ import NoData from "../../components/NoData";
 import AdjustDistance from "../../components/AdjustDistance";
 import { useLocation } from "../../context/LocationProvider";
 
+import getLocation from "../../utils/getLocation";
+
 import api from "../../service/api";
 
 export default function Supermarkets({ navigation }) {
@@ -24,7 +26,14 @@ export default function Supermarkets({ navigation }) {
   const [range, setRange] = useState(1000);
   const [previousRange, setPreviousRange] = useState(0);
 
-  const myLocation = useLocation();
+  let myLocation = useLocation();
+
+  useEffect(() => {
+    myLocation = null;
+    if (myLocation == null) {
+      setPosition();
+    }
+  }, [myLocation]);
 
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
@@ -32,6 +41,10 @@ export default function Supermarkets({ navigation }) {
       getNearbySupermarkets();
     }
   }, [myLocation, range, modalVisible]);
+
+  async function setPosition() {
+    myLocation = await getLocation();
+  }
 
   async function getNearbySupermarkets() {
     setNoData(null);
