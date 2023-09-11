@@ -5,6 +5,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -17,7 +18,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import Loading from "../../components/Loading";
 
-export default function Scanner() {
+export default function Scanner({ navigation }) {
   const isFocused = useIsFocused();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -40,7 +41,21 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    api.post("/envios/LinkNotaFiscal", { link: data });
+    api.post("/envios/LinkNotaFiscal", { link: data }).then(() => {
+      Alert.alert(
+        "Nota escaneada com sucesso",
+        "Obrigado pela sua contribuição 😉",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              setScanned(false);
+              navigation.navigate("Categorias");
+            },
+          },
+        ]
+      );
+    });
   };
 
   const handleFlashToggle = async () => {
@@ -70,12 +85,12 @@ export default function Scanner() {
                 : Camera.Constants.FlashMode.off
             }
           />
-          {scanned && (
+          {/* {scanned && (
             <Button
               title="Nota escaneada, aperte para escanear novamente"
               onPress={() => setScanned(false)}
             />
-          )}
+          )} */}
         </View>
         <View
           style={{

@@ -72,6 +72,7 @@ export default function Products({ route, navigation }) {
         .get(`/consultas/SupermercadosProduto?nome_produto=${nameProduct}`)
         .then((response) => {
           let listMarkets = response.data;
+          console.warn("supermercados proximos, response:", response.data);
           if (listMarkets != null && listMarkets.length > 0) {
             setSupermarktesAvailables(
               listMarkets.map((item, index) => {
@@ -86,6 +87,7 @@ export default function Products({ route, navigation }) {
                   district: item.bairro,
                   product: item.produto,
                   image: require("../../images/icone_mercado.png"),
+                  cnpj: item.cnpj,
                 };
               })
             );
