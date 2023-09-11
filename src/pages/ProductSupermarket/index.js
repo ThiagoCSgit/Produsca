@@ -39,7 +39,6 @@ export default function ProductSupermarket({ route, navigation }) {
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
     dataInicial = format(dataInicial, "yyyy-MM-dd");
-    console.warn("route.params:", route.params);
     try {
       api
         .get(
