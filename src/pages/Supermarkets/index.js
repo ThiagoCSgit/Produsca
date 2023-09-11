@@ -23,7 +23,7 @@ export default function Supermarkets({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [range, setRange] = useState(1000);
+  const [range, setRange] = useState(5000);
   const [previousRange, setPreviousRange] = useState(0);
   const [myLocation, setMyLocation] = useState(useLocation());
 

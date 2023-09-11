@@ -17,7 +17,7 @@ import { useIsFocused } from "@react-navigation/native";
 export default function SupermaketShoppingList({ route, navigation }) {
   const [state, setState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [range, setRange] = useState(1000);
+  const [range, setRange] = useState(5000);
   const [previousRange, setPreviousRange] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [noData, setNoData] = useState(null);
