@@ -8,6 +8,8 @@ import Loading from "../../components/Loading";
 import AdjustDistance from "../../components/AdjustDistance";
 import NoData from "../../components/NoData";
 
+import getLocation from "../../utils/getLocation";
+
 import { useLocation } from "../../context/LocationProvider";
 
 import { useIsFocused } from "@react-navigation/native";
@@ -15,14 +17,19 @@ import { useIsFocused } from "@react-navigation/native";
 export default function SupermaketShoppingList({ route, navigation }) {
   const [state, setState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [range, setRange] = useState(1000);
+  const [range, setRange] = useState(5000);
   const [previousRange, setPreviousRange] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [noData, setNoData] = useState(null);
+  const [myLocation, setMyLocation] = useState(useLocation());
 
   const isFocused = useIsFocused();
 
-  const myLocation = useLocation();
+  useEffect(() => {
+    if (myLocation == null) {
+      setPosition();
+    }
+  }, [myLocation]);
 
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
@@ -36,6 +43,11 @@ export default function SupermaketShoppingList({ route, navigation }) {
       alertNoPrice();
     }
   }, [state]);
+
+  async function setPosition() {
+    let location = await getLocation();
+    setMyLocation(location);
+  }
 
   function postShopList() {
     setIsLoading(true);

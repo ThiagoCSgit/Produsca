@@ -1,35 +1,24 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import * as Location from "expo-location";
+import getLocation from "../utils/getLocation";
 
 const LocationContext = createContext();
 
 export function LocationProvider({ children }) {
   const [userLocation, setUserLocation] = useState(null);
-  let location = null;
 
-  async function getLocation() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      alert("A permissão para acessar o local foi negada");
-      return;
-    }
-
-    location = await Location.getCurrentPositionAsync({});
+  async function setPosition() {
+    let location = await getLocation();
     setUserLocation(location);
   }
 
   useEffect(() => {
-    if (userLocation == null) {
-      getLocation();
-    }
-  }, [userLocation]);
+    setPosition();
+  }, []);
 
   return (
-    userLocation && (
-      <LocationContext.Provider value={userLocation}>
-        {children}
-      </LocationContext.Provider>
-    )
+    <LocationContext.Provider value={userLocation}>
+      {children}
+    </LocationContext.Provider>
   );
 }
 

@@ -86,6 +86,7 @@ export default function Products({ route, navigation }) {
                   district: item.bairro,
                   product: item.produto,
                   image: require("../../images/icone_mercado.png"),
+                  cnpj: item.cnpj,
                 };
               })
             );
@@ -209,8 +210,8 @@ export default function Products({ route, navigation }) {
                 >
                   Disponível em:
                 </Text>
-                {supermarktesAvailables.map((item) => (
-                  <View style={styles.itemSupermarket}>
+                {supermarktesAvailables.map((item, index) => (
+                  <View style={styles.itemSupermarket} key={index}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -231,15 +232,27 @@ export default function Products({ route, navigation }) {
                           })
                         }
                       >
-                        <Text
-                          style={{
-                            color: "#1E90FF",
-                            fontSize: 18,
-                            fontFamily: "OpenSans_500Medium",
-                          }}
-                        >
-                          {item.name || "Supermercado"}
-                        </Text>
+                        {item.name != "" ? (
+                          <Text
+                            style={{
+                              color: "#1E90FF",
+                              fontSize: 18,
+                              fontFamily: "OpenSans_500Medium",
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              color: "#1E90FF",
+                              fontSize: 14,
+                              fontFamily: "OpenSans_500Medium",
+                            }}
+                          >
+                            Nome do supermercado indisponível
+                          </Text>
+                        )}
                       </TouchableOpacity>
                       <Text
                         style={{

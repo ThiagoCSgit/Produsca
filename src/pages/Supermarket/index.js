@@ -81,7 +81,13 @@ export default function Supermarket({ route, navigation }) {
     supermarketProducts && (
       <SafeAreaView style={styles.container}>
         <View style={styles.supermarketInfos}>
-          <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>
+          {supermarketInfos.name != "" ? (
+            <Text style={styles.supermarketName}>{supermarketInfos.name}</Text>
+          ) : (
+            <Text style={{ fontFamily: "OpenSans_500Medium", fontSize: 18 }}>
+              Nome do supermercado indisponível
+            </Text>
+          )}
           <TouchableOpacity
             style={styles.callNumber}
             onPress={() => callNumber(supermarketInfos.phone)}

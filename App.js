@@ -1,4 +1,11 @@
-import { StyleSheet, View, Text, SafeAreaView, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  Pressable,
+  StatusBar,
+} from "react-native";
 import { useState } from "react";
 import {
   NavigationContainer,
@@ -53,9 +60,15 @@ export default function App() {
     return <View />;
   }
 
+  function updateState(navigation) {
+    setState(navigation);
+  }
+
   function Tabs({ navigation }) {
     if (!state) {
-      setState(navigation);
+      setTimeout(() => {
+        updateState(navigation), 100;
+      });
     }
     return (
       <Tab.Navigator
@@ -153,6 +166,7 @@ export default function App() {
 
   return (
     <LocationProvider>
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <NavigationContainer style={styles.container} ref={navigationRef}>
         <Stack.Navigator>
           <Stack.Screen
@@ -257,14 +271,14 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   headerGradient: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
   headerGradientAlternative: {
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
     paddingLeft: 30,
     flexDirection: "row",

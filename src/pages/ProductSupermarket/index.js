@@ -39,7 +39,6 @@ export default function ProductSupermarket({ route, navigation }) {
     let dataInicial = new Date();
     dataInicial.setDate(dataInicial.getDate() - quantDays);
     dataInicial = format(dataInicial, "yyyy-MM-dd");
-
     try {
       api
         .get(
@@ -71,7 +70,7 @@ export default function ProductSupermarket({ route, navigation }) {
   const onShare = async () => {
     await Share.share({
       message: `O(A) ${nameProduct}${
-        supermarket ? ` no${supermarket}` : ""
+        supermarket ? ` no ${supermarket}` : ""
       } está custando apenas R$${convertToReal(price)} no Produsca, confira!`,
     });
   };

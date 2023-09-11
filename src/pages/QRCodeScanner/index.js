@@ -2,22 +2,22 @@ import {
   View,
   Text,
   Dimensions,
-  Button,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Camera } from "expo-camera";
 import styles from "./styles";
 import api from "../../service/api";
-import IconET from "react-native-vector-icons/Entypo";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useIsFocused } from "@react-navigation/native";
 
 import Loading from "../../components/Loading";
 
-export default function Scanner() {
+export default function Scanner({ navigation }) {
   const isFocused = useIsFocused();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -40,7 +40,21 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    api.post("/envios/LinkNotaFiscal", { link: data });
+    api.post("/envios/LinkNotaFiscal", { link: data }).then(() => {
+      Alert.alert(
+        "Nota escaneada com sucesso",
+        "Obrigado pela sua contribuição 😉",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              setScanned(false);
+              navigation.navigate("Categorias");
+            },
+          },
+        ]
+      );
+    });
   };
 
   const handleFlashToggle = async () => {
@@ -70,12 +84,6 @@ export default function Scanner() {
                 : Camera.Constants.FlashMode.off
             }
           />
-          {scanned && (
-            <Button
-              title="Nota escaneada, aperte para escanear novamente"
-              onPress={() => setScanned(false)}
-            />
-          )}
         </View>
         <View
           style={{
@@ -85,10 +93,19 @@ export default function Scanner() {
           }}
         >
           <TouchableOpacity
-            style={styles.flashButton}
+            style={[
+              styles.flashButton,
+              flashOn
+                ? { backgroundColor: "#fff" }
+                : { backgroundColor: "#1a1a1a" },
+            ]}
             onPress={handleFlashToggle}
           >
-            <IconET name="flashlight" size={25} />
+            {flashOn ? (
+              <Icon name="flashlight" size={25} />
+            ) : (
+              <Icon name="flashlight-off" size={25} color="#fff" />
+            )}
           </TouchableOpacity>
         </View>
       </View>

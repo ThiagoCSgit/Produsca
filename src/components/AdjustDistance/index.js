@@ -50,7 +50,7 @@ export default function adjustDistance({
             <Slider
               style={{ width: 250, height: 50 }}
               minimumValue={1000}
-              maximumValue={10000}
+              maximumValue={20000}
               onValueChange={(value) => setRange(parseInt(value))}
               value={range}
               step={100}

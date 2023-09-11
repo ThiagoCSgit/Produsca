@@ -5,6 +5,7 @@ import {
   FlatList,
   Pressable,
   View,
+  Dimensions,
 } from "react-native";
 import styles from "./styles";
 import React, { useState, useEffect, useContext } from "react";
@@ -14,6 +15,8 @@ import NoData from "../../components/NoData";
 import AdjustDistance from "../../components/AdjustDistance";
 import { useLocation } from "../../context/LocationProvider";
 
+import getLocation from "../../utils/getLocation";
+
 import api from "../../service/api";
 
 export default function Supermarkets({ navigation }) {
@@ -21,10 +24,15 @@ export default function Supermarkets({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [noData, setNoData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [range, setRange] = useState(1000);
+  const [range, setRange] = useState(5000);
   const [previousRange, setPreviousRange] = useState(0);
+  const [myLocation, setMyLocation] = useState(useLocation());
 
-  const myLocation = useLocation();
+  useEffect(() => {
+    if (myLocation == null) {
+      setPosition();
+    }
+  }, [myLocation]);
 
   useEffect(() => {
     if (myLocation && !modalVisible && range != previousRange) {
@@ -32,6 +40,11 @@ export default function Supermarkets({ navigation }) {
       getNearbySupermarkets();
     }
   }, [myLocation, range, modalVisible]);
+
+  async function setPosition() {
+    let location = await getLocation();
+    setMyLocation(location);
+  }
 
   async function getNearbySupermarkets() {
     setNoData(null);
@@ -108,11 +121,22 @@ export default function Supermarkets({ navigation }) {
               }
             >
               <Image style={styles.supermarketIcon} source={item.image} />
-              <View>
-                <Text style={styles.supermarketName}>
+              {item.name != "" ? (
+                <Text style={styles.supermarketInfos}>
                   {item.name} - {item.publicPlace} {item.number}, {item.city}
                 </Text>
-              </View>
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "OpenSans_500Medium",
+                    fontSize: 12,
+                    width: Dimensions.get("window").width - 160,
+                  }}
+                >
+                  Nome do supermercado indisponível, {item.publicPlace}{" "}
+                  {item.number}, {item.city}
+                </Text>
+              )}
             </Pressable>
           );
         }}
