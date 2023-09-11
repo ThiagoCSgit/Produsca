@@ -5,6 +5,7 @@ import {
   FlatList,
   Pressable,
   View,
+  Dimensions,
 } from "react-native";
 import styles from "./styles";
 import React, { useState, useEffect, useContext } from "react";
@@ -120,11 +121,22 @@ export default function Supermarkets({ navigation }) {
               }
             >
               <Image style={styles.supermarketIcon} source={item.image} />
-              <View>
-                <Text style={styles.supermarketName}>
+              {item.name != "" ? (
+                <Text style={styles.supermarketInfos}>
                   {item.name} - {item.publicPlace} {item.number}, {item.city}
                 </Text>
-              </View>
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "OpenSans_500Medium",
+                    fontSize: 12,
+                    width: Dimensions.get("window").width - 160,
+                  }}
+                >
+                  Nome do supermercado indisponível, {item.publicPlace}{" "}
+                  {item.number}, {item.city}
+                </Text>
+              )}
             </Pressable>
           );
         }}

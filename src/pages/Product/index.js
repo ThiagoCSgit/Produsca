@@ -233,15 +233,27 @@ export default function Products({ route, navigation }) {
                           })
                         }
                       >
-                        <Text
-                          style={{
-                            color: "#1E90FF",
-                            fontSize: 18,
-                            fontFamily: "OpenSans_500Medium",
-                          }}
-                        >
-                          {item.name || "Supermercado"}
-                        </Text>
+                        {item.name != "" ? (
+                          <Text
+                            style={{
+                              color: "#1E90FF",
+                              fontSize: 18,
+                              fontFamily: "OpenSans_500Medium",
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              color: "#1E90FF",
+                              fontSize: 14,
+                              fontFamily: "OpenSans_500Medium",
+                            }}
+                          >
+                            Nome do supermercado indisponível
+                          </Text>
+                        )}
                       </TouchableOpacity>
                       <Text
                         style={{

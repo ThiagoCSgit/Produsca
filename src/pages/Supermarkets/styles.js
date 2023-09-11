@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 100,
   },
-  supermarketName: {
+  supermarketInfos: {
     fontSize: 15,
     textAlign: "left",
     fontFamily: "OpenSans_500Medium",
