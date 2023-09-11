@@ -4,11 +4,13 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 50,
   },
   image: {
-    width: "95%",
-    height: "75%",
+    width: "100%",
+    height: "70%",
+    position: "relative",
+    left: "3%",
   },
   message: {
     textAlign: "center",

@@ -5,7 +5,10 @@ import styles from "./styles";
 export default function NoData({ message, executeAction }) {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require("../../images/404.png")} />
+      <Image
+        style={styles.image}
+        source={require("../../images/cart-image.png")}
+      />
       <Text style={styles.message}>{message}</Text>
       <TouchableOpacity
         style={styles.buttonRefresh}
