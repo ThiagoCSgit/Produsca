@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   categoryName: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
     fontFamily: "OpenSans_500Medium",
   },

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   supermarketCategoryName: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
     fontFamily: "OpenSans_500Medium",
   },
