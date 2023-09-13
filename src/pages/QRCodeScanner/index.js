@@ -40,20 +40,21 @@ export default function Scanner({ navigation }) {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    api.post("/envios/LinkNotaFiscal", { link: data }).then(() => {
-      Alert.alert(
-        "Nota escaneada com sucesso",
-        "Obrigado pela sua contribuição 😉",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              setScanned(false);
-              navigation.navigate("Categorias");
-            },
+    Alert.alert(
+      "Nota escaneada com sucesso",
+      "Obrigado pela sua contribuição 😉",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            setScanned(false);
+            navigation.navigate("Categorias");
           },
-        ]
-      );
+        },
+      ]
+    );
+    api.post("/envios/LinkNotaFiscal", { link: data }).then((response) => {
+      console.warn(response.data);
     });
   };
 

@@ -56,6 +56,8 @@ export default function Products({ route, navigation }) {
           if (historic != null && historic?.listPrecoGeral.length > 0) {
             setPriceHistory(historic.listPrecoGeral);
           } else {
+            historic.message =
+              "Não foram encontrados preços referentes a este produto.";
             setPriceHistory(historic);
           }
           setIsLoadingHistory(false);
@@ -217,6 +219,7 @@ export default function Products({ route, navigation }) {
                         flexDirection: "row",
                         justifyContent: "center",
                         paddingBottom: 10,
+                        paddingHorizontal: 5,
                       }}
                     >
                       <TouchableOpacity
@@ -231,12 +234,16 @@ export default function Products({ route, navigation }) {
                             number: item.number,
                           })
                         }
+                        style={{
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
                         {item.name != "" ? (
                           <Text
                             style={{
                               color: "#1E90FF",
-                              fontSize: 18,
+                              fontSize: 16,
                               fontFamily: "OpenSans_500Medium",
                             }}
                           >
@@ -256,7 +263,7 @@ export default function Products({ route, navigation }) {
                       </TouchableOpacity>
                       <Text
                         style={{
-                          fontSize: 18,
+                          fontSize: 16,
                           color: "#140F07",
                           fontFamily: "OpenSans_500Medium",
                         }}

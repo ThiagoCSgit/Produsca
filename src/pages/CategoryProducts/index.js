@@ -74,7 +74,10 @@ export default function CategoryProducts({ navigation }) {
             );
           } else {
             setCatProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Nenhuma categoria encontrada, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         })

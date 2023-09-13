@@ -64,7 +64,10 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Não existem produtos cadastrados para essa categoria nesse supermercado no momento, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         });
@@ -87,7 +90,10 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Não existem produtos cadastrados para essa categoria no momento, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         });

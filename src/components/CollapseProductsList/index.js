@@ -170,15 +170,27 @@ export default function CollapseProductsList({
                     style={styles.buttonOpenCollapse}
                     onPress={() => openCloseCollapse(item.id)}
                   >
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontFamily: "OpenSans_500Medium",
-                        color: "#253D4E",
-                      }}
-                    >
-                      {item.supermarket.name}
-                    </Text>
+                    {item.supermarket.name ? (
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: "OpenSans_500Medium",
+                          color: "#253D4E",
+                        }}
+                      >
+                        {item.supermarket.name}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: "OpenSans_500Medium",
+                          color: "#253D4E",
+                        }}
+                      >
+                        Nome do supermercado indisponível
+                      </Text>
+                    )}
                     {visible[index]?.open ? (
                       <Icon name="down" color="#253D4E" size={20} />
                     ) : (

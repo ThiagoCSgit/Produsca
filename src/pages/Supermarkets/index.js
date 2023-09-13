@@ -74,7 +74,10 @@ export default function Supermarkets({ navigation }) {
           );
         } else {
           setSupermarkets([]);
-          setNoData(response.data);
+          let apiResponse = response.data;
+          apiResponse.message =
+            "Nenhum supermercado encontrado próximo a sua região";
+          setNoData(apiResponse);
         }
         setIsLoading(false);
       });
