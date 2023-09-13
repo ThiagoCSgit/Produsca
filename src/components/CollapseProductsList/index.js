@@ -57,8 +57,8 @@ export default function CollapseProductsList({
     setVisible(updatedVisible);
   }
 
-  async function startShopping(list, supermarketName) {
-    await getPurchaseInProgress(list, supermarketName);
+  async function startShopping(list, cnpj) {
+    await getPurchaseInProgress(list, cnpj);
     navigation.navigate("Carrinho", {
       list: list,
     });
@@ -99,10 +99,10 @@ export default function CollapseProductsList({
           return tempHistoryKey == tempPurchaseKey;
         }
       });
-      let supermarketNameKey = purchaseKey.substring(20);
+      let supermarketCnpjKey = purchaseKey.substring(20);
       let codeHistory = historyKey.substring(17, 20);
 
-      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketNameKey);
+      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketCnpjKey);
 
       if (
         choosedMarket &&
@@ -116,7 +116,7 @@ export default function CollapseProductsList({
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
       } else {
         let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
-        let id = `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
+        let id = `compra-iniciada-${codeHistory}-${supermarketCnpjKey}`;
 
         let updatedState = internalState.map((item) => {
           return item.id == shoppingList.id
@@ -227,12 +227,12 @@ export default function CollapseProductsList({
                       onPress={() =>
                         startShopping(
                           internalState[index],
-                          item.supermarket.name
+                          item.supermarket.cnpj
                         )
                       }
                     >
                       <Text style={styles.textButton}>
-                        {purchaseInProgress == item.supermarket.name
+                        {purchaseInProgress == item.supermarket.cnpj
                           ? "Continuar Compra"
                           : "Iniciar Compra"}
                       </Text>
@@ -309,12 +309,12 @@ export default function CollapseProductsList({
                         onPress={() =>
                           startShopping(
                             internalState[index],
-                            item.supermarket.name
+                            item.supermarket.cnpj
                           )
                         }
                       >
                         <Text style={styles.textButton}>
-                          {purchaseInProgress == item.supermarket.name
+                          {purchaseInProgress == item.supermarket.cnpj
                             ? "Continuar Compra"
                             : "Iniciar Compra"}
                         </Text>

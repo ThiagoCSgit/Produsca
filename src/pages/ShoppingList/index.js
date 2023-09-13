@@ -50,7 +50,7 @@ export default function ShoppingList({ navigation }) {
     }
   }
 
-  async function increaseQuantity(id, supermarket = null) {
+  async function increaseQuantity(id, supermarket = null, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -67,12 +67,12 @@ export default function ShoppingList({ navigation }) {
     addOrRemoveToShopCart(
       currentProduct.id,
       currentProduct.qtd,
-      supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  async function decreaseQuantity(id, supermarket = null) {
+  async function decreaseQuantity(id, supermarket = null, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -89,14 +89,14 @@ export default function ShoppingList({ navigation }) {
     addOrRemoveToShopCart(
       currentProduct.id,
       currentProduct.qtd,
-      supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
-    let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+  async function addOrRemoveToShopCart(idProd, qtd, cnpj, productName) {
+    let id = cnpj
+      ? `produto-lista-${cnpj}-${idProd}-${productName}`
       : `produto-lista-noMarket-${idProd}-${productName}`;
 
     if (qtd > 0) {
@@ -139,7 +139,7 @@ export default function ShoppingList({ navigation }) {
                   <View style={{ width: "80%" }}>
                     <Text style={styles.itemName}>
                       {item.supermarket
-                        ? `${item.name} \n R$${item.price} - ${item.supermarket}`
+                        ? `${item.name} \nR$${item.price} - ${item.supermarket}`
                         : `${item.name}`}
                     </Text>
                     <View style={styles.quantItems}>

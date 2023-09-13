@@ -110,10 +110,10 @@ export default function Products({ route, navigation }) {
       let productChecked = null;
       for (let i = 0; i < newList.length; i++) {
         item = newList[i];
-        if (supermarketName) {
+        if (cnpj) {
           productChecked = JSON.parse(
             await AsyncStorage.getItem(
-              `produto-lista-${supermarketName}-${item.id}-${item.name}`
+              `produto-lista-${cnpj}-${item.id}-${item.name}`
             )
           );
         } else {
@@ -138,7 +138,7 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  function increaseQuantity(id, supermarket = null) {
+  function increaseQuantity(id, supermarket = null, cnpj = null) {
     let newList = [...products];
     let currentProduct = "";
 
@@ -156,11 +156,12 @@ export default function Products({ route, navigation }) {
       currentProduct.id,
       currentProduct.qtd,
       supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  function decreaseQuantity(id, supermarket = null) {
+  function decreaseQuantity(id, supermarket = null, cnpj = null) {
     let newList = [...products];
     let currentProduct = "";
 
@@ -178,20 +179,28 @@ export default function Products({ route, navigation }) {
       currentProduct.id,
       currentProduct.qtd,
       supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
-    let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}-${productName}`
+  async function addOrRemoveToShopCart(
+    idProd,
+    qtd,
+    supermarket,
+    cnpj,
+    productName
+  ) {
+    let id = cnpj
+      ? `produto-lista-${cnpj}-${idProd}-${productName}`
       : `produto-lista-noMarket-${idProd}-${productName}`;
 
-    cleanShoppingList(supermarket, id);
+    cleanShoppingList(cnpj);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
       itemToAdd.supermarket = supermarket;
+      itemToAdd.cnpj = cnpj;
       itemToAdd.category = categoryName;
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
@@ -207,14 +216,14 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  async function cleanShoppingList(supermarket, id) {
+  async function cleanShoppingList(cnpj) {
     let asyncStorage = await AsyncStorage.getAllKeys();
     let productsOnList = asyncStorage.filter((item) =>
       item.includes("produto-lista")
     );
-    if (!supermarket) {
+    if (!cnpj) {
       productsOnList.forEach(async (item) => {
-        if (item.includes(`produto-lista-${supermarket}-`)) {
+        if (item.includes(`produto-lista-${cnpj}-`)) {
           await AsyncStorage.removeItem(item);
         }
       });
@@ -258,7 +267,7 @@ export default function Products({ route, navigation }) {
               <Pressable
                 style={styles.productItem}
                 onPress={() =>
-                  supermarketName
+                  cnpj
                     ? navigation.navigate("Detalhes do Produto", {
                         supermarket: supermarketName,
                         nameProduct: item.name,
@@ -278,7 +287,7 @@ export default function Products({ route, navigation }) {
                 />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
-                  {supermarketName && (
+                  {cnpj && (
                     <Text style={styles.nameProduct}>R$ {item.price}</Text>
                   )}
                 </View>
@@ -288,14 +297,18 @@ export default function Products({ route, navigation }) {
                   name="minuscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() => decreaseQuantity(item.id, supermarketName)}
+                  onPress={() =>
+                    decreaseQuantity(item.id, supermarketName, cnpj)
+                  }
                 />
                 <Text style={styles.quantityValue}>{item.qtd}</Text>
                 <Icon
                   name="pluscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() => increaseQuantity(item.id, supermarketName)}
+                  onPress={() =>
+                    increaseQuantity(item.id, supermarketName, cnpj)
+                  }
                 />
               </View>
             </View>

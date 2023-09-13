@@ -32,6 +32,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
   }, [myLocation]);
 
   useEffect(() => {
+    console.warn("myLocation:", myLocation);
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
       postShopList();
@@ -80,7 +81,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
               state: item.nomeEstado,
               district: item.nomeBairro,
               phone: item.telefone,
-              cpnj: item.cnpj,
+              cnpj: item.cnpj,
             };
             let produtos = item.produtos.map((prod, index) => {
               if (prod.nome.trim() == listNomeProd[index].nome.trim())
