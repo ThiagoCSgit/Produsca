@@ -32,7 +32,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
   }, [myLocation]);
 
   useEffect(() => {
-    console.warn("myLocation:", myLocation);
     if (myLocation && !modalVisible && range != previousRange) {
       setPreviousRange(range);
       postShopList();
