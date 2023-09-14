@@ -26,7 +26,6 @@ export default function Products({ route, navigation }) {
 
   useEffect(() => {
     getCategoryProducts();
-    console.warn("params:", route.params);
   }, []);
 
   useMemo(() => {
@@ -104,7 +103,6 @@ export default function Products({ route, navigation }) {
 
   async function getCheckProducts() {
     let produtos = await AsyncStorage.getAllKeys();
-    console.warn("chaves em produtos:", produtos, "cnpj:", cnpj);
     try {
       let newList = [...products];
       newList.forEach((item) => {
@@ -173,7 +171,6 @@ export default function Products({ route, navigation }) {
   }
 
   async function addOrRemoveToShopCart(idProd, qtd) {
-    console.warn("parametros para adicionar, idProd:", idProd, "qtd:", qtd);
     let id = cnpj
       ? `produto-lista-${cnpj}-${idProd}`
       : `produto-lista-noMarket-${idProd}`;
@@ -184,8 +181,6 @@ export default function Products({ route, navigation }) {
       itemToAdd.supermarket = supermarketName;
       itemToAdd.cnpj = cnpj;
       itemToAdd.category = categoryName;
-      console.warn("id ao adicionar:", id, "item:", itemToAdd);
-      console.warn("cnpj e nome do mercado:", cnpj, supermarketName);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -246,6 +241,7 @@ export default function Products({ route, navigation }) {
                 borderRadius: 10,
                 paddingHorizontal: 10,
                 overflow: "hidden",
+                flex: 1,
               }}
               key={index}
             >
