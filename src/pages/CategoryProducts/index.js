@@ -33,7 +33,6 @@ export default function CategoryProducts({ navigation }) {
   }, [isFocused]);
 
   async function hasPurchaseInProgress() {
-    // await AsyncStorage.clear();
     let savedKeys = await AsyncStorage.getAllKeys();
     let filteredKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
@@ -114,6 +113,7 @@ export default function CategoryProducts({ navigation }) {
     });
     await AsyncStorage.removeItem(purchaseKey);
     await AsyncStorage.removeItem(historyKey);
+    savedKeys = await AsyncStorage.getAllKeys();
   }
 
   return isLoading ? (

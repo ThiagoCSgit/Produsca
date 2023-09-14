@@ -37,7 +37,6 @@ export default function Products({ route, navigation }) {
   async function getCategoryProducts() {
     setIsLoading(true);
     setNoData(null);
-    // await AsyncStorage.clear();
 
     if (supermarketName || cnpj) {
       api
@@ -102,7 +101,6 @@ export default function Products({ route, navigation }) {
   }
 
   async function getCheckProducts() {
-    let produtos = await AsyncStorage.getAllKeys();
     try {
       let newList = [...products];
       newList.forEach((item) => {
@@ -136,7 +134,7 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  function increaseQuantity(id, supermarket = null, cnpj = null) {
+  function increaseQuantity(id) {
     let newList = [...products];
     let currentProduct = "";
 
@@ -153,7 +151,7 @@ export default function Products({ route, navigation }) {
     addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd);
   }
 
-  function decreaseQuantity(id, supermarket = null, cnpj = null) {
+  function decreaseQuantity(id) {
     let newList = [...products];
     let currentProduct = "";
 

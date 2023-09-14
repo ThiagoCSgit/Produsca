@@ -17,12 +17,7 @@ import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
 export default function ShopCart({ route, navigation }) {
-  const [cartList, setCartList] = useState({
-    id: 0,
-    products: [],
-    supermarket: "",
-    cnpj: "",
-  });
+  const [cartList, setCartList] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
@@ -32,8 +27,10 @@ export default function ShopCart({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    totalValue();
-    saveToHistory();
+    if (cartList?.products.length > 0) {
+      saveToHistory();
+      totalValue();
+    }
   }, [cartList]);
 
   function getCartProducts() {
@@ -63,12 +60,14 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function removePurchaseStorage() {
-    await AsyncStorage.removeItem(
-      `compra-iniciada-${cartList.id}-${cartList.supermarket.cnpj}`
-    );
+    if (cartList?.supermarket.cnpj) {
+      await AsyncStorage.removeItem(
+        `compra-iniciada-${cartList.id}-${cartList.supermarket.cnpj}`
+      );
+    }
   }
 
-  function removeItem(index) {
+  function removeItemList(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
     setCartList({
@@ -165,7 +164,7 @@ export default function ShopCart({ route, navigation }) {
 
   async function saveToHistory() {
     try {
-      if (cartList.products.length > 0) {
+      if (cartList?.products.length > 0) {
         await AsyncStorage.setItem(
           `compra-iniciada-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
@@ -266,7 +265,7 @@ export default function ShopCart({ route, navigation }) {
                     color="#dc3546"
                     name="trash-2"
                     size={25}
-                    onPress={() => removeItem(index)}
+                    onPress={() => removeItemList(index)}
                   />
                 </View>
               );
