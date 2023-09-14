@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 15,
+    flex: 1,
   },
   itemList: {
     fontSize: 16,
@@ -48,6 +49,25 @@ const styles = StyleSheet.create({
     color: "#5C5A66",
     alignItems: "center",
     justifyContent: "center",
+  },
+  itemValue: {
+    marginLeft: 10,
+    fontStyle: "italic",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#5C5A66",
+    fontSize: 16,
+  },
+  historicInfos: {
+    flexDirection: "row",
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 5,
+    position: "relative",
+    top: 5,
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
   },
   startShoppingButton: {
     borderBottomLeftRadius: 8,

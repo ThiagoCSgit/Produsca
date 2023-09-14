@@ -16,6 +16,9 @@ import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
 export default function ShopCart({ route, navigation }) {
   const [cartList, setCartList] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -33,16 +36,23 @@ export default function ShopCart({ route, navigation }) {
     }
   }, [cartList]);
 
+  function callSetCartList(newList) {
+    setCartList({
+      id: list.id,
+      products: newList,
+      supermarket: list.supermarket,
+      data: format(new Date(), "dd/MM/yy", {
+        locale: ptBR,
+      }),
+    });
+  }
+
   function getCartProducts() {
     let newList = list.products.map((item, index) => {
       item.idProd = index;
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function checkedProduct(value, id) {
@@ -52,11 +62,7 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   async function removePurchaseStorage() {
@@ -70,11 +76,7 @@ export default function ShopCart({ route, navigation }) {
   function removeItemList(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function increaseQuantity(id) {
@@ -84,11 +86,7 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function decreaseQuantity(id) {
@@ -98,11 +96,7 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function itemPrice(value, quantity = 1) {

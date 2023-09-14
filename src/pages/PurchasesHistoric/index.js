@@ -27,8 +27,14 @@ export default function PurchasesHistoric() {
       let id = item[0];
       let products = JSON.parse(item[1]).products;
       let supermarket = JSON.parse(item[1]).supermarket;
+      let data = JSON.parse(item[1]).data;
 
-      return { id: id, products: products, supermarket: supermarket };
+      return {
+        id: id,
+        products: products,
+        supermarket: supermarket,
+        data: data,
+      };
     });
     setHistoric(newList);
   }
@@ -46,6 +52,7 @@ export default function PurchasesHistoric() {
             state={historic}
             deleteButton={true}
             getHistoric={getHistoric}
+            showInfos={true}
           />
         </ScrollView>
       ) : (

@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function CollapseProductsList({
   state,
   showButton = false,
+  showInfos = false,
   navigation = null,
   isFocused,
   deleteButton = false,
@@ -138,6 +139,29 @@ export default function CollapseProductsList({
         }
       }
     }
+  }
+
+  function itemPrice(value, quantity = 1) {
+    if (value != -1) {
+      return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
+        minimumFractionDigits: 2,
+      });
+    } else {
+      return "- -";
+    }
+  }
+
+  function totalValue(list) {
+    let sum = 0;
+    if (list.products.length > 0) {
+      list.products.forEach((item) => {
+        if (item.price != -1) {
+          sum += item.price * item.qtd;
+        }
+      });
+    }
+    let valor = sum != 0 ? itemPrice(`${sum}`) : "- -";
+    return valor;
   }
 
   return (
@@ -263,6 +287,14 @@ export default function CollapseProductsList({
                 </View>
                 {visible[index]?.open && (
                   <View>
+                    {showInfos && (
+                      <View style={styles.historicInfos}>
+                        <Text style={styles.itemValue}>Data: {item.data}</Text>
+                        <Text style={styles.itemValue}>
+                          Total: R$ {totalValue(item)}
+                        </Text>
+                      </View>
+                    )}
                     <View style={styles.listCollapse}>
                       {item?.products.map((products, indexProd) => (
                         <View
@@ -274,23 +306,13 @@ export default function CollapseProductsList({
                           <Text
                             style={[
                               styles.itemList,
-                              { width: Dimensions.get("window").width - 160 },
+                              { width: Dimensions.get("window").width - 170 },
                             ]}
                             key={`${index}-${indexProd}`}
                           >
                             {products.name}
                           </Text>
-                          <Text
-                            style={[
-                              styles.itemList,
-                              {
-                                marginLeft: 10,
-                                fontStyle: "italic",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              },
-                            ]}
-                          >
+                          <Text style={[styles.itemValue]}>
                             {products.price == -1
                               ? `${products.qtd}x R$ - -`
                               : `${products.qtd}x R$ ${products.price}`}
