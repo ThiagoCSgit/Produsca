@@ -26,6 +26,7 @@ export default function Products({ route, navigation }) {
 
   useEffect(() => {
     getCategoryProducts();
+    console.warn("params:", route.params);
   }, []);
 
   useMemo(() => {
@@ -37,6 +38,7 @@ export default function Products({ route, navigation }) {
   async function getCategoryProducts() {
     setIsLoading(true);
     setNoData(null);
+    // await AsyncStorage.clear();
 
     if (supermarketName || cnpj) {
       api
@@ -101,6 +103,8 @@ export default function Products({ route, navigation }) {
   }
 
   async function getCheckProducts() {
+    let produtos = await AsyncStorage.getAllKeys();
+    console.warn("chaves em produtos:", produtos, "cnpj:", cnpj);
     try {
       let newList = [...products];
       newList.forEach((item) => {
@@ -112,15 +116,11 @@ export default function Products({ route, navigation }) {
         item = newList[i];
         if (cnpj) {
           productChecked = JSON.parse(
-            await AsyncStorage.getItem(
-              `produto-lista-${cnpj}-${item.id}-${item.name}`
-            )
+            await AsyncStorage.getItem(`produto-lista-${cnpj}-${item.id}`)
           );
         } else {
           productChecked = JSON.parse(
-            await AsyncStorage.getItem(
-              `produto-lista-noMarket-${item.id}-${item.name}`
-            )
+            await AsyncStorage.getItem(`produto-lista-noMarket-${item.id}`)
           );
         }
         if (productChecked != null) {
@@ -152,13 +152,7 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(
-      currentProduct.id,
-      currentProduct.qtd,
-      supermarket,
-      cnpj,
-      currentProduct.name
-    );
+    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd);
   }
 
   function decreaseQuantity(id, supermarket = null, cnpj = null) {
@@ -175,33 +169,23 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(
-      currentProduct.id,
-      currentProduct.qtd,
-      supermarket,
-      cnpj,
-      currentProduct.name
-    );
+    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd);
   }
 
-  async function addOrRemoveToShopCart(
-    idProd,
-    qtd,
-    supermarket,
-    cnpj,
-    productName
-  ) {
+  async function addOrRemoveToShopCart(idProd, qtd) {
+    console.warn("parametros para adicionar, idProd:", idProd, "qtd:", qtd);
     let id = cnpj
-      ? `produto-lista-${cnpj}-${idProd}-${productName}`
-      : `produto-lista-noMarket-${idProd}-${productName}`;
-
+      ? `produto-lista-${cnpj}-${idProd}`
+      : `produto-lista-noMarket-${idProd}`;
     cleanShoppingList(cnpj);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
-      itemToAdd.supermarket = supermarket;
+      itemToAdd.supermarket = supermarketName;
       itemToAdd.cnpj = cnpj;
       itemToAdd.category = categoryName;
+      console.warn("id ao adicionar:", id, "item:", itemToAdd);
+      console.warn("cnpj e nome do mercado:", cnpj, supermarketName);
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
       } catch (e) {
@@ -261,6 +245,7 @@ export default function Products({ route, navigation }) {
                 borderColor: "#D4EEE2",
                 borderRadius: 10,
                 paddingHorizontal: 10,
+                overflow: "hidden",
               }}
               key={index}
             >
@@ -297,18 +282,14 @@ export default function Products({ route, navigation }) {
                   name="minuscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() =>
-                    decreaseQuantity(item.id, supermarketName, cnpj)
-                  }
+                  onPress={() => decreaseQuantity(item.id)}
                 />
                 <Text style={styles.quantityValue}>{item.qtd}</Text>
                 <Icon
                   name="pluscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() =>
-                    increaseQuantity(item.id, supermarketName, cnpj)
-                  }
+                  onPress={() => increaseQuantity(item.id)}
                 />
               </View>
             </View>

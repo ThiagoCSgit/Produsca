@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4EEE2",
     borderRadius: 10,
-    paddingTop: 10,
+    paddingVertical: 20,
+    // backgroundColor: "red",
+    // height: "100%",
   },
   itemName: {
     fontSize: 18,

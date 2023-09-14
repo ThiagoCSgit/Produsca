@@ -40,6 +40,7 @@ export default function ShoppingList({ navigation }) {
   }
 
   async function removeItem(id, callGetCart = true) {
+    console.warn("id para remover:", id);
     try {
       await AsyncStorage.removeItem(id);
       if (callGetCart) {
@@ -50,7 +51,7 @@ export default function ShoppingList({ navigation }) {
     }
   }
 
-  async function increaseQuantity(id, supermarket = null, cnpj) {
+  async function increaseQuantity(id, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -72,7 +73,7 @@ export default function ShoppingList({ navigation }) {
     );
   }
 
-  async function decreaseQuantity(id, supermarket = null, cnpj) {
+  async function decreaseQuantity(id, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -94,11 +95,13 @@ export default function ShoppingList({ navigation }) {
     );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, cnpj, productName) {
+  async function addOrRemoveToShopCart(idProd, qtd, cnpj) {
     let id = cnpj
-      ? `produto-lista-${cnpj}-${idProd}-${productName}`
-      : `produto-lista-noMarket-${idProd}-${productName}`;
-
+      ? `produto-lista-${cnpj}-${idProd}`
+      : `produto-lista-noMarket-${idProd}`;
+    console.warn("id:", id);
+    let teste = await AsyncStorage.getAllKeys();
+    console.warn("keys:", teste);
     if (qtd > 0) {
       let itemToAdd = cartList.find((item) => item.id == idProd);
       try {
@@ -123,12 +126,12 @@ export default function ShoppingList({ navigation }) {
             width: "100%",
             height: "100%",
             alignItems: "center",
+            flex: 1,
           }}
         >
           <FlatList
             contentContainerStyle={{
               gap: 15,
-              paddingHorizontal: 20,
             }}
             data={cartList}
             numColumns={1}
@@ -147,18 +150,14 @@ export default function ShoppingList({ navigation }) {
                         name="minuscircleo"
                         color="#253D4E"
                         size={25}
-                        onPress={() =>
-                          decreaseQuantity(item.id, item.supermarket)
-                        }
+                        onPress={() => decreaseQuantity(item.id, item.cnpj)}
                       />
                       <Text style={styles.quantityValue}>{item.qtd}</Text>
                       <IconAD
                         name="pluscircleo"
                         color="#253D4E"
                         size={25}
-                        onPress={() =>
-                          increaseQuantity(item.id, item.supermarket)
-                        }
+                        onPress={() => increaseQuantity(item.id, item.cnpj)}
                       />
                     </View>
                   </View>
@@ -170,8 +169,8 @@ export default function ShoppingList({ navigation }) {
                     onPress={() =>
                       removeItem(
                         item.supermarket
-                          ? `produto-lista-${item.supermarket}-${item.id}-${item.name}`
-                          : `produto-lista-noMarket-${item.id}-${item.name}`
+                          ? `produto-lista-${item.cnpj}-${item.id}`
+                          : `produto-lista-noMarket-${item.id}`
                       )
                     }
                   />

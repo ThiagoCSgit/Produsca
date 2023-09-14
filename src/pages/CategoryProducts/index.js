@@ -33,6 +33,7 @@ export default function CategoryProducts({ navigation }) {
   }, [isFocused]);
 
   async function hasPurchaseInProgress() {
+    // await AsyncStorage.clear();
     let savedKeys = await AsyncStorage.getAllKeys();
     let filteredKey = savedKeys.find((key) => {
       if (key.includes("compra-iniciada")) {
@@ -139,6 +140,7 @@ export default function CategoryProducts({ navigation }) {
                   navigation.navigate("Produtos", {
                     categoryName: item.name,
                     supermarketName: null,
+                    cnpj: null,
                   })
                 }
               >
