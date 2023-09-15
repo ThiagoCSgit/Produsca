@@ -275,7 +275,7 @@ export default function Products({ route, navigation }) {
                     <TouchableOpacity
                       style={styles.buttonHistoric}
                       onPress={() =>
-                        navigation.navigate("Detalhes do Produto", {
+                        navigation.navigate("Detalhes do produto", {
                           supermarket: item.name,
                           nameProduct: nameProduct,
                           cnpj: item.cnpj,

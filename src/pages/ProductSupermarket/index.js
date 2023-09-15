@@ -82,7 +82,7 @@ export default function ProductSupermarket({ route, navigation }) {
   ) : (
     <SafeAreaView style={styles.container}>
       <Text style={styles.nameProduct}>
-        {nameProduct} {supermarket && ` ${supermarket}`}
+        {nameProduct} {supermarket && `${supermarket}`}
       </Text>
       <View>
         {priceHistory.length > 0 ? (

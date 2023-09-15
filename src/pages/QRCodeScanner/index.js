@@ -109,6 +109,7 @@ export default function Scanner({ navigation }) {
             )}
           </TouchableOpacity>
         </View>
+        <Text style={styles.textInfo}>Leitor de nota fiscal</Text>
       </View>
     );
   }

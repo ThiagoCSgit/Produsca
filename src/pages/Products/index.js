@@ -247,7 +247,7 @@ export default function Products({ route, navigation }) {
                 style={styles.productItem}
                 onPress={() =>
                   cnpj
-                    ? navigation.navigate("Detalhes do Produto", {
+                    ? navigation.navigate("Detalhes do produto", {
                         supermarket: supermarketName,
                         nameProduct: item.name,
                         barCode: item.bar_code,

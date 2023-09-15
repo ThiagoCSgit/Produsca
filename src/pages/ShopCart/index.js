@@ -195,7 +195,7 @@ export default function ShopCart({ route, navigation }) {
     ]);
 
     setTimeout(() => {
-      navigation.navigate("Histórico");
+      navigation.navigate("Categorias");
     }, 100);
   }
 
@@ -209,7 +209,7 @@ export default function ShopCart({ route, navigation }) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
+          <Text style={styles.totalValue}>Valor total da compra: {total}</Text>
           <FlatList
             data={cartList.products}
             numColumns={1}

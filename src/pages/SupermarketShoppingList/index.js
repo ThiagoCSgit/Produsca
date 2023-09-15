@@ -59,7 +59,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
         qtd: item.qtd,
       };
     });
-
     api
       .post("/envios/ProdutosEscolhidosCarrinho", {
         latitudeUsuario: myLocation?.coords.latitude,
@@ -69,7 +68,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
       })
       .then((response) => {
         let listResponse = response.data;
-
         if (listResponse != null && listResponse.length > 0) {
           let data = listResponse.map((item) => {
             let supermercado = {
@@ -92,6 +90,7 @@ export default function SupermaketShoppingList({ route, navigation }) {
                   qtd: listNomeProd[index].qtd,
                 };
             });
+
             return {
               supermarket: supermercado,
               products: produtos,

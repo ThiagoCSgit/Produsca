@@ -197,7 +197,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Detalhes do Produto"
+            name="Detalhes do produto"
             component={ProductSupermarket}
             options={{
               header: (scene) => {
