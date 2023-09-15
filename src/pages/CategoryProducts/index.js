@@ -111,9 +111,7 @@ export default function CategoryProducts({ navigation }) {
         return tempHistoryKey == tempPurchaseKey;
       }
     });
-    await AsyncStorage.removeItem(purchaseKey);
-    await AsyncStorage.removeItem(historyKey);
-    savedKeys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.multiRemove([purchaseKey, historyKey]);
   }
 
   return isLoading ? (

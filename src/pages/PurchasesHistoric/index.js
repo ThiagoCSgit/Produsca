@@ -16,8 +16,8 @@ export default function PurchasesHistoric() {
   }, [isFocused]);
 
   async function getHistoric() {
-    let productKeys = await AsyncStorage.getAllKeys();
-    let filteredKeys = productKeys.filter((key) => {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let filteredKeys = savedKeys.filter((key) => {
       if (key.includes("compra-historico")) {
         return key;
       }

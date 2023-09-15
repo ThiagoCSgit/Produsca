@@ -102,16 +102,17 @@ export default function CollapseProductsList({
       });
       let supermarketCnpjKey = purchaseKey.substring(20);
       let codeHistory = historyKey.substring(17, 20);
-
       setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketCnpjKey);
 
       if (
         choosedMarket &&
         purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
       ) {
-        await AsyncStorage.removeItem(purchaseKey);
-        await AsyncStorage.removeItem(historyKey);
-
+        await AsyncStorage.multiRemove([
+          purchaseKey,
+          historyKey,
+          `ultima-compra-${codeHistory}-${supermarketCnpjKey}`,
+        ]);
         let shoppingList = list;
         let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));

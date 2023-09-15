@@ -167,6 +167,10 @@ export default function ShopCart({ route, navigation }) {
           `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
         );
+        await AsyncStorage.setItem(
+          `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
+          JSON.stringify(cartList)
+        );
       } else {
         removePurchaseStorage();
       }
@@ -185,10 +189,10 @@ export default function ShopCart({ route, navigation }) {
 
   async function cancelPurchase() {
     removePurchaseStorage();
-
-    await AsyncStorage.removeItem(
-      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`
-    );
+    await AsyncStorage.multiRemove([
+      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
+      `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
+    ]);
 
     setTimeout(() => {
       navigation.navigate("Histórico");
