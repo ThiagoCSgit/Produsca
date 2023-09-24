@@ -28,19 +28,21 @@ const styles = StyleSheet.create({
   },
   productInfos: {
     marginLeft: 15,
+    width: "100%",
   },
   productIcon: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     marginRight: 10,
     borderRadius: 100,
   },
   nameProduct: {
-    width: Dimensions.get("window").width - 180,
     fontSize: 14,
     fontFamily: "OpenSans_400Regular",
     color: "#253D4E",
     textAlign: "left",
+    width: "75%",
+    flexWrap: "wrap",
   },
   quantItems: {
     flexDirection: "row",

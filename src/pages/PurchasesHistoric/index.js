@@ -16,8 +16,8 @@ export default function PurchasesHistoric() {
   }, [isFocused]);
 
   async function getHistoric() {
-    let productKeys = await AsyncStorage.getAllKeys();
-    let filteredKeys = productKeys.filter((key) => {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let filteredKeys = savedKeys.filter((key) => {
       if (key.includes("compra-historico")) {
         return key;
       }
@@ -27,8 +27,14 @@ export default function PurchasesHistoric() {
       let id = item[0];
       let products = JSON.parse(item[1]).products;
       let supermarket = JSON.parse(item[1]).supermarket;
+      let data = JSON.parse(item[1]).data;
 
-      return { id: id, products: products, supermarket: supermarket };
+      return {
+        id: id,
+        products: products,
+        supermarket: supermarket,
+        data: data,
+      };
     });
     setHistoric(newList);
   }
@@ -46,6 +52,7 @@ export default function PurchasesHistoric() {
             state={historic}
             deleteButton={true}
             getHistoric={getHistoric}
+            showInfos={true}
           />
         </ScrollView>
       ) : (

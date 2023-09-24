@@ -14,6 +14,7 @@ import styles from "./styles";
 import api from "../../service/api";
 
 import Loading from "../../components/Loading";
+import NoData from "../../components/NoData";
 
 export default function Supermarket({ route, navigation }) {
   const supermarketInfos = {
@@ -27,6 +28,7 @@ export default function Supermarket({ route, navigation }) {
   };
   const [isLoading, setIsLoading] = useState(true);
   const [supermarketProducts, setSupermarketProducts] = useState([]);
+  const [noData, setNoData] = useState(null);
 
   useEffect(() => {
     getCategories();
@@ -34,6 +36,7 @@ export default function Supermarket({ route, navigation }) {
 
   async function getCategories() {
     setIsLoading(true);
+    setNoData(null);
     api.get("/consultas/CategoriasProdutos").then((response) => {
       let listCategorys = response.data;
       if (listCategorys != null && listCategorys.length > 0) {
@@ -47,6 +50,10 @@ export default function Supermarket({ route, navigation }) {
           })
         );
       } else {
+        let apiReturn = response.data;
+        apiReturn.message =
+          "Nenhuma categoria encontrada, tente novamente mais tarde";
+        setNoData(apiReturn);
         setSupermarketProducts([]);
       }
       setIsLoading(false);
@@ -77,6 +84,8 @@ export default function Supermarket({ route, navigation }) {
 
   return isLoading ? (
     <Loading />
+  ) : noData != null ? (
+    <NoData message={noData.message} executeAction={getCategories} />
   ) : (
     supermarketProducts && (
       <SafeAreaView style={styles.container}>

@@ -7,7 +7,7 @@ export default function NoData({ message, executeAction }) {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={require("../../images/cart-image.png")}
+        source={require("../../images/empty-cart-image.png")}
       />
       <Text style={styles.message}>{message}</Text>
       <TouchableOpacity

@@ -12,6 +12,10 @@ import { Camera } from "expo-camera";
 import styles from "./styles";
 import api from "../../service/api";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -23,6 +27,7 @@ export default function Scanner({ navigation }) {
   const [scanned, setScanned] = useState(false);
   const [flashOn, setFlashOn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [updateApi, setUpdateApi] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -38,24 +43,90 @@ export default function Scanner({ navigation }) {
     })();
   }, [isFocused]);
 
-  const handleBarCodeScanned = ({ data }) => {
-    setScanned(true);
-    api.post("/envios/LinkNotaFiscal", { link: data }).then(() => {
-      Alert.alert(
-        "Nota escaneada com sucesso",
-        "Obrigado pela sua contribuição 😉",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              setScanned(false);
-              navigation.navigate("Categorias");
-            },
-          },
-        ]
-      );
+  useEffect(() => {
+    if (updateApi) {
+      getLastPurchase();
+    }
+  }, [updateApi]);
+
+  function returnDate(value) {
+    let date = value.split(" ")[0];
+    date = date.split("/");
+    return `${date[1]}-${date[0]}-${date[2]}`;
+  }
+
+  async function getLastPurchase() {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let lastPurchaseKey = savedKeys.find((key) => {
+      if (key.includes("ultima-compra")) {
+        return key;
+      }
     });
-  };
+    if (lastPurchaseKey && updateApi.listaProdutos.length > 0) {
+      let lastPurchaseList = await AsyncStorage.getItem(lastPurchaseKey);
+      let updatedData = {
+        id: lastPurchaseList.id,
+        products: updateApi.listaProdutos.map((item, index) => {
+          return {
+            name: item.nomeProduto,
+            price: item.valorUnidade,
+            qtd: item.quantidade,
+            idProd: index,
+          };
+        }),
+        supermarket: {
+          name: updateApi.nome,
+          publicPlace: updateApi.logradouro,
+          number: updateApi.numero,
+          city: updateApi.cidade,
+          state: updateApi.estado,
+          district: updateApi.bairro,
+          phone: updateApi.telefone,
+          cnpj: updateApi.cnpj,
+        },
+        data: format(new Date(returnDate(updateApi.dataEmissao)), "dd/MM/yy", {
+          locale: ptBR,
+        }),
+      };
+      let codeNCnpj = lastPurchaseKey.substring(14);
+      let purchaseHistoryKey = savedKeys.find((key) => {
+        if (key.substring(17) == codeNCnpj) {
+          return key;
+        }
+      });
+      if (purchaseHistoryKey) {
+        await AsyncStorage.setItem(
+          purchaseHistoryKey,
+          JSON.stringify(updatedData)
+        );
+        await AsyncStorage.removeItem(lastPurchaseKey);
+      }
+    }
+  }
+
+  function handleBarCodeScanned({ data }) {
+    setScanned(true);
+    Alert.alert(
+      "Nota escaneada com sucesso",
+      "Obrigado pela sua contribuição 😉",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            setScanned(false);
+            navigation.navigate("Categorias");
+          },
+        },
+      ]
+    );
+    api.post("/envios/LinkNotaFiscal", { link: data }).then((response) => {
+      if (!response.data.message) {
+        setUpdateApi(response.data);
+      } else {
+        setUpdateApi(null);
+      }
+    });
+  }
 
   const handleFlashToggle = async () => {
     setFlashOn(!flashOn);
@@ -108,6 +179,7 @@ export default function Scanner({ navigation }) {
             )}
           </TouchableOpacity>
         </View>
+        <Text style={styles.textInfo}>Leitor de nota fiscal</Text>
       </View>
     );
   }

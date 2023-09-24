@@ -74,7 +74,10 @@ export default function CategoryProducts({ navigation }) {
             );
           } else {
             setCatProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Nenhuma categoria encontrada, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         })
@@ -108,8 +111,7 @@ export default function CategoryProducts({ navigation }) {
         return tempHistoryKey == tempPurchaseKey;
       }
     });
-    await AsyncStorage.removeItem(purchaseKey);
-    await AsyncStorage.removeItem(historyKey);
+    await AsyncStorage.multiRemove([purchaseKey, historyKey]);
   }
 
   return isLoading ? (
@@ -136,6 +138,7 @@ export default function CategoryProducts({ navigation }) {
                   navigation.navigate("Produtos", {
                     categoryName: item.name,
                     supermarketName: null,
+                    cnpj: null,
                   })
                 }
               >

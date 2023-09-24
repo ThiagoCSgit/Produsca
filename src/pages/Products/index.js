@@ -64,7 +64,10 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Não existem produtos cadastrados para essa categoria nesse supermercado no momento, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         });
@@ -87,7 +90,10 @@ export default function Products({ route, navigation }) {
             );
           } else {
             setProducts([]);
-            setNoData(response.data);
+            let apiReturn = response.data;
+            apiReturn.message =
+              "Não existem produtos cadastrados para essa categoria no momento, tente novamente mais tarde";
+            setNoData(apiReturn);
           }
           setIsLoading(false);
         });
@@ -104,17 +110,13 @@ export default function Products({ route, navigation }) {
       let productChecked = null;
       for (let i = 0; i < newList.length; i++) {
         item = newList[i];
-        if (supermarketName) {
+        if (cnpj) {
           productChecked = JSON.parse(
-            await AsyncStorage.getItem(
-              `produto-lista-${supermarketName}-${item.id}-${item.name}`
-            )
+            await AsyncStorage.getItem(`produto-lista-${cnpj}-${item.id}`)
           );
         } else {
           productChecked = JSON.parse(
-            await AsyncStorage.getItem(
-              `produto-lista-noMarket-${item.id}-${item.name}`
-            )
+            await AsyncStorage.getItem(`produto-lista-noMarket-${item.id}`)
           );
         }
         if (productChecked != null) {
@@ -132,7 +134,7 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  function increaseQuantity(id, supermarket = null) {
+  function increaseQuantity(id) {
     let newList = [...products];
     let currentProduct = "";
 
@@ -146,15 +148,10 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(
-      currentProduct.id,
-      currentProduct.qtd,
-      supermarket,
-      currentProduct.name
-    );
+    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd);
   }
 
-  function decreaseQuantity(id, supermarket = null) {
+  function decreaseQuantity(id) {
     let newList = [...products];
     let currentProduct = "";
 
@@ -168,24 +165,19 @@ export default function Products({ route, navigation }) {
       })
     );
 
-    addOrRemoveToShopCart(
-      currentProduct.id,
-      currentProduct.qtd,
-      supermarket,
-      currentProduct.name
-    );
+    addOrRemoveToShopCart(currentProduct.id, currentProduct.qtd);
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
-    let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}-${productName}`
-      : `produto-lista-noMarket-${idProd}-${productName}`;
-
-    cleanShoppingList(supermarket, id);
+  async function addOrRemoveToShopCart(idProd, qtd) {
+    let id = cnpj
+      ? `produto-lista-${cnpj}-${idProd}`
+      : `produto-lista-noMarket-${idProd}`;
+    cleanShoppingList(cnpj);
 
     if (qtd > 0) {
       let itemToAdd = products.find((item) => item.id == idProd);
-      itemToAdd.supermarket = supermarket;
+      itemToAdd.supermarket = supermarketName;
+      itemToAdd.cnpj = cnpj;
       itemToAdd.category = categoryName;
       try {
         await AsyncStorage.setItem(id, JSON.stringify(itemToAdd));
@@ -201,14 +193,14 @@ export default function Products({ route, navigation }) {
     }
   }
 
-  async function cleanShoppingList(supermarket, id) {
+  async function cleanShoppingList(cnpj) {
     let asyncStorage = await AsyncStorage.getAllKeys();
     let productsOnList = asyncStorage.filter((item) =>
       item.includes("produto-lista")
     );
-    if (!supermarket) {
+    if (!cnpj) {
       productsOnList.forEach(async (item) => {
-        if (item.includes(`produto-lista-${supermarket}-`)) {
+        if (item.includes(`produto-lista-${cnpj}-`)) {
           await AsyncStorage.removeItem(item);
         }
       });
@@ -246,14 +238,16 @@ export default function Products({ route, navigation }) {
                 borderColor: "#D4EEE2",
                 borderRadius: 10,
                 paddingHorizontal: 10,
+                overflow: "hidden",
+                flex: 1,
               }}
               key={index}
             >
               <Pressable
                 style={styles.productItem}
                 onPress={() =>
-                  supermarketName
-                    ? navigation.navigate("Detalhes do Produto", {
+                  cnpj
+                    ? navigation.navigate("Detalhes do produto", {
                         supermarket: supermarketName,
                         nameProduct: item.name,
                         barCode: item.bar_code,
@@ -272,7 +266,7 @@ export default function Products({ route, navigation }) {
                 />
                 <View style={styles.productInfos}>
                   <Text style={styles.nameProduct}>{item.name}</Text>
-                  {supermarketName && (
+                  {cnpj && (
                     <Text style={styles.nameProduct}>R$ {item.price}</Text>
                   )}
                 </View>
@@ -282,14 +276,14 @@ export default function Products({ route, navigation }) {
                   name="minuscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() => decreaseQuantity(item.id, supermarketName)}
+                  onPress={() => decreaseQuantity(item.id)}
                 />
                 <Text style={styles.quantityValue}>{item.qtd}</Text>
                 <Icon
                   name="pluscircleo"
                   color="#253D4E"
                   size={25}
-                  onPress={() => increaseQuantity(item.id, supermarketName)}
+                  onPress={() => increaseQuantity(item.id)}
                 />
               </View>
             </View>

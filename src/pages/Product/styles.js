@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 20,
-    paddingHorizontal: 0,
+    paddingTop: 15,
+    paddingHorizontal: 10,
     height: "100%",
   },
   productName: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans_500Medium",
   },
   nameProduct: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "OpenSans_500Medium",
     textAlign: "center",
   },

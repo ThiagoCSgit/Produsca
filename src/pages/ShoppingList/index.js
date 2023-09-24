@@ -50,7 +50,7 @@ export default function ShoppingList({ navigation }) {
     }
   }
 
-  async function increaseQuantity(id, supermarket = null) {
+  async function increaseQuantity(id, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -67,12 +67,12 @@ export default function ShoppingList({ navigation }) {
     addOrRemoveToShopCart(
       currentProduct.id,
       currentProduct.qtd,
-      supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  async function decreaseQuantity(id, supermarket = null) {
+  async function decreaseQuantity(id, cnpj) {
     let newList = [...cartList];
     let currentProduct = "";
 
@@ -89,16 +89,15 @@ export default function ShoppingList({ navigation }) {
     addOrRemoveToShopCart(
       currentProduct.id,
       currentProduct.qtd,
-      supermarket,
+      cnpj,
       currentProduct.name
     );
   }
 
-  async function addOrRemoveToShopCart(idProd, qtd, supermarket, productName) {
-    let id = supermarket
-      ? `produto-lista-${supermarket}-${idProd}-${productName}`
-      : `produto-lista-noMarket-${idProd}-${productName}`;
-
+  async function addOrRemoveToShopCart(idProd, qtd, cnpj) {
+    let id = cnpj
+      ? `produto-lista-${cnpj}-${idProd}`
+      : `produto-lista-noMarket-${idProd}`;
     if (qtd > 0) {
       let itemToAdd = cartList.find((item) => item.id == idProd);
       try {
@@ -121,14 +120,12 @@ export default function ShoppingList({ navigation }) {
         <View
           style={{
             width: "100%",
-            height: "100%",
-            alignItems: "center",
+            flex: 1,
           }}
         >
           <FlatList
             contentContainerStyle={{
-              gap: 15,
-              paddingHorizontal: 20,
+              gap: 20,
             }}
             data={cartList}
             numColumns={1}
@@ -136,10 +133,10 @@ export default function ShoppingList({ navigation }) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.itemCart}>
-                  <View style={{ width: "80%" }}>
+                  <View style={{ flex: 1 }}>
                     <Text style={styles.itemName}>
                       {item.supermarket
-                        ? `${item.name} \n R$${item.price} - ${item.supermarket}`
+                        ? `${item.name} \nR$${item.price} - ${item.supermarket}`
                         : `${item.name}`}
                     </Text>
                     <View style={styles.quantItems}>
@@ -147,45 +144,39 @@ export default function ShoppingList({ navigation }) {
                         name="minuscircleo"
                         color="#253D4E"
                         size={25}
-                        onPress={() =>
-                          decreaseQuantity(item.id, item.supermarket)
-                        }
+                        onPress={() => decreaseQuantity(item.id, item.cnpj)}
                       />
                       <Text style={styles.quantityValue}>{item.qtd}</Text>
                       <IconAD
                         name="pluscircleo"
                         color="#253D4E"
                         size={25}
-                        onPress={() =>
-                          increaseQuantity(item.id, item.supermarket)
-                        }
+                        onPress={() => increaseQuantity(item.id, item.cnpj)}
                       />
                     </View>
                   </View>
-                  <IconF
-                    color="#dc3546"
-                    name="trash-2"
-                    style={{ marginBottom: 13 }}
-                    size={25}
-                    onPress={() =>
-                      removeItem(
-                        item.supermarket
-                          ? `produto-lista-${item.supermarket}-${item.id}-${item.name}`
-                          : `produto-lista-noMarket-${item.id}-${item.name}`
-                      )
-                    }
-                  />
+                  <View>
+                    <IconF
+                      color="#dc3546"
+                      name="trash-2"
+                      size={25}
+                      onPress={() =>
+                        removeItem(
+                          item.supermarket
+                            ? `produto-lista-${item.cnpj}-${item.id}`
+                            : `produto-lista-noMarket-${item.id}`
+                        )
+                      }
+                    />
+                  </View>
                 </View>
               );
             }}
           />
           <View
             style={{
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
               position: "relative",
-              top: 10,
+              top: 15,
             }}
           >
             <TouchableOpacity

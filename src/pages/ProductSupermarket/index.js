@@ -51,6 +51,8 @@ export default function ProductSupermarket({ route, navigation }) {
           if (historic != null && historic.listPrecoGeral.length > 0) {
             setPriceHistory(historic.listPrecoGeral);
           } else {
+            historic.message =
+              "Não foram encontrados preços referentes a este produto.";
             setPriceHistory(historic);
           }
           setIsLoading(false);
@@ -80,7 +82,7 @@ export default function ProductSupermarket({ route, navigation }) {
   ) : (
     <SafeAreaView style={styles.container}>
       <Text style={styles.nameProduct}>
-        {nameProduct} {supermarket && `- ${supermarket}`}
+        {nameProduct} {supermarket && `${supermarket}`}
       </Text>
       <View>
         {priceHistory.length > 0 ? (

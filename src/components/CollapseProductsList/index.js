@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function CollapseProductsList({
   state,
   showButton = false,
+  showInfos = false,
   navigation = null,
   isFocused,
   deleteButton = false,
@@ -57,8 +58,8 @@ export default function CollapseProductsList({
     setVisible(updatedVisible);
   }
 
-  async function startShopping(list, supermarketName) {
-    await getPurchaseInProgress(list, supermarketName);
+  async function startShopping(list, cnpj) {
+    await getPurchaseInProgress(list, cnpj);
     navigation.navigate("Carrinho", {
       list: list,
     });
@@ -99,24 +100,25 @@ export default function CollapseProductsList({
           return tempHistoryKey == tempPurchaseKey;
         }
       });
-      let supermarketNameKey = purchaseKey.substring(20);
+      let supermarketCnpjKey = purchaseKey.substring(20);
       let codeHistory = historyKey.substring(17, 20);
-
-      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketNameKey);
+      setPurchaseInProgress(choosedMarket ? choosedMarket : supermarketCnpjKey);
 
       if (
         choosedMarket &&
         purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
       ) {
-        await AsyncStorage.removeItem(purchaseKey);
-        await AsyncStorage.removeItem(historyKey);
-
+        await AsyncStorage.multiRemove([
+          purchaseKey,
+          historyKey,
+          `ultima-compra-${codeHistory}-${supermarketCnpjKey}`,
+        ]);
         let shoppingList = list;
         let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
       } else {
         let shoppingList = JSON.parse(await AsyncStorage.getItem(purchaseKey));
-        let id = `compra-iniciada-${codeHistory}-${supermarketNameKey}`;
+        let id = `compra-iniciada-${codeHistory}-${supermarketCnpjKey}`;
 
         let updatedState = internalState.map((item) => {
           return item.id == shoppingList.id
@@ -138,6 +140,29 @@ export default function CollapseProductsList({
         }
       }
     }
+  }
+
+  function itemPrice(value, quantity = 1) {
+    if (value != -1) {
+      return Number.parseFloat(value * quantity).toLocaleString("pt-br", {
+        minimumFractionDigits: 2,
+      });
+    } else {
+      return "- -";
+    }
+  }
+
+  function totalValue(list) {
+    let sum = 0;
+    if (list.products.length > 0) {
+      list.products.forEach((item) => {
+        if (item.price != -1) {
+          sum += parseFloat(item.price) * parseFloat(item.qtd);
+        }
+      });
+    }
+    let valor = sum != 0 ? itemPrice(`${sum}`) : "- -";
+    return valor;
   }
 
   return (
@@ -170,15 +195,27 @@ export default function CollapseProductsList({
                     style={styles.buttonOpenCollapse}
                     onPress={() => openCloseCollapse(item.id)}
                   >
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontFamily: "OpenSans_500Medium",
-                        color: "#253D4E",
-                      }}
-                    >
-                      {item.supermarket.name}
-                    </Text>
+                    {item.supermarket.name ? (
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: "OpenSans_500Medium",
+                          color: "#253D4E",
+                        }}
+                      >
+                        {item.supermarket.name}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: "OpenSans_500Medium",
+                          color: "#253D4E",
+                        }}
+                      >
+                        Nome do supermercado indisponível
+                      </Text>
+                    )}
                     {visible[index]?.open ? (
                       <Icon name="down" color="#253D4E" size={20} />
                     ) : (
@@ -215,12 +252,12 @@ export default function CollapseProductsList({
                       onPress={() =>
                         startShopping(
                           internalState[index],
-                          item.supermarket.name
+                          item.supermarket.cnpj
                         )
                       }
                     >
                       <Text style={styles.textButton}>
-                        {purchaseInProgress == item.supermarket.name
+                        {purchaseInProgress == item.supermarket.cnpj
                           ? "Continuar Compra"
                           : "Iniciar Compra"}
                       </Text>
@@ -251,6 +288,14 @@ export default function CollapseProductsList({
                 </View>
                 {visible[index]?.open && (
                   <View>
+                    {showInfos && (
+                      <View style={styles.historicInfos}>
+                        <Text style={styles.itemValue}>Data: {item.data}</Text>
+                        <Text style={styles.itemValue}>
+                          Total: R$ {totalValue(item)}
+                        </Text>
+                      </View>
+                    )}
                     <View style={styles.listCollapse}>
                       {item?.products.map((products, indexProd) => (
                         <View
@@ -258,27 +303,18 @@ export default function CollapseProductsList({
                             flexDirection: "row",
                             justifyContent: "space-between",
                           }}
+                          key={indexProd}
                         >
                           <Text
                             style={[
                               styles.itemList,
-                              { width: Dimensions.get("window").width - 160 },
+                              { width: Dimensions.get("window").width - 230 },
                             ]}
                             key={`${index}-${indexProd}`}
                           >
                             {products.name}
                           </Text>
-                          <Text
-                            style={[
-                              styles.itemList,
-                              {
-                                marginLeft: 10,
-                                fontStyle: "italic",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              },
-                            ]}
-                          >
+                          <Text style={[styles.itemValue]}>
                             {products.price == -1
                               ? `${products.qtd}x R$ - -`
                               : `${products.qtd}x R$ ${products.price}`}
@@ -297,12 +333,12 @@ export default function CollapseProductsList({
                         onPress={() =>
                           startShopping(
                             internalState[index],
-                            item.supermarket.name
+                            item.supermarket.cnpj
                           )
                         }
                       >
                         <Text style={styles.textButton}>
-                          {purchaseInProgress == item.supermarket.name
+                          {purchaseInProgress == item.supermarket.cnpj
                             ? "Continuar Compra"
                             : "Iniciar Compra"}
                         </Text>

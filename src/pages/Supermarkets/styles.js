@@ -32,10 +32,12 @@ const styles = StyleSheet.create({
     borderColor: "#D4EEE2",
     borderRadius: 10,
     paddingVertical: 15,
+    paddingHorizontal: 5,
+    overflow: "hidden",
   },
   supermarketIcon: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     marginHorizontal: 10,
     borderRadius: 100,
   },
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "left",
     fontFamily: "OpenSans_500Medium",
-    width: Dimensions.get("window").width - 140,
+    width: "80%",
   },
   buttonGradient: {
     borderRadius: 100,

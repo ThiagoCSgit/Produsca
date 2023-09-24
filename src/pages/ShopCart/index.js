@@ -16,12 +16,11 @@ import IconF from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";
 import Icon from "react-native-vector-icons/AntDesign";
 
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
 export default function ShopCart({ route, navigation }) {
-  const [cartList, setCartList] = useState({
-    id: 0,
-    products: [],
-    supermarket: "",
-  });
+  const [cartList, setCartList] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [total, setTotal] = useState(0);
   const { list } = route.params;
@@ -31,20 +30,29 @@ export default function ShopCart({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    totalValue();
-    saveToHistory();
+    if (cartList?.products.length > 0) {
+      saveToHistory();
+      totalValue();
+    }
   }, [cartList]);
+
+  function callSetCartList(newList) {
+    setCartList({
+      id: list.id,
+      products: newList,
+      supermarket: list.supermarket,
+      data: format(new Date(), "dd/MM/yy", {
+        locale: ptBR,
+      }),
+    });
+  }
 
   function getCartProducts() {
     let newList = list.products.map((item, index) => {
       item.idProd = index;
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function checkedProduct(value, id) {
@@ -54,27 +62,21 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   async function removePurchaseStorage() {
-    await AsyncStorage.removeItem(
-      `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`
-    );
+    if (cartList?.supermarket.cnpj) {
+      await AsyncStorage.removeItem(
+        `compra-iniciada-${cartList.id}-${cartList.supermarket.cnpj}`
+      );
+    }
   }
 
-  function removeItem(index) {
+  function removeItemList(index) {
     let newList = [...cartList.products];
     newList.splice(index, 1);
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function increaseQuantity(id) {
@@ -84,11 +86,7 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function decreaseQuantity(id) {
@@ -98,11 +96,7 @@ export default function ShopCart({ route, navigation }) {
       }
       return item;
     });
-    setCartList({
-      id: list.id,
-      products: newList,
-      supermarket: list.supermarket,
-    });
+    callSetCartList(newList);
   }
 
   function itemPrice(value, quantity = 1) {
@@ -145,10 +139,8 @@ export default function ShopCart({ route, navigation }) {
             text: "Continuar sem marcar todos",
             onPress: async () => {
               saveToHistory();
+              setModalVisible(true);
               removePurchaseStorage();
-              setTimeout(() => {
-                navigation.navigate("Histórico");
-              }, 100);
             },
           },
           {
@@ -166,13 +158,17 @@ export default function ShopCart({ route, navigation }) {
 
   async function saveToHistory() {
     try {
-      if (cartList.products.length > 0) {
+      if (cartList?.products.length > 0) {
         await AsyncStorage.setItem(
-          `compra-iniciada-${cartList.id}-${cartList.supermarket.name}`,
+          `compra-iniciada-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
         );
         await AsyncStorage.setItem(
-          `compra-historico-${cartList.id}-${cartList.supermarket.name}`,
+          `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
+          JSON.stringify(cartList)
+        );
+        await AsyncStorage.setItem(
+          `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
         );
       } else {
@@ -193,11 +189,25 @@ export default function ShopCart({ route, navigation }) {
 
   async function cancelPurchase() {
     removePurchaseStorage();
+    await AsyncStorage.multiRemove([
+      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
+      `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
+    ]);
 
-    await AsyncStorage.removeItem(
-      `compra-historico-${cartList.id}-${cartList.supermarket.name}`
-    );
+    setTimeout(() => {
+      navigation.navigate("Categorias");
+    }, 100);
+  }
 
+  async function noScanner() {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let lastPurchaseKey = savedKeys.find((key) => {
+      if (key.includes("ultima-compra")) {
+        return key;
+      }
+    });
+    await AsyncStorage.removeItem(lastPurchaseKey);
+    setModalVisible(false);
     setTimeout(() => {
       navigation.navigate("Histórico");
     }, 100);
@@ -213,7 +223,7 @@ export default function ShopCart({ route, navigation }) {
             alignItems: "center",
           }}
         >
-          <Text style={styles.totalValue}>Valor Total da compra: {total}</Text>
+          <Text style={styles.totalValue}>Valor total da compra: {total}</Text>
           <FlatList
             data={cartList.products}
             numColumns={1}
@@ -267,7 +277,7 @@ export default function ShopCart({ route, navigation }) {
                     color="#dc3546"
                     name="trash-2"
                     size={25}
-                    onPress={() => removeItem(index)}
+                    onPress={() => removeItemList(index)}
                   />
                 </View>
               );
@@ -321,10 +331,7 @@ export default function ShopCart({ route, navigation }) {
               <View style={styles.modalButtons}>
                 <Pressable
                   onPress={() => {
-                    setModalVisible(false);
-                    setTimeout(() => {
-                      navigation.navigate("Histórico");
-                    }, 100);
+                    noScanner();
                   }}
                   style={[
                     styles.buttonModal,
