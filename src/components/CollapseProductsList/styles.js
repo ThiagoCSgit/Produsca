@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemList: {
-    fontSize: 16,
+    fontSize: 15,
     marginVertical: 5,
     fontFamily: "OpenSans_400Regular",
     color: "#5C5A66",

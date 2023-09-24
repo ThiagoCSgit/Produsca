@@ -157,7 +157,7 @@ export default function CollapseProductsList({
     if (list.products.length > 0) {
       list.products.forEach((item) => {
         if (item.price != -1) {
-          sum += item.price * item.qtd;
+          sum += parseFloat(item.price) * parseFloat(item.qtd);
         }
       });
     }
@@ -303,11 +303,12 @@ export default function CollapseProductsList({
                             flexDirection: "row",
                             justifyContent: "space-between",
                           }}
+                          key={indexProd}
                         >
                           <Text
                             style={[
                               styles.itemList,
-                              { width: Dimensions.get("window").width - 170 },
+                              { width: Dimensions.get("window").width - 230 },
                             ]}
                             key={`${index}-${indexProd}`}
                           >

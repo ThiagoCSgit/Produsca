@@ -199,6 +199,20 @@ export default function ShopCart({ route, navigation }) {
     }, 100);
   }
 
+  async function noScanner() {
+    let savedKeys = await AsyncStorage.getAllKeys();
+    let lastPurchaseKey = savedKeys.find((key) => {
+      if (key.includes("ultima-compra")) {
+        return key;
+      }
+    });
+    await AsyncStorage.removeItem(lastPurchaseKey);
+    setModalVisible(false);
+    setTimeout(() => {
+      navigation.navigate("Histórico");
+    }, 100);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       {cartList?.products.length > 0 ? (
@@ -317,10 +331,7 @@ export default function ShopCart({ route, navigation }) {
               <View style={styles.modalButtons}>
                 <Pressable
                   onPress={() => {
-                    setModalVisible(false);
-                    setTimeout(() => {
-                      navigation.navigate("Histórico");
-                    }, 100);
+                    noScanner();
                   }}
                   style={[
                     styles.buttonModal,
