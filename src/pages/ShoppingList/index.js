@@ -126,6 +126,7 @@ export default function ShoppingList({ navigation }) {
           <FlatList
             contentContainerStyle={{
               gap: 20,
+              paddingHorizontal: 15,
             }}
             data={cartList}
             numColumns={1}

@@ -13,9 +13,9 @@ import styles from "./styles";
 import api from "../../service/api";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import randomIdGeneretor from "../../utils/randomIdGeneretor";
 
 import { useIsFocused } from "@react-navigation/native";
 
@@ -44,64 +44,45 @@ export default function Scanner({ navigation }) {
   }, [isFocused]);
 
   useEffect(() => {
-    if (updateApi) {
+    if (updateApi != null) {
       getLastPurchase();
     }
   }, [updateApi]);
 
-  function returnDate(value) {
-    let date = value.split(" ")[0];
-    date = date.split("/");
-    return `${date[1]}-${date[0]}-${date[2]}`;
-  }
-
   async function getLastPurchase() {
-    let savedKeys = await AsyncStorage.getAllKeys();
-    let lastPurchaseKey = savedKeys.find((key) => {
-      if (key.includes("ultima-compra")) {
-        return key;
-      }
+    let id = randomIdGeneretor(3);
+    let scannerKey = `compra-historico-${id}-${updateApi.cnpj}`;
+    let updatedData = {
+      id: id,
+      products: updateApi.listaProdutos.map((item, index) => {
+        return {
+          name: item.nomeProduto,
+          price: item.valorUnidade,
+          qtd: item.quantidade,
+          idProd: index,
+        };
+      }),
+      supermarket: {
+        name: updateApi.nome,
+        publicPlace: updateApi.logradouro,
+        number: updateApi.numero,
+        city: updateApi.cidade,
+        state: updateApi.estado,
+        district: updateApi.bairro,
+        phone: updateApi.telefone,
+        cnpj: updateApi.cnpj,
+      },
+      data: updateApi.dataEmissao.split(" ")[0],
+    };
+
+    await AsyncStorage.setItem(scannerKey, JSON.stringify(updatedData));
+    Toast.show({
+      type: "info",
+      text1: "Nota fiscal processada",
+      text2: "Seu histórico de compras foi atualizado 😎",
+      position: "bottom",
     });
-    if (lastPurchaseKey && updateApi.listaProdutos.length > 0) {
-      let lastPurchaseList = await AsyncStorage.getItem(lastPurchaseKey);
-      let updatedData = {
-        id: lastPurchaseList.id,
-        products: updateApi.listaProdutos.map((item, index) => {
-          return {
-            name: item.nomeProduto,
-            price: item.valorUnidade,
-            qtd: item.quantidade,
-            idProd: index,
-          };
-        }),
-        supermarket: {
-          name: updateApi.nome,
-          publicPlace: updateApi.logradouro,
-          number: updateApi.numero,
-          city: updateApi.cidade,
-          state: updateApi.estado,
-          district: updateApi.bairro,
-          phone: updateApi.telefone,
-          cnpj: updateApi.cnpj,
-        },
-        data: format(new Date(returnDate(updateApi.dataEmissao)), "dd/MM/yy", {
-          locale: ptBR,
-        }),
-      };
-      let codeNCnpj = lastPurchaseKey.substring(14);
-      let purchaseHistoryKey = savedKeys.find((key) => {
-        if (key.substring(17) == codeNCnpj) {
-          return key;
-        }
-      });
-      if (purchaseHistoryKey) {
-        await AsyncStorage.setItem(
-          purchaseHistoryKey,
-          JSON.stringify(updatedData)
-        );
-        await AsyncStorage.removeItem(lastPurchaseKey);
-      }
-    }
+    setUpdateApi(null);
   }
 
   function handleBarCodeScanned({ data }) {

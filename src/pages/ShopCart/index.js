@@ -167,10 +167,6 @@ export default function ShopCart({ route, navigation }) {
           `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
         );
-        await AsyncStorage.setItem(
-          `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
-          JSON.stringify(cartList)
-        );
       } else {
         removePurchaseStorage();
       }
@@ -189,10 +185,9 @@ export default function ShopCart({ route, navigation }) {
 
   async function cancelPurchase() {
     removePurchaseStorage();
-    await AsyncStorage.multiRemove([
-      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
-      `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
-    ]);
+    await AsyncStorage.removeItem(
+      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`
+    );
 
     setTimeout(() => {
       navigation.navigate("Categorias");
@@ -200,13 +195,6 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function noScanner() {
-    let savedKeys = await AsyncStorage.getAllKeys();
-    let lastPurchaseKey = savedKeys.find((key) => {
-      if (key.includes("ultima-compra")) {
-        return key;
-      }
-    });
-    await AsyncStorage.removeItem(lastPurchaseKey);
     setModalVisible(false);
     setTimeout(() => {
       navigation.navigate("Histórico");
@@ -219,8 +207,7 @@ export default function ShopCart({ route, navigation }) {
         <View
           style={{
             width: "100%",
-            height: "100%",
-            alignItems: "center",
+            flex: 1,
           }}
         >
           <Text style={styles.totalValue}>Valor total da compra: {total}</Text>
@@ -229,13 +216,13 @@ export default function ShopCart({ route, navigation }) {
             numColumns={1}
             key={"_"}
             contentContainerStyle={{
-              gap: 15,
-              paddingHorizontal: 20,
+              gap: 20,
+              paddingHorizontal: 15,
             }}
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.itemCart}>
-                  <View style={{ width: "80%" }}>
+                  <View style={{ flex: 1 }}>
                     <Text
                       style={[styles.itemName, item.check && styles.bought]}
                     >

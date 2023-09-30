@@ -108,11 +108,7 @@ export default function CollapseProductsList({
         choosedMarket &&
         purchaseKey != `compra-iniciada-${codeHistory}-${choosedMarket}`
       ) {
-        await AsyncStorage.multiRemove([
-          purchaseKey,
-          historyKey,
-          `ultima-compra-${codeHistory}-${supermarketCnpjKey}`,
-        ]);
+        await AsyncStorage.multiRemove([purchaseKey, historyKey]);
         let shoppingList = list;
         let id = `compra-iniciada-${shoppingList.id}-${choosedMarket}`;
         await AsyncStorage.setItem(id, JSON.stringify(shoppingList));
@@ -157,12 +153,18 @@ export default function CollapseProductsList({
     if (list.products.length > 0) {
       list.products.forEach((item) => {
         if (item.price != -1) {
-          sum += parseFloat(item.price) * parseFloat(item.qtd);
+          sum +=
+            parseFloat(item.price) *
+            parseFloat(`${item.qtd}`.replace(",", "."));
         }
       });
     }
     let valor = sum != 0 ? itemPrice(`${sum}`) : "- -";
-    return valor;
+    if (valor == "- -") {
+      return valor;
+    } else {
+      return parseFloat(valor.replace(",", ".")).toFixed(2);
+    }
   }
 
   return (
