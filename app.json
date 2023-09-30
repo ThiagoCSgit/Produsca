@@ -2,10 +2,11 @@
   "expo": {
     "name": "Produsca",
     "slug": "Produsca",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon_app.png",
     "userInterfaceStyle": "light",
+    "author": "Thiago Correa dos Santos <thiagocsodssantos@gmail.com>",
     "splash": {
       "image": "./assets/icon_splash.png",
       "resizeMode": "contain",
