@@ -167,10 +167,6 @@ export default function ShopCart({ route, navigation }) {
           `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
           JSON.stringify(cartList)
         );
-        await AsyncStorage.setItem(
-          `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
-          JSON.stringify(cartList)
-        );
       } else {
         removePurchaseStorage();
       }
@@ -189,10 +185,9 @@ export default function ShopCart({ route, navigation }) {
 
   async function cancelPurchase() {
     removePurchaseStorage();
-    await AsyncStorage.multiRemove([
-      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`,
-      `ultima-compra-${cartList.id}-${cartList.supermarket.cnpj}`,
-    ]);
+    await AsyncStorage.removeItem(
+      `compra-historico-${cartList.id}-${cartList.supermarket.cnpj}`
+    );
 
     setTimeout(() => {
       navigation.navigate("Categorias");
@@ -200,13 +195,6 @@ export default function ShopCart({ route, navigation }) {
   }
 
   async function noScanner() {
-    let savedKeys = await AsyncStorage.getAllKeys();
-    let lastPurchaseKey = savedKeys.find((key) => {
-      if (key.includes("ultima-compra")) {
-        return key;
-      }
-    });
-    await AsyncStorage.removeItem(lastPurchaseKey);
     setModalVisible(false);
     setTimeout(() => {
       navigation.navigate("Histórico");

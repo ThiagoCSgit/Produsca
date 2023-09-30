@@ -9,6 +9,7 @@ import AdjustDistance from "../../components/AdjustDistance";
 import NoData from "../../components/NoData";
 
 import getLocation from "../../utils/getLocation";
+import randomIdGeneretor from "../../utils/randomIdGeneretor";
 
 import { useLocation } from "../../context/LocationProvider";
 
@@ -90,7 +91,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
                   qtd: listNomeProd[index].qtd,
                 };
             });
-
             return {
               supermarket: supermercado,
               products: produtos,
@@ -121,19 +121,6 @@ export default function SupermaketShoppingList({ route, navigation }) {
         );
       }
     }
-  }
-
-  function randomIdGeneretor(length) {
-    const caracteres =
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let id = "";
-
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * caracteres.length);
-      id += caracteres.charAt(randomIndex);
-    }
-
-    return id;
   }
 
   return isLoading ? (
