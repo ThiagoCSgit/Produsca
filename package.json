@@ -1,6 +1,6 @@
 {
   "name": "produsca",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -44,5 +44,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
+  "author": "Thiago Correa dos Santos <thiagocsodssantos@gmail.com>",
   "private": true
 }

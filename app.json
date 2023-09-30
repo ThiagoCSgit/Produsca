@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon_app.png",
     "userInterfaceStyle": "light",
-    "author": "Thiago Correa dos Santos <thiagocsodssantos@gmail.com>",
     "splash": {
       "image": "./assets/icon_splash.png",
       "resizeMode": "contain",
@@ -33,5 +32,6 @@
         "projectId": "633366d1-d1a6-4718-82f2-621f5886bd1d"
       }
     }
-  }
+  },
+  "author": "Thiago Correa dos Santos <thiagocsodssantos@gmail.com>"
 }
