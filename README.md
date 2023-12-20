@@ -5,6 +5,7 @@ Produtos e supermercados são cadastrados ou atualizados através da leitura do 
 na tela de histórico. Esse aplicativo tem a finalidade de auxiliar seus usuários a economizar dinheiro e tempo na pesquisa pelo produtos mais em conta.
 
 Imagens do Aplicativo:
+
 Tela de Categoria de Produtos:
 ![telaCategoriaProdutos](https://github.com/ThiagoCSgit/Produsca/assets/57235729/106ce42c-75bb-472f-a475-6d6c91bb3da4)
 
