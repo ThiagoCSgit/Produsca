@@ -6,11 +6,8 @@ na tela de histórico. Esse aplicativo tem a finalidade de auxiliar seus usuári
 
 Imagens do Aplicativo:
 
-Tela de Categoria de Produtos:
-![telaCategoriaProdutos](https://github.com/ThiagoCSgit/Produsca/assets/57235729/106ce42c-75bb-472f-a475-6d6c91bb3da4)
-
-Tela de Produtos:
-![telaProdutos](https://github.com/ThiagoCSgit/Produsca/assets/57235729/2fc85e83-0009-4e39-ae9f-019cdd3aee8a)
+Tela de Categoria de Produtos:                                                                                          Tela de Produtos:
+![telaCategoriaProdutos](https://github.com/ThiagoCSgit/Produsca/assets/57235729/106ce42c-75bb-472f-a475-6d6c91bb3da4)  ![telaProdutos](https://github.com/ThiagoCSgit/Produsca/assets/57235729/2fc85e83-0009-4e39-ae9f-019cdd3aee8a)
 
 Tela de DEtalhes do Produto: 
 ![detalhesGeral](https://github.com/ThiagoCSgit/Produsca/assets/57235729/fa39710f-8deb-422c-b2e5-f3d81d9c809a)
